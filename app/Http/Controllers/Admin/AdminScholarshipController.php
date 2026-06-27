@@ -1,0 +1,226 @@
+<?php
+
+namespace App\Http\Controllers\Admin;
+
+use App\Http\Controllers\Controller;
+use App\Models\Scholarship;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
+
+class AdminScholarshipController extends Controller
+{
+    // دالة خاصة لتجهيز البيانات المشتركة للصفحة مع تحديث فوري للمنح المنتهية
+    private function getCommonData()
+    {
+        // خطوة ذكية ولحظية: تحويل أي منحة نشطة وتجاوزت الـ deadline إلى closed فوراً عند تحميل الصفحة
+        Scholarship::where('status', 'active')
+            ->whereNotNull('deadline')
+            ->where('deadline', '<', now()->startOfDay())
+            ->update(['status' => 'closed']);
+
+        // الآن نقوم بجلب البيانات والإحصائيات وهي محدثة 100% وبشكل صحيح
+        return [
+            'scholarships' => Scholarship::latest()->paginate(10),
+            'stats' => [
+                'total' => Scholarship::count(),
+                'active' => Scholarship::where('status', 'active')->count(),
+                'closed' => Scholarship::where('status', 'closed')->count(),
+            ]
+        ];
+    }
+
+    public function index()
+    {
+        return view('admin.scholarships', $this->getCommonData());
+    }
+
+    public function create()
+    {
+        return view('admin.scholarships', $this->getCommonData());
+    }
+
+    public function store(Request $request)
+{
+    $request->validate([
+        'title_ar' => 'required|string|max:255',
+        'title_en' => 'required|string|max:255',
+        'country' => 'required|string',
+        'university' => 'required|string',
+        'deadline' => 'required|date',
+        'description' => 'nullable|string',
+        'overview' => 'nullable|string',
+        'conditions' => 'nullable|string',
+        'documents' => 'nullable|string',
+        'features' => 'nullable|string',
+        'financial_value' => 'nullable|string|max:255',
+        'applicants_count' => 'nullable|integer|min:0',
+        'recommended_tags' => 'nullable|string|max:255', // نستقبله كنص أولاً
+        'category' => 'required|string',
+        'coverage' => 'nullable|array',
+        'tags' => 'nullable|array',
+        'application_url' => 'nullable|url|max:500',
+        'main_image' => 'nullable|image|max:2048',
+        'logo_image' => 'nullable|image|max:1048',
+    ]);
+
+    $data = $request->all();
+
+    // 1. حل مشكلة الـ recommended_tags: تحويل النص المفصول بفاصلة إلى مصفوفة (لأن الموديل يعامله كـ array)
+    if ($request->filled('recommended_tags')) {
+        // تحويل السلسلة النصية "tag1, tag2" إلى مصفوفة ['tag1', 'tag2'] وتنظيف الفراغات
+        $data['recommended_tags'] = array_map('trim', explode(',', $request->input('recommended_tags')));
+    } else {
+        $data['recommended_tags'] = [];
+    }
+
+    // 2. حل مشكلة الثبات على 50000: نقوم بإسناد القيمة المدخلة في الـ price أيضاً إذا كانت قاعدة البيانات تعتمد عليه
+    if ($request->filled('financial_value')) {
+        // استخراج الأرقام فقط من القيمة المالية إذا كنت تريد تخزينها كـ decimal في الـ price
+        $numericPrice = (float) preg_replace('/[^0-9.]/', '', $request->input('financial_value'));
+        $data['price'] = $numericPrice > 0 ? $numericPrice : 0.00;
+    } else {
+        $data['price'] = 0.00;
+    }
+
+    // ضمان عدم تصفير الفلاتر الأساسية
+    $data['tags'] = $request->has('tags') ? $request->input('tags') : [];
+    $data['coverage'] = $request->has('coverage') ? $request->input('coverage') : [];
+
+    // رفع الصور
+    if ($request->hasFile('main_image')) {
+        $file = $request->file('main_image');
+        $filename = Str::random(20) . '_' . time() . '.' . $file->getClientOriginalExtension();
+        $path = $file->storeAs('scholarships/main-images', $filename, 'public');
+        $data['main_image'] = Storage::disk('public')->url($path);
+    }
+
+    if ($request->hasFile('logo_image')) {
+        $file = $request->file('logo_image');
+        $filename = Str::random(20) . '_' . time() . '.' . $file->getClientOriginalExtension();
+        $path = $file->storeAs('scholarships/logos', $filename, 'public');
+        $data['logo_image'] = Storage::disk('public')->url($path);
+    }
+
+    Scholarship::create(array_merge($data, ['status' => 'active']));
+
+    return redirect()->route('admin.scholarships.index')->with('success', 'تم نشر المنحة بنجاح!');
+}
+public function edit(Scholarship $scholarship)
+    {
+        return view('admin.scholarships.edit', compact('scholarship'));
+    }
+
+public function update(Request $request, Scholarship $scholarship)
+{
+    $request->validate([
+        'title_ar' => 'required|string|max:255',
+        'title_en' => 'required|string|max:255',
+        'country' => 'required|string',
+        'university' => 'required|string',
+        'deadline' => 'required|date',
+        'description' => 'nullable|string',
+        'overview' => 'nullable|string',
+        'conditions' => 'nullable|string',
+        'documents' => 'nullable|string',
+        'features' => 'nullable|string',
+        'financial_value' => 'nullable|string|max:255',
+        'applicants_count' => 'nullable|integer|min:0',
+        'recommended_tags' => 'nullable|string|max:255',
+        'category' => 'required|string',
+        'coverage' => 'nullable|array',
+        'tags' => 'nullable|array',
+        'application_url' => 'nullable|url|max:500',
+        'status' => 'required|in:active,closed',
+        'main_image' => 'nullable|image|max:2048',
+        'logo_image' => 'nullable|image|max:1048',
+    ]);
+
+    $data = $request->all();
+
+    // 1. معالجة الـ recommended_tags لمنع تعارض مصفوفة الـ Model وحذف الفلاتر
+    if ($request->filled('recommended_tags')) {
+        $data['recommended_tags'] = array_map('trim', explode(',', $request->input('recommended_tags')));
+    } else {
+        $data['recommended_tags'] = [];
+    }
+
+    // 2. تحديث الـ price بناءً على الـ financial_value المتغيرة لمنع ثبات الـ 50000
+    if ($request->filled('financial_value')) {
+        $numericPrice = (float) preg_replace('/[^0-9.]/', '', $request->input('financial_value'));
+        $data['price'] = $numericPrice > 0 ? $numericPrice : 0.00;
+    }
+
+    // حماية الفلاتر عند التعديل: إذا لم يتم اختيار أي checkbox، نحتفظ بالقديم ولا نحذفه بالكامل
+    $data['tags'] = $request->has('tags') ? $request->input('tags') : $scholarship->tags;
+    $data['coverage'] = $request->has('coverage') ? $request->input('coverage') : $scholarship->coverage;
+
+    // تحديث الصور
+    if ($request->hasFile('main_image')) {
+        $file = $request->file('main_image');
+        $filename = Str::random(20) . '_' . time() . '.' . $file->getClientOriginalExtension();
+        $path = $file->storeAs('scholarships/main-images', $filename, 'public');
+        $data['main_image'] = Storage::disk('public')->url($path);
+    } else {
+        $data['main_image'] = $scholarship->main_image;
+    }
+
+    if ($request->hasFile('logo_image')) {
+        $file = $request->file('logo_image');
+        $filename = Str::random(20) . '_' . time() . '.' . $file->getClientOriginalExtension();
+        $path = $file->storeAs('scholarships/logos', $filename, 'public');
+        $data['logo_image'] = Storage::disk('public')->url($path);
+    } else {
+        $data['logo_image'] = $scholarship->logo_image;
+    }
+
+    $scholarship->update($data);
+
+    return redirect()->route('admin.scholarships.index')->with('success', 'تم تحديث المنحة بنجاح!');
+}
+    public function destroy(Scholarship $scholarship)
+    {
+        $scholarship->delete();
+        return redirect()->route('admin.scholarships.index')->with('success', 'تم حذف المنحة بنجاح!');
+    }
+
+    public function generateAllSections(Request $request)
+    {
+        $request->validate([
+            'title_ar' => 'required|string|max:255',
+            'university' => 'required|string|max:255',
+            'country' => 'required|string|max:100',
+            'category' => 'required|string|max:50',
+        ]);
+
+        try {
+            $service = new \App\Services\GroqChatServiceScholarshipPrompt();
+            
+            $sections = $service->generateAllSections(
+                $request->title_ar,
+                $request->university,
+                $request->country,
+                $request->category
+            );
+
+            if (isset($sections['error'])) {
+                return response()->json(['success' => false, 'error' => $sections['error']], 400);
+            }
+
+            return response()->json([
+                'success' => true,
+                'data' => [
+                    'description' => $sections['description'] ?? '',
+                    'overview'   => $sections['overview'] ?? '',
+                    'conditions' => $sections['conditions'] ?? '',
+                    'documents'  => $sections['documents'] ?? '',
+                    'features'   => $sections['features'] ?? '',
+                ]
+            ]);
+        } catch (\Exception $e) {
+            Log::error('Groq generateAllSections error: ' . $e->getMessage());
+            return response()->json(['success' => false, 'error' => 'خطأ داخلي: ' . $e->getMessage()], 500);
+        }
+    }
+}

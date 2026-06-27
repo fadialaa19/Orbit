@@ -1,0 +1,7 @@
+Restoring Tailwind CDN temporarily to prevent design breakage. Production removal should be done only after ensuring compiled Tailwind assets are loaded.
+Files restored:
+- resources/views/layouts/app.blade.php
+- resources/views/layouts/dashboard.blade.php
+- resources/views/layouts/admin.blade.php
+- resources/views/errors/maintenance.blade.php
+

@@ -1,0 +1,164 @@
+@extends('layouts.app')
+
+@section('content')
+<style>
+    /* لمسة إضافية للزر لجذب الانتباه */
+    @keyframes pulse-indigo {
+        0% { box-shadow: 0 0 0 0 rgba(79, 70, 229, 0.7); }
+        70% { box-shadow: 0 0 0 15px rgba(79, 70, 229, 0); }
+        100% { box-shadow: 0 0 0 0 rgba(79, 70, 229, 0); }
+    }
+    .btn-pulse { animation: pulse-indigo 2s infinite; }
+    
+    .grad-text {
+        background: linear-gradient(90deg, #4f46e5, #9333ea);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+</style>
+
+<section class="py-20 px-8 max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-16 items-center overflow-hidden">
+    <div data-aos="fade-left" data-aos-duration="1200">
+        <span class="bg-indigo-50 text-indigo-600 px-5 py-2 rounded-full text-sm font-bold border border-indigo-100 inline-block mb-6">
+            ✨ مدعوم بالذكاء الاصطناعي
+        </span>
+        <h1 class="text-6xl font-extrabold mt-2 leading-[1.2] text-slate-900">
+            ابدأ رحلتك <span class="grad-text">الدراسية</span> <br> نحو العالم
+        </h1>
+        <p class="text-gray-500 mt-8 text-xl leading-relaxed max-w-lg">
+            اكتشف آلاف المنح الدراسية المتاحة حول العالم وقدم طلباتك بسهولة مع خدماتنا المتخصصة.
+        </p>
+        <div class="flex flex-wrap gap-5 mt-12">
+            <button class="bg-indigo-600 text-white px-10 py-4 rounded-2xl shadow-xl flex items-center gap-3 hover:bg-indigo-700 transition-all duration-300 transform hover:-translate-y-1 btn-pulse">
+                <span class="font-bold">استكشف المنح</span>
+                <span class="text-xl">←</span>
+            </button>
+            <button class="border-2 border-slate-200 px-10 py-4 rounded-2xl font-bold text-slate-700 hover:bg-slate-50 transition-all duration-300">
+                ابدأ الآن مجاناً
+            </button>
+        </div>
+    </div>
+    
+    <div class="relative" data-aos="zoom-in-right" data-aos-duration="1500">
+        <div class="relative z-10 p-3 bg-white rounded-[3rem] shadow-2xl transition-transform duration-700 hover:rotate-2 group">
+            <img src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&q=80&w=800" 
+                 alt="Students" class="rounded-[2.5rem] transition-all duration-500 group-hover:scale-[1.02]">
+        </div>
+        
+        <div data-aos="fade-down" data-aos-delay="800" class="absolute -top-8 -left-8 bg-white p-5 rounded-3xl shadow-2xl border border-indigo-50 flex items-center gap-4 z-20">
+            <div class="w-12 h-12 bg-indigo-600 rounded-2xl flex items-center justify-center text-white font-bold text-lg">95%</div>
+            <div>
+                <p class="text-[10px] text-gray-400 font-black uppercase tracking-wider text-right">نسبة التطابق</p>
+                <p class="text-sm font-bold text-slate-800">ذكاء اصطناعي</p>
+            </div>
+        </div>
+
+        <div data-aos="fade-up" data-aos-delay="1000" class="absolute -bottom-8 -right-8 bg-white p-5 rounded-3xl shadow-2xl border border-green-50 flex items-center gap-4 z-20">
+            <div class="w-12 h-12 bg-green-500 rounded-full flex items-center justify-center text-white shadow-lg shadow-green-100">
+                <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path></svg>
+            </div>
+            <div>
+                <p class="text-sm font-black text-slate-800">تم القبول!</p>
+                <p class="text-[10px] text-gray-400">في جامعة تورنتو</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="bg-white py-20 relative z-0">
+    <div class="max-w-7xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-12 px-8">
+        @foreach([
+            ['+50k', 'طالب مسجل', 'users'],
+            ['+2.5k', 'منحة متاحة', 'briefcase'],
+            ['+15k', 'قصة نجاح', 'star'],
+            ['+120', 'دولة حول العالم', 'globe']
+        ] as $index => $stat)
+        <div data-aos="fade-up" data-aos-delay="{{ $index * 100 }}" class="text-center group cursor-default">
+            <div class="text-indigo-600 bg-indigo-50 w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:bg-indigo-600 group-hover:text-white transition-all duration-500 transform group-hover:rotate-12 shadow-sm">
+                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                </svg>
+            </div>
+            <h2 class="text-4xl font-black text-slate-900 mb-2">{{ $stat[0] }}</h2>
+            <p class="text-gray-400 font-medium">{{ $stat[1] }}</p>
+        </div>
+        @endforeach
+    </div>
+</section>
+
+<section class="py-24 px-8 bg-slate-50 text-center relative overflow-hidden">
+    <div class="relative z-10 mb-20">
+        <h2 data-aos="fade-up" class="text-4xl font-black text-slate-900 mb-4">كيف يعمل؟</h2>
+        <div data-aos="fade-up" data-aos-delay="200" class="w-24 h-1.5 bg-indigo-600 mx-auto rounded-full mb-6"></div>
+        <p data-aos="fade-up" data-aos-delay="300" class="text-gray-500 text-lg max-w-xl mx-auto">ثلاث خطوات بسيطة تبعدك عن تحقيق حلمك الدراسي.</p>
+    </div>
+    
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-10 max-w-6xl mx-auto">
+        @foreach([
+            ['1', 'ابحث عن المنحة المثالية', 'استخدم محرك البحث المتقدم المفلتر حسب تخصصك ودولتك.'],
+            ['2', 'قدم طلبك بسهولة', 'مساعدنا الذكي يوجهك خطوة بخطوة لصياغة خطاب النوايا.'],
+            ['3', 'تتبع تقدمك', 'لوحة تحكم خاصة بك لمتابعة حالة القبول في الوقت الفعلي.']
+        ] as $index => $step)
+        <div data-aos="fade-up" data-aos-delay="{{ $index * 200 }}" 
+             class="bg-white p-12 rounded-[2.5rem] shadow-sm border border-slate-100 hover:shadow-2xl transition-all duration-500 hover:-translate-y-4 group">
+            <div class="w-20 h-20 bg-slate-50 text-indigo-600 rounded-[1.5rem] flex items-center justify-center mx-auto mb-8 text-3xl font-black group-hover:bg-indigo-600 group-hover:text-white transition-all duration-500 shadow-inner">
+                {{ $step[0] }}
+            </div>
+            <h3 class="font-black text-xl mb-4 text-slate-800">{{ $step[1] }}</h3>
+            <p class="text-gray-400 leading-relaxed text-sm">{{ $step[2] }}</p>
+        </div>
+        @endforeach
+    </div>
+</section>
+
+<section class="py-24 px-8 bg-white">
+    <div class="text-center mb-16">
+        <h2 data-aos="zoom-in" class="text-4xl font-black text-slate-900 mb-4 text-indigo-900">قصص النجاح</h2>
+        <p class="text-gray-400 font-medium">طلاب حققوا أحلامهم وانطلقوا نحو العالمية</p>
+    </div>
+    
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-7xl mx-auto">
+        @foreach([
+            ['أحمد محمد', 'جامعة تورنتو - كندا', 'أ', 'https://images.unsplash.com/photo-1544717297-fa95b3ee51f8?q=80&w=400'],
+            ['فاطمة علي', 'جامعة برلين - ألمانيا', 'ف', 'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=400'],
+            ['محمد حسن', 'جامعة ملبورن - أستراليا', 'م', 'https://images.unsplash.com/photo-1519337265831-281ec6cc8514?q=80&w=400']
+        ] as $index => $student)
+        <div data-aos="fade-right" data-aos-delay="{{ $index * 150 }}" 
+             class="border border-slate-100 rounded-[2.5rem] p-8 hover:shadow-2xl transition-all duration-500 group bg-slate-50/50 hover:bg-white">
+            <div class="overflow-hidden rounded-2xl mb-8 shadow-md">
+                <img src="{{ $student[3] }}" class="w-full h-52 object-cover transition-transform duration-700 group-hover:scale-110" alt="Student">
+            </div>
+            <div class="flex text-yellow-400 mb-4 text-sm tracking-widest group-hover:scale-110 transition-transform">★★★★★</div>
+            <p class="text-slate-600 italic mb-8 leading-relaxed">"تجربة استثنائية مع فريق بدون قيود، الدعم الفني والمساعد الذكي اختصروا عليّ شهور من البحث العشوائي."</p>
+            <div class="flex items-center gap-4 border-t border-slate-100 pt-6">
+                <div class="w-14 h-14 bg-indigo-600 rounded-2xl flex items-center justify-center font-black text-white shadow-lg shadow-indigo-100 group-hover:rotate-12 transition-transform">
+                    {{ $student[2] }}
+                </div>
+                <div>
+                    <h4 class="font-black text-slate-800 text-lg">{{ $student[0] }}</h4>
+                    <p class="text-xs text-indigo-500 font-bold uppercase tracking-tighter">{{ $student[1] }}</p>
+                </div>
+            </div>
+        </div>
+        @endforeach
+    </div>
+</section>
+
+<section class="px-8 pb-24">
+    <div data-aos="zoom-in-up" class="max-w-6xl mx-auto bg-indigo-600 rounded-[4rem] p-16 text-center text-white relative overflow-hidden shadow-[0_20px_50px_rgba(79,70,229,0.3)]">
+        <div class="relative z-10">
+            <h2 class="text-5xl font-black mb-6">جاهز لبدء رحلتك؟</h2>
+            <p class="opacity-80 mb-12 text-xl max-w-lg mx-auto">انضم إلى آلاف الطلاب الذين حققوا أحلامهم معنا اليوم مجاناً</p>
+            <div class="flex flex-col md:flex-row justify-center gap-4 max-w-2xl mx-auto">
+                <input type="email" placeholder="أدخل بريدك الإلكتروني" 
+                       class="px-10 py-5 rounded-[2rem] text-slate-800 focus:outline-none w-full md:w-2/3 shadow-inner text-lg font-medium">
+                <button class="bg-white text-indigo-600 font-black px-12 py-5 rounded-[2rem] hover:bg-slate-100 transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-xl text-lg">
+                    ابدأ الآن
+                </button>
+            </div>
+        </div>
+        <div class="absolute top-0 right-0 w-96 h-96 bg-white opacity-10 rounded-full -mr-48 -mt-48 blur-3xl"></div>
+        <div class="absolute bottom-0 left-0 w-72 h-72 bg-purple-400 opacity-20 rounded-full -ml-36 -mb-36 blur-2xl"></div>
+    </div>
+</section>
+@endsection

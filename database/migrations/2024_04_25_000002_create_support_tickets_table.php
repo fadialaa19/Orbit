@@ -1,0 +1,30 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    public function up(): void
+    {
+        Schema::create('support_tickets', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->string('subject');
+            $table->enum('priority', ['low', 'medium', 'high', 'urgent'])->default('medium');
+            $table->enum('status', ['pending', 'resolved', 'closed'])->default('pending');
+            $table->json('messages')->nullable(); // conversation history
+            $table->timestamp('last_reply_at')->nullable();
+            $table->text('ai_summary')->nullable(); // ملخص المحادثة الذي وضعه الذكاء الاصطناعي
+            $table->json('chat_history')->nullable(); // سجل المحادثة كاملة
+            $table->timestamps();
+        });
+    }
+
+    public function down(): void
+    {
+        Schema::dropIfExists('support_tickets');
+    }
+};
+

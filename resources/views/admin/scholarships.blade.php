@@ -1,0 +1,406 @@
+@extends('layouts.admin')
+
+@section('title', 'إدارة المنح')
+@section('breadcrumb', 'المنح الدراسية')
+
+@section('content')
+
+<link href="https://cdn.quilljs.com/1.3.7/quill.snow.css" rel="stylesheet">
+<script src="https://cdn.quilljs.com/1.3.7/quill.min.js"></script>
+
+<div class="max-w-full mx-auto space-y-6" x-data="{ activeTab: '{{ request()->routeIs('*.create') ? 'builder' : 'list' }}' }">
+
+    @if(session('success'))
+        <div class="bg-emerald-500 text-white p-4 rounded-2xl font-black text-sm shadow-lg shadow-emerald-100 flex items-center gap-3 animate-in fade-in slide-in-from-top-4 duration-300">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
+            {{ session('success') }}
+        </div>
+    @endif
+
+    <div class="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4 bg-white p-6 rounded-[2rem] shadow-sm border border-slate-50">
+        <div>
+            <h1 class="text-xl font-black text-slate-800 tracking-tight flex items-center gap-2">
+                <span class="text-indigo-500">🎓</span>  إدارة المنح الدراسية
+            </h1>
+            <p class="text-xs font-bold text-slate-400 mt-1">قم بنشر منح جديدة وتعديلها أو توليد الأقسام بالذكاء الاصطناعي</p>
+        </div>
+
+        <div class="flex items-center gap-2 bg-slate-50 p-1.5 rounded-2xl border border-slate-100 w-full lg:w-auto">
+            <button @click="activeTab = 'list'" :class="activeTab === 'list' ? 'bg-white text-indigo-600 shadow-sm font-black' : 'text-slate-400 font-bold hover:text-slate-600'" class="flex-1 lg:flex-none px-6 py-2.5 rounded-xl text-xs transition-all flex items-center justify-center gap-2">
+                📋 قائمة المنح الحالية
+            </button>
+            <button @click="activeTab = 'builder'" :class="activeTab === 'builder' ? 'bg-white text-indigo-600 shadow-sm font-black' : 'text-slate-400 font-bold hover:text-slate-600'" class="flex-1 lg:flex-none px-6 py-2.5 rounded-xl text-xs transition-all flex items-center justify-center gap-2">
+                ✨ منشئ المنح الذكي
+            </button>
+        </div>
+    </div>
+
+    <div x-show="activeTab === 'list'" x-transition class="bg-white rounded-[2rem] shadow-sm border border-slate-50 overflow-hidden">
+        <div class="p-6 border-b border-slate-50 flex items-center justify-between">
+            <h2 class="text-sm font-black text-slate-700">قائمة المنح المنشورة بالموقع</h2>
+            <span class="bg-slate-50 border text-slate-500 font-black text-[10px] px-3 py-1 rounded-full">العدد الإجمالي: {{ $stats['total'] }}</span>
+        </div>
+        <div class="overflow-x-auto">
+            <table class="w-full text-right border-collapse">
+                <thead>
+                    <tr class="bg-slate-50/70 border-b border-slate-50 text-[11px] font-black text-slate-400 uppercase tracking-wider">
+                        <th class="p-5">المنحة والجامعة</th>
+                        <th class="p-5">الدولة</th>
+                        <th class="p-5">المرحلة</th>
+                        <th class="p-5">القيمة المالية</th>
+                        <th class="p-5">الموعد النهائي</th>
+                        <th class="p-5">الحالة</th>
+                        <th class="p-5 text-left">العمليات</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-50 text-sm font-bold text-slate-600">
+                    @forelse($scholarships as $item)
+                    <tr class="hover:bg-slate-50/50 transition-colors">
+                        <td class="p-5">
+                            <div class="flex items-center gap-3">
+                                @if($item->logo_image)
+                                    <img src="{{ $item->logo_image }}" class="w-10 h-10 rounded-xl object-contain border bg-white p-1">
+                                @else
+                                    <div class="w-10 h-10 rounded-xl bg-indigo-50 text-indigo-500 font-black flex items-center justify-center text-xs">🎓</div>
+                                @endif
+                                <div>
+                                    <div class="font-black text-slate-800 text-sm">{{ $item->title_ar }}</div>
+                                    <div class="text-[11px] text-slate-400 font-medium mt-0.5">{{ $item->university }}</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="p-5 text-xs font-black text-slate-500">{{ $item->country }}</td>
+                        <td class="p-5">
+                            <span class="px-3 py-1 bg-slate-100 rounded-lg text-[11px] font-black text-slate-600">{{ $item->category }}</span>
+                        </td>
+                        <td class="p-5 text-xs font-black text-indigo-600">{{ $item->financial_value ?? 'غير محدد' }}</td>
+                        <td class="p-5 text-xs text-slate-500">{{ $item->deadline }}</td>
+                        <td class="p-5">
+                            @if(($item->status ?? 'active') == 'active')
+                                <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-black bg-emerald-50 text-emerald-600 border border-emerald-100">● نشط</span>
+                            @else
+                                <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-black bg-rose-50 text-rose-600 border border-rose-100">● مغلق</span>
+                            @endif
+                        </td>
+                        <td class="p-5 text-left">
+                            <div class="flex items-center justify-end gap-2">
+                                <a href="{{ route('admin.scholarships.edit', $item) }}" class="p-2 bg-slate-50 hover:bg-indigo-50 hover:text-indigo-600 text-slate-400 rounded-xl border transition-all">✏️</a>
+                                <form action="{{ route('admin.scholarships.destroy', $item) }}" method="POST" onsubmit="return confirm('هل أنت متأكد من حذف هذه المنحة نهائياً؟')">
+                                    @csrf @method('DELETE')
+                                    <button type="submit" class="p-2 bg-slate-50 hover:bg-rose-50 hover:text-rose-600 text-slate-400 rounded-xl border transition-all">🗑️</button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                    @empty
+                    <tr>
+                        <td colspan="7" class="p-10 text-center font-bold text-slate-400 text-xs">لا يوجد أي منح دراسية مضافة حالياً.</td>
+                    </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
+        @if($scholarships->hasPages())
+        <div class="p-5 border-t border-slate-50 bg-slate-50/50">
+            {{ $scholarships->links() }}
+        </div>
+        @endif
+    </div>
+
+    <div x-show="activeTab === 'builder'" x-transition class="bg-white rounded-[2rem] shadow-sm border border-slate-50 overflow-hidden">
+        <form action="{{ route('admin.scholarships.store') }}" method="POST" id="scholarshipForm" enctype="multipart/form-data">
+            @csrf
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-0 divide-y lg:divide-y-0 lg:divide-x lg:divide-x-reverse divide-slate-100">
+                
+                <div class="lg:col-span-8 p-8 space-y-8">
+                    
+                    <div class="bg-white rounded-[1.5rem] border border-slate-100 p-6 shadow-sm space-y-6">
+                        <h3 class="text-sm font-black text-slate-800 pb-3 border-b border-slate-50 flex items-center gap-2">
+                            <span class="text-indigo-500">📝</span> البيانات الأساسية للمنحة
+                        </h3>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div class="md:col-span-2">
+                                <label class="text-[11px] font-black text-slate-400 uppercase mb-2 block tracking-widest">عنوان المنحة (بالعربية)</label>
+                                <div class="relative flex gap-2">
+                                    <input type="text" name="title_ar" id="title_ar" required placeholder="مثال: منحة جامعة اكسفورد للتميز الدراسي والبحث العلمي" class="flex-1 bg-slate-50 border border-slate-100 rounded-xl px-5 py-3 text-sm font-bold focus:border-indigo-300 outline-none transition-all">
+                                    <button type="button" onclick="generateAllSections()" id="aiGenerateBtn" class="bg-amber-100 text-amber-700 px-4 py-2 rounded-xl font-black text-[10px] uppercase flex items-center gap-2 hover:bg-amber-200 transition-all border border-amber-200 shrink-0">
+                                        <svg id="aiIcon" class="w-4 h-4 text-amber-600 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+                                        <span id="aiText">توليد الأقسام ذكياً</span>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="md:col-span-2">
+                                <label class="text-[11px] font-black text-slate-400 uppercase mb-2 block tracking-widest">Scholarship Title (English)</label>
+                                <input type="text" name="title_en" required placeholder="Example: Oxford University Excellence Scholarship for International Students" class="w-full bg-slate-50 border border-slate-100 rounded-xl px-5 py-3 text-sm font-bold focus:border-indigo-300 outline-none transition-all text-left">
+                            </div>
+
+                            <div class="md:col-span-2">
+                                <label class="text-[11px] font-black text-slate-400 uppercase mb-2 block tracking-widest">القيمة المالية والتمويل (للإظهار في الكارد)</label>
+                                <input type="text" name="financial_value" placeholder="مثال: تمويل كامل يشمل الرسوم، السكن، وراتب شهري 1200$" class="w-full bg-slate-50 border border-slate-100 rounded-xl px-5 py-3 text-sm font-bold focus:border-indigo-300 outline-none transition-all">
+                            </div>
+
+                            <div>
+                                <label class="text-[11px] font-black text-slate-400 uppercase mb-2 block tracking-widest">عدد المتقدمين الافتراضي</label>
+                                <input type="number" name="applicants_count" value="0" min="0" class="w-full bg-slate-50 border border-slate-100 rounded-xl px-5 py-3 text-sm font-bold focus:border-indigo-300 outline-none transition-all">
+                            </div>
+
+                            <div>
+                                <label class="text-[11px] font-black text-slate-400 uppercase mb-2 block tracking-widest">الكلمات المفتاحية الموصى بها لكارد المنحة</label>
+                                <input type="text" name="recommended_tags" placeholder="ممولة كاملاً, هندسة, بدون آيلتس" class="w-full bg-slate-50 border border-slate-100 rounded-xl px-5 py-3 text-sm font-bold focus:border-indigo-300 outline-none transition-all">
+                                <p class="text-[10px] text-slate-400 mt-1">افصل بين الكلمات بفاصلة لسهولة القراءة</p>
+                            </div>
+
+                            <div>
+                                <label class="text-[11px] font-black text-slate-400 uppercase mb-2 block tracking-widest">الدولة</label>
+                                <input type="text" name="country" id="country" required placeholder="المملكة المتحدة" class="w-full bg-slate-50 border border-slate-100 rounded-xl px-5 py-3 text-sm font-bold focus:border-indigo-300 outline-none transition-all">
+                            </div>
+                            <div>
+                                <label class="text-[11px] font-black text-slate-400 uppercase mb-2 block tracking-widest">الجامعة المانحة</label>
+                                <input type="text" name="university" id="university" required placeholder="جامعة أكسفورد - Oxford" class="w-full bg-slate-50 border border-slate-100 rounded-xl px-5 py-3 text-sm font-bold focus:border-indigo-300 outline-none transition-all">
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label class="text-[11px] font-black text-slate-400 uppercase mb-2 block tracking-widest">الموعد النهائي للتقديم</label>
+                                <input type="date" name="deadline" required class="w-full bg-slate-50 border border-slate-100 rounded-xl px-5 py-3 text-sm font-bold focus:border-indigo-300 outline-none transition-all">
+                            </div>
+                            <div>
+                                <label class="text-[11px] font-black text-slate-400 uppercase mb-2 block tracking-widest">التصنيف والمرحلة الدراسية</label>
+                                <select name="category" id="category" class="w-full bg-slate-50 border border-slate-100 rounded-xl px-5 py-3 text-sm font-bold focus:border-indigo-300 outline-none transition-all">
+                                    <option value="Bachelor">بكالوريوس (Undergraduate)</option>
+                                    <option value="Master">ماجستير (Postgraduate Master)</option>
+                                    <option value="PhD">دكتوراه (PhD / Doctoral)</option>
+                                    <option value="Short Course">كورسات قصيرة وزمالات</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="text-[11px] font-black text-slate-400 uppercase mb-2 block tracking-widest">رابط التقديم المباشر (خارجي)</label>
+                            <input type="url" name="application_url" placeholder="https://www.ox.ac.uk/admissions/apply" class="w-full bg-slate-50 border border-slate-100 rounded-xl px-5 py-3 text-sm font-bold focus:border-indigo-300 outline-none transition-all text-left">
+                        </div>
+                    </div>
+
+                    <div class="space-y-6">
+                        
+                        <div class="word-editor-card space-y-2">
+                            <label class="text-xs font-black text-slate-700 flex items-center gap-2">
+                                <span class="p-1.5 bg-indigo-50 text-indigo-500 rounded-lg text-xs">📝</span> الوصف العام والمقدمة للمنحة
+                            </label>
+                            <input type="hidden" name="description" id="description_input">
+                            <div class="editor-container"><div id="description_editor" class="quill-editor"></div></div>
+                        </div>
+
+                        <div class="word-editor-card space-y-2">
+                            <label class="text-xs font-black text-slate-700 flex items-center gap-2">
+                                <span class="p-1.5 bg-sky-50 text-sky-500 rounded-lg text-xs">📖</span> نظرة عامة عن التمويل والفرصة
+                            </label>
+                            <input type="hidden" name="overview" id="overview_input">
+                            <div class="editor-container"><div id="overview_editor" class="quill-editor"></div></div>
+                        </div>
+
+                        <div class="word-editor-card space-y-2">
+                            <label class="text-xs font-black text-slate-700 flex items-center gap-2">
+                                <span class="p-1.5 bg-emerald-50 text-emerald-500 rounded-lg text-xs">✅</span> شروط الأهلية ومعايير القبول
+                            </label>
+                            <input type="hidden" name="conditions" id="conditions_input">
+                            <div class="editor-container"><div id="conditions_editor" class="quill-editor"></div></div>
+                        </div>
+
+                        <div class="word-editor-card space-y-2">
+                            <label class="text-xs font-black text-slate-700 flex items-center gap-2">
+                                <span class="p-1.5 bg-amber-50 text-amber-500 rounded-lg text-xs">📄</span> الوثائق والمستندات المطلوبة للتقديم
+                            </label>
+                            <input type="hidden" name="documents" id="documents_input">
+                            <div class="editor-container"><div id="documents_editor" class="quill-editor"></div></div>
+                        </div>
+
+                        <div class="word-editor-card space-y-2">
+                            <label class="text-xs font-black text-slate-700 flex items-center gap-2">
+                                <span class="p-1.5 bg-rose-50 text-rose-500 rounded-lg text-xs">⭐</span> المزايا والفوائد المالية التي توفرها المنحة
+                            </label>
+                            <input type="hidden" name="features" id="features_input">
+                            <div class="editor-container"><div id="features_editor" class="quill-editor"></div></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="lg:col-span-4 p-8 space-y-8 bg-slate-50/40">
+                    
+                    <div class="p-6 bg-slate-900 rounded-[2rem] shadow-xl text-white space-y-4">
+                        <div class="flex items-center gap-2 text-xs font-black text-indigo-300 uppercase tracking-widest">
+                            ⚡ لوحة التحكم بالمنحة
+                        </div>
+                        <p class="text-xs text-slate-400 font-bold">تأكد من مراجعة وتوليد الحقول والأقسام قبل الضغط على نشر وتعميم المنحة في الموقع.</p>
+                        <button type="submit" class="w-full bg-indigo-500 text-white font-black py-4 rounded-2xl text-xs hover:bg-indigo-400 transition-all shadow-lg shadow-indigo-500/20">
+                            🚀 نشر المنحة بالموقع الآن
+                        </button>
+                    </div>
+
+                    <div class="bg-white rounded-[1.5rem] border border-slate-100 p-6 shadow-sm space-y-5">
+                        <h4 class="text-xs font-black text-slate-700 flex items-center gap-2">🖼️ صور وبوستر المنحة</h4>
+                        
+                        <div class="space-y-2">
+                            <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest block">الصورة الرئيسية (بوستر المنحة)</label>
+                            <input type="file" name="main_image" accept="image/*" class="w-full text-xs font-bold text-slate-500 file:ml-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-black file:bg-slate-100 file:text-slate-700 hover:file:bg-slate-200 cursor-pointer">
+                        </div>
+
+                        <div class="space-y-2 pt-2 border-t border-slate-50">
+                            <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest block">شعار الجامعة أو الجهة المانحة</label>
+                            <input type="file" name="logo_image" accept="image/*" class="w-full text-xs font-bold text-slate-500 file:ml-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-black file:bg-slate-100 file:text-slate-700 hover:file:bg-slate-200 cursor-pointer">
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-[1.5rem] border border-slate-100 p-6 shadow-sm space-y-4">
+                        <h4 class="text-xs font-black text-slate-700 flex items-center gap-2">🏷️ التخصصات المتاحة (فلاتر Tags)</h4>
+                        <div class="flex flex-wrap gap-2">
+                            @foreach(['هندسة', 'طب', 'تقنية', 'إدارة', 'علوم', 'فن'] as $tag)
+                            <label class="group cursor-pointer">
+                                <input type="checkbox" name="tags[]" value="{{ $tag }}" class="hidden peer">
+                                <span class="px-4 py-2 bg-slate-50 text-slate-500 rounded-xl text-[10px] font-black peer-checked:bg-indigo-600 peer-checked:text-white transition-all border border-slate-100 inline-block">
+                                    {{ $tag }}
+                                </span>
+                            </label>
+                            @endforeach
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-[1.5rem] border border-slate-100 p-6 shadow-sm space-y-4">
+                        <h4 class="text-xs font-black text-slate-700 flex items-center gap-2">💰 فلاتر التغطية والتمويل (Coverage)</h4>
+                        <div class="space-y-3">
+                            @foreach(['تمويل كامل', 'إعفاء من الرسوم', 'راتب شهري', 'تأمين صحي', 'تذاكر طيران', 'سكن جامعي'] as $coverage)
+                            <label class="flex items-center gap-3 group cursor-pointer">
+                                <input type="checkbox" name="coverage[]" value="{{ $coverage }}" class="w-5 h-5 rounded-lg border-slate-200 text-indigo-600 focus:ring-indigo-500 transition-all">
+                                <span class="text-xs font-bold text-slate-600 group-hover:text-slate-800 transition-colors">{{ $coverage }}</span>
+                            </label>
+                            @endforeach
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<style>
+    /* تنسيقات مخصصة ومحسنة لمحرر الـ Quill ليظهر بمظهر الـ Word والاحترافي */
+    .word-editor-card { display: flex; flex-direction: column; }
+    .word-editor-card .editor-container { position: relative; width: 100%; }
+    .word-editor-card .ql-toolbar.ql-snow { border: 1px solid rgba(15, 23, 42, 0.06) !important; background: #f8fafc !important; border-top-left-radius: 0.75rem !important; border-top-right-radius: 0.75rem !important; text-align: right; direction: rtl; padding: 10px !important; }
+    .word-editor-card .ql-container.ql-snow { border: 1px solid rgba(15, 23, 42, 0.06) !important; border-top: none !important; border-bottom-left-radius: 0.75rem !important; border-bottom-right-radius: 0.75rem !important; min-height: 180px; max-height: 400px; overflow-y: auto; background: #ffffff; }
+    .word-editor-card .ql-editor { direction: rtl; text-align: right; font-size: 0.9rem; font-weight: 600; line-height: 1.7; color: #334155; padding: 16px !important; }
+    .word-editor-card .ql-editor.ql-blank::before { left: auto !important; right: 16px !important; text-align: right; direction: rtl; color: #cbd5e1; font-style: normal; }
+</style>
+
+<script>
+const editors = {};
+
+function initAllEditors() {
+    const fields = ['description', 'overview', 'conditions', 'documents', 'features'];
+    
+    const toolbarOptions = [
+        [{ 'header': [1, 2, 3, false] }],
+        ['bold', 'italic', 'underline', 'strike'],
+        [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+        [{ 'align': [] }],
+        ['link'],
+        ['clean']
+    ];
+
+    fields.forEach(field => {
+        const containerSelector = `#${field}_editor`;
+        const inputSelector = `#${field}_input`;
+        
+        if (document.querySelector(containerSelector)) {
+            editors[field] = new Quill(containerSelector, {
+                theme: 'snow',
+                dir: 'rtl',
+                placeholder: `أدخل تفاصيل وعناصر حقل ${field === 'overview' ? 'النظرة العامة' : field}...`,
+                modules: { toolbar: toolbarOptions }
+            });
+
+            // مزامنة فورية عند الكتابة والتعديل إلى الـ input المخفي
+            editors[field].on('text-change', () => {
+                document.querySelector(inputSelector).value = editors[field].root.innerHTML;
+            });
+        }
+    });
+}
+
+function setQuillHtml(field, html) {
+    if (editors[field]) {
+        editors[field].root.innerHTML = html;
+        document.querySelector(`#${field}_input`).value = html;
+    }
+}
+
+async function generateAllSections() {
+    const title = document.getElementById('title_ar').value.trim();
+    const university = document.getElementById('university').value.trim();
+    const country = document.getElementById('country').value.trim();
+    const category = document.getElementById('category').value;
+
+    if (!title || !university || !country) {
+        alert('من فضلك املأ حقول العنوان (بالعربية)، الجامعة، والدولة أولاً لتوليد البيانات ذكياً.');
+        return;
+    }
+
+    const aiBtn = document.getElementById('aiGenerateBtn');
+    const aiText = document.getElementById('aiText');
+    
+    aiBtn.disabled = true;
+    aiBtn.classList.add('opacity-60', 'cursor-not-allowed');
+    aiText.innerText = 'جاري التوليد ذكياً...';
+
+    try {
+        const response = await fetch("{{ route('admin.scholarships.generate-sections') }}", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+            },
+            body: JSON.stringify({
+                title_ar: title,
+                university: university,
+                country: country,
+                category: category
+            })
+        });
+
+        const data = await response.json();
+
+        if (response.ok && data.success) {
+            // تم التعديل هنا ليقرأ من كائن data.data مباشرة والمُرسل من الكنترولر المعدل
+            setQuillHtml('description', data.data.description || '');
+            setQuillHtml('overview', data.data.overview || '');
+            setQuillHtml('conditions', data.data.conditions || '');
+            setQuillHtml('documents', data.data.documents || '');
+            setQuillHtml('features', data.data.features || '');
+            
+            aiText.innerText = '✅ تم توليد الأقسام!';
+            setTimeout(() => {
+                aiText.innerText = 'توليد الأقسام ذكياً';
+            }, 3000);
+        } else {
+            alert(data.error || 'حدث خطأ غير متوقع أثناء توليد الأقسام.');
+            aiText.innerText = 'توليد الأقسام ذكياً';
+        }
+    } catch (error) {
+        console.error('AI Error:', error);
+        alert('حدث خطأ في الاتصال بالخادم، تأكد من وجود الـ CSRF Token وحالة الشبكة.');
+        aiText.innerText = 'توليد الأقسام ذكياً';
+    } finally {
+        aiBtn.disabled = false;
+        aiBtn.classList.remove('opacity-60', 'cursor-not-allowed');
+    }
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+    initAllEditors();
+});
+</script>
+@endsection
