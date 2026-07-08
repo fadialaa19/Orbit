@@ -4,11 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>Bedoon Quyood - بدون قيود</title>
+    <title>Orbit ☕️</title>
 
     <script defer crossorigin="anonymous" src="https://unpkg.com/alpinejs@3.14.1/dist/cdn.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
-    <script src="https://cdn.tailwindcss.com"></script>
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
     <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
 
     <style>
@@ -23,8 +23,8 @@
     <nav class="bg-white shadow-sm py-4 px-8 flex justify-between items-center sticky top-0 z-50">
         <div class="flex items-center gap-6">
         <a href="/" class="flex items-center gap-2">
-            <img src="{{ asset('assets/images/logo.png') }}" alt="Bedoon Quyood Logo" class="h-12 w-auto transition-transform duration-300 hover:scale-105">
-            <span class="font-bold text-xl text-slate-800 hidden md:block">BEDOON QUYOOD</span>
+            <img src="{{ asset('assets/images/logo.png') }}" alt="Orbit Logo" class="h-12 w-auto transition-transform duration-300 hover:scale-105">
+            <span class="font-bold text-xl text-slate-800 hidden md:block">Orbit ☕️</span>
         </a>
         
         <div class="hidden md:flex gap-6 text-gray-600 font-medium">
@@ -80,12 +80,12 @@
             </div>
             <div>
                 <h4 class="font-bold mb-4">تواصل معنا</h4>
-                <p class="text-gray-400">info@bedoonquyood.com</p>
+                <p class="text-gray-400">khaledelhobe@gmail.com</p>
                 <p class="text-gray-400">+966 123 456 789</p>
             </div>
         </div>
         <div class="border-t border-gray-700 mt-10 pt-6 text-center text-gray-500">
-            © 2026 بدون قيود. جميع الحقوق محفوظة.
+            © 2026 Orbit ☕️. جميع الحقوق محفوظة.
         </div>
     </footer>
 

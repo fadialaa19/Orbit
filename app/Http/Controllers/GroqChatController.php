@@ -118,8 +118,9 @@ class GroqChatController extends Controller
         ]);
 
         Message::create([
-            'ticket_id' => $ticket->id,
-            'user_id' => $user->id,
+            'messageable_id' => $ticket->id,
+            'messageable_type' => get_class($ticket),
+            'sender_id' => $user->id,
             'sender_type' => 'user',
             'message_text' => $lastMessage . "\n\n" . '--- سياق المحادثة الكامل ---' . "\n" . $chatHistoryText,
         ]);

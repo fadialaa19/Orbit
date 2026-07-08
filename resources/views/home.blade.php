@@ -129,7 +129,7 @@
                 <img src="{{ $student[3] }}" class="w-full h-52 object-cover transition-transform duration-700 group-hover:scale-110" alt="Student">
             </div>
             <div class="flex text-yellow-400 mb-4 text-sm tracking-widest group-hover:scale-110 transition-transform">★★★★★</div>
-            <p class="text-slate-600 italic mb-8 leading-relaxed">"تجربة استثنائية مع فريق بدون قيود، الدعم الفني والمساعد الذكي اختصروا عليّ شهور من البحث العشوائي."</p>
+            <p class="text-slate-600 italic mb-8 leading-relaxed">"تجربة استثنائية مع فريق Orbit ☕️، الدعم الفني والمساعد الذكي اختصروا عليّ شهور من البحث العشوائي."</p>
             <div class="flex items-center gap-4 border-t border-slate-100 pt-6">
                 <div class="w-14 h-14 bg-indigo-600 rounded-2xl flex items-center justify-center font-black text-white shadow-lg shadow-indigo-100 group-hover:rotate-12 transition-transform">
                     {{ $student[2] }}

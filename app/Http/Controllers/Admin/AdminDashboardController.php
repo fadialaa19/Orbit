@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Scholarship;
-use App\Models\Plan;
+use App\Models\ScholarshipApplication;
 use App\Models\SupportTicket;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -32,14 +32,10 @@ class AdminDashboardController extends Controller
     ];
 
     // 2. أحدث طلبات الالتحاق
-    // إذا كان موديل Application غير موجود، سنمرر مصفوفة فارغة لتجنب الخطأ
-    $recent_applications = [];
-    if (class_exists('\App\Models\Application')) {
-        $recent_applications = \App\Models\Application::with(['user', 'scholarship'])
-            ->latest()
-            ->take(6)
-            ->get();
-    }
+    $recent_applications = ScholarshipApplication::with(['user', 'scholarship'])
+        ->latest()
+        ->take(6)
+        ->get();
 
     return view('admin.index', compact('stats', 'recent_applications'));
 }
@@ -58,5 +54,12 @@ class AdminDashboardController extends Controller
 
     return response()->json($notifications);
 }
+
+    public function notifications()
+    {
+        $notifications = auth()->user()->notifications()->latest()->paginate(20);
+
+        return view('admin.notifications', compact('notifications'));
+    }
 }
 

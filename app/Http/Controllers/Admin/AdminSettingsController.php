@@ -43,7 +43,7 @@ class AdminSettingsController extends Controller
         }
 
         // 3. تحديث النصوص والبيانات الأساسية
-        $setting->site_name = $request->site_name ?? $setting->site_name ?? 'بدون قيود';
+        $setting->site_name = $request->site_name ?? $setting->site_name ?? 'Orbit ☕️';
         $setting->primary_color = $request->primary_color ?? $setting->primary_color ?? '#6366f1';
         $setting->ai_api_key = $request->ai_api_key;
         $setting->maintenance_message = $request->maintenance_message;

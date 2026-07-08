@@ -12,7 +12,7 @@
             </p>
             <div class="flex flex-col sm:flex-row gap-8 justify-center items-center">
                 <span class="text-xl md:text-2xl font-black text-emerald-600 flex items-center gap-3 bg-white px-6 py-3 rounded-2xl shadow-sm">
-                    <span class="bg-emerald-100 p-1 rounded-full text-sm">✓</span> ضمان استرداد الأموال
+                    <span class="bg-emerald-100 p-1 rounded-full text-sm">✓</span> مجاني بالكامل حالياً
                 </span>
                 <span class="text-xl md:text-2xl font-black text-indigo-600 flex items-center gap-3 bg-white px-6 py-3 rounded-2xl shadow-sm">
                     <span class="bg-indigo-100 p-1 rounded-full text-sm">✨</span> مدعوم بالذكاء الاصطناعي
@@ -76,7 +76,7 @@
                     </div>
                     <div class="flex items-center gap-3">
                         <svg class="w-5 h-5 text-amber-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
-                        <span class="text-sm font-bold text-slate-700">دفع عبر البنوك المحلية بأمان</span>
+                        <span class="text-sm font-bold text-slate-700">بدون أي رسوم خلال الفترة الحالية</span>
                     </div>
                 </div>
                 <a href="{{ route('guest.scholarships') }}" class="block w-full bg-gradient-to-r from-amber-400 via-yellow-500 to-amber-600 text-white py-4 rounded-2xl font-black shadow-lg shadow-amber-200 hover:shadow-xl hover:scale-[1.02] transition-all duration-300">

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Order;
+use App\Notifications\StudentAlertNotification;
 use Illuminate\Http\Request;
 
 class AdminOrderController extends Controller
@@ -35,6 +36,21 @@ class AdminOrderController extends Controller
             'status' => $request->status,
             'admin_notes' => $request->admin_notes,
         ]);
+
+        $scholarshipTitle = $order->scholarship->title_ar ?? $order->scholarship->title_en ?? 'المنحة';
+        if ($request->status === 'paid') {
+            $order->user->notify(new StudentAlertNotification(
+                'تم قبول طلب الدفع',
+                "تم تأكيد دفعك لمنحة \"{$scholarshipTitle}\" ويمكنك الآن متابعة التقديم.",
+                route('dashboard.scholarships.show', $order->scholarship_id)
+            ));
+        } elseif ($request->status === 'rejected') {
+            $order->user->notify(new StudentAlertNotification(
+                'تم رفض طلب الدفع',
+                "لم يتم قبول بيانات الدفع لمنحة \"{$scholarshipTitle}\". يرجى مراجعة التفاصيل وإعادة المحاولة.",
+                route('dashboard.scholarships.show', $order->scholarship_id)
+            ));
+        }
 
         return back()->with('success', 'تم تحديث حالة الطلب بنجاح');
     }

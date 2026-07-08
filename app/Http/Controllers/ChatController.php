@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\SupportTicket;
 use App\Models\Message;
+use App\Notifications\StudentAlertNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
@@ -153,6 +154,13 @@ class ChatController extends Controller
         }
 
         $ticket->update(['status' => 'resolved']);
+
+        $ticket->user->notify(new StudentAlertNotification(
+            'تم حل تذكرتك',
+            "تم حل تذكرة الدعم \"{$ticket->subject}\" من قبل فريق الدعم الفني.",
+            route('dashboard.tickets.show', $ticket->id)
+        ));
+
         return response()->json(['success' => true]);
     }
 
@@ -166,6 +174,13 @@ class ChatController extends Controller
         }
 
         $ticket->update(['status' => 'closed']);
+
+        $ticket->user->notify(new StudentAlertNotification(
+            'تم إغلاق تذكرتك',
+            "تم إغلاق تذكرة الدعم \"{$ticket->subject}\".",
+            route('dashboard.tickets.show', $ticket->id)
+        ));
+
         return response()->json(['success' => true]);
     }
 

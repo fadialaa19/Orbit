@@ -10,7 +10,7 @@
             </svg>
             منصة مدعومة بالذكاء الاصطناعي
         </span>
-        <h1 class="text-5xl md:text-6xl font-black text-slate-900 mb-6 leading-tight">بدون قيود <span class="grad-text">تحقق</span> حلمك الدراسي</h1>
+        <h1 class="text-5xl md:text-6xl font-black text-slate-900 mb-6 leading-tight">Orbit ☕️ <span class="grad-text">تحقق</span> حلمك الدراسي</h1>
         <p class="text-xl text-gray-500 font-bold max-w-3xl mx-auto mb-12 leading-relaxed">نحن هنا لنفتح لك أبواب العالم الأكاديمي. منصة شاملة تجمع بين التكنولوجيا المتقدمة وخبرة الطلاب لضمان نجاحك في الحصول على أفضل المنح الدراسية.</p>
         <div class="flex flex-wrap gap-4 justify-center">
             <a href="{{ route('register') }}" class="bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-12 py-6 rounded-[2.5rem] font-black text-xl shadow-2xl hover:shadow-3xl hover:scale-105 transition-all">ابدأ رحلتك الآن</a>

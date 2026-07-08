@@ -9,73 +9,41 @@ class DashboardApiController extends Controller
 {
     /**
      * GET /dashboard/my-tickets/api
-     * JSON Mock with pagination.
      */
     public function myTickets(Request $request)
     {
+        $user = Auth::user();
         $page = max((int) $request->query('page', 1), 1);
         $perPage = (int) $request->query('per_page', 10);
         if ($perPage <= 0) $perPage = 10;
 
-        // Mock dataset (keep fields aligned with resources/views/dashboard/tickets.blade.php)
-        // tickets.blade.php expects: id, subject, status, created_at
-        $all = [];
-        $statuses = ['pending', 'resolved', 'closed', 'pending', 'resolved'];
-        $subjects = [
-            'مشكلة في التسجيل',
-            'لا أستطيع رفع المستندات',
-            'استفسار عن المنحة',
-            'طلب تعديل البيانات',
-            'مشكلة في الدفع',
-            'تأخير في الرد',
-            'خطأ في لوحة التحكم',
-            'استفسار حول القبول',
-            'مشكلة في حسابي',
-            'تحديث حالة الطلب',
-        ];
+        $query = $user->supportTickets()->latest();
 
-        $total = 42;
-        for ($i = 1; $i <= $total; $i++) {
-            $status = $statuses[$i % count($statuses)];
-            $subject = $subjects[$i % count($subjects)];
-
-            // created_at should be string for UI.
-            // We'll return YYYY-MM-DD (you can change formatting later).
-            $createdAt = now()->subDays($total - $i)->format('Y-m-d');
-
-            $all[] = [
-                'id' => $i,
-                'subject' => $subject . ' #' . $i,
-                'status' => $status,
-                'created_at' => $createdAt,
+        $total = (clone $query)->count();
+        $tickets = $query->forPage($page, $perPage)->get()->map(function ($ticket) {
+            return [
+                'id' => $ticket->id,
+                'subject' => $ticket->subject,
+                'status' => $ticket->status,
+                'created_at' => $ticket->created_at->format('Y-m-d'),
             ];
-        }
+        });
 
-        $offset = ($page - 1) * $perPage;
-        $slice = array_slice($all, $offset, $perPage);
-
-        // Mock stats (used by tickets.blade.php)
         $stats = [
-            'pending' => 0,
-            'resolved' => 0,
-            'closed' => 0,
-            'emergency' => 0,
+            'pending' => $user->supportTickets()->where('status', 'pending')->count(),
+            'resolved' => $user->supportTickets()->where('status', 'resolved')->count(),
+            'closed' => $user->supportTickets()->where('status', 'closed')->count(),
+            'emergency' => $user->supportTickets()->where('status', 'pending')->where('priority', 'emergency')->count(),
         ];
-        foreach ($all as $t) {
-            if (($t['status'] ?? '') === 'pending') $stats['pending']++;
-            if (($t['status'] ?? '') === 'resolved') $stats['resolved']++;
-            if (($t['status'] ?? '') === 'closed') $stats['closed']++;
-        }
-        $stats['emergency'] = (int) floor($stats['pending'] / 3);
 
         return response()->json([
-            'tickets' => array_values($slice),
+            'tickets' => $tickets->values(),
             'stats' => $stats,
             'pagination' => [
                 'page' => $page,
                 'per_page' => $perPage,
                 'total' => $total,
-                'total_pages' => (int) ceil($total / $perPage),
+                'total_pages' => (int) ceil($total / max($perPage, 1)),
             ],
         ]);
     }
@@ -123,63 +91,45 @@ class DashboardApiController extends Controller
      */
     public function myNotifications(Request $request)
     {
+        $user = Auth::user();
         $page = max((int) $request->query('page', 1), 1);
         $perPage = (int) $request->query('per_page', 10);
         if ($perPage <= 0) $perPage = 10;
 
-        $all = [];
-        $titles = [
-            'منحة جديدة متاحة',
-            'تم قبول طلبك',
-            'تذكير بموعد مهم',
-            'رسالة من فريق الدعم',
-            'تم تحديث حالة الطلب',
-            'معلومة تساعدك',
-        ];
-        $texts = [
-            'تم تحديث حالتك بنجاح، راجع التفاصيل في لوحة التحكم.',
-            'لدينا اقتراحات لتحسين ملفك، افتح الصفحة لمعرفة المزيد.',
-            'يرجى الانتباه لآخر موعد للخطوة القادمة في عملية التقديم.',
-            'تمت معالجة طلبك، وقد وصلنا للتو بتحديث جديد.',
-            'تم إرسال رسالة جديدة حول مستنداتك المطلوبة.',
-        ];
-        $hours = [1, 2, 3, 6, 10, 14, 20, 30, 45, 60];
+        $query = $user->notifications()->latest();
+        $total = (clone $query)->count();
 
-        $total = 26;
-        for ($i = 1; $i <= $total; $i++) {
-            $isRead = ($i % 4 === 0); // mock
-
-            $all[] = [
-                'id' => $i,
-                'title' => $titles[$i % count($titles)] . ' #' . $i,
-                'text' => $texts[$i % count($texts)],
-                'is_read' => !$isRead,
-                'read_at' => $isRead ? now()->subHours($hours[$i % count($hours)])->toISOString() : null,
-                'time' => ($i % 5 === 0)
-                    ? now()->subHours($hours[$i % count($hours)])->diffForHumans()
-                    : now()->subMinutes($i * 7)->diffForHumans(),
-                // keep link to dashboard pages (same style as current blade)
-                'url' => match ($i % 5) {
-                    0 => route('dashboard.show'),
-                    1 => route('dashboard.scholarships'),
-                    2 => route('dashboard.profile'),
-                    default => '#',
-                },
+        $notifications = $query->forPage($page, $perPage)->get()->map(function ($n) {
+            return [
+                'id' => $n->id,
+                'title' => $n->data['title'] ?? 'إشعار',
+                'text' => $n->data['body'] ?? '',
+                'is_read' => !is_null($n->read_at),
+                'read_at' => $n->read_at?->toISOString(),
+                'time' => $n->created_at->diffForHumans(),
+                'url' => $n->data['link'] ?? '#',
             ];
-        }
-
-        $offset = ($page - 1) * $perPage;
-        $slice = array_slice($all, $offset, $perPage);
+        });
 
         return response()->json([
-            'notifications' => array_values($slice),
+            'notifications' => $notifications->values(),
             'pagination' => [
                 'page' => $page,
                 'per_page' => $perPage,
                 'total' => $total,
-                'total_pages' => (int) ceil($total / $perPage),
+                'total_pages' => (int) ceil($total / max($perPage, 1)),
             ],
         ]);
+    }
+
+    /**
+     * POST /dashboard/notifications/read-all
+     */
+    public function markAllNotificationsRead(Request $request)
+    {
+        Auth::user()->unreadNotifications->markAsRead();
+
+        return response()->json(['success' => true]);
     }
 }
 

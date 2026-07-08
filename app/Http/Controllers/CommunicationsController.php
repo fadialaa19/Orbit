@@ -99,8 +99,8 @@ class CommunicationsController extends Controller
                 'message_text' => $request->message,
             ]);
 
-            // إرسال إشعار للمشرفين (اختياري)
-            // \App\Models\User::admins()->notify(new \App\Notifications\NewTicketNotification($ticket));
+            // إرسال إشعار للمشرفين
+            \App\Models\User::admins()->get()->each->notify(new \App\Notifications\NewTicketNotification($ticket));
         }
 
         // 3. تخزين رد الذكاء الاصطناعي (الذي يخبر المستخدم بأنه تم تحويله)
@@ -185,7 +185,7 @@ public function createNewTicket(Request $request) {
             'status' => 'pending',
         ]);
         // Notify admins via database notification
-        \App\Models\User::admins()->notify(new \App\Notifications\NewTicketNotification($ticket));
+        \App\Models\User::admins()->get()->each->notify(new \App\Notifications\NewTicketNotification($ticket));
         
         // ✅ Real-time: بث حدث إنشاء تذكرة جديدة للأدمن
         broadcast(new \App\Events\NewTicketCreatedEvent($ticket))->toOthers();

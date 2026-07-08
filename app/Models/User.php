@@ -39,6 +39,7 @@ protected $fillable = [
         'xp',          // 👈 أضف هذا السطر
         'referred_by',
         'permissions',
+        'preferences',
         'status',
         'phone',
         'birthdate',
@@ -125,6 +126,7 @@ protected $fillable = [
             'required_documents' => 'array',
             'optional_documents' => 'array',
             'education_summary' => 'array',
+            'preferences' => 'array',
         ];
     }
 

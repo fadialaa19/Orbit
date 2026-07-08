@@ -2,7 +2,7 @@
 @section('title', 'الرئيسية')
 
 @section('content')
-<div class="bg-slate-50 min-h-screen py-10 px-4 md:px-10" dir="rtl" x-data="dashboardEngine()" x-init="initDashboard()">
+<div class="bg-slate-50 min-h-screen py-10 px-4 md:px-10" dir="rtl">
     <div class="max-w-7xl mx-auto">
         
         <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-10 gap-6">
@@ -161,35 +161,33 @@
                 <div class="bg-white p-8 rounded-[2.5rem] shadow-sm border border-slate-50">
                     <h3 class="font-black text-slate-800 mb-6">قائمة المهام</h3>
                     <div class="space-y-4">
-                        <template x-for="(task, index) in tasks" :key="index">
-                            <label class="flex items-center gap-4 cursor-pointer group select-none">
-                                <input type="checkbox" 
-                                       x-model="task.completed" 
-                                       @change="toggleTaskStatus(task)"
-                                       class="w-6 h-6 rounded-lg border-2 border-slate-200 text-indigo-600 focus:ring-indigo-500 cursor-pointer">
-                                <span class="text-sm font-bold transition-all duration-300" 
-                                      :class="task.completed ? 'text-slate-300 line-through' : 'text-slate-600'" 
-                                      x-text="task.title"></span>
-                            </label>
-                        </template>
-                        
-                        <div x-show="tasks.length === 0" class="text-slate-400 text-xs font-bold text-center py-4">
-                            📭 لا توجد مهام حالية المطلوبة منك.
-                        </div>
+                        @forelse($tasks as $task)
+                            <a href="{{ $task['completed'] ? '#' : $task['link'] }}" class="flex items-center gap-4 group select-none {{ $task['completed'] ? 'cursor-default' : 'cursor-pointer' }}">
+                                <span class="w-6 h-6 rounded-lg border-2 flex items-center justify-center flex-shrink-0 {{ $task['completed'] ? 'bg-indigo-600 border-indigo-600 text-white' : 'border-slate-200' }}">
+                                    @if($task['completed'])
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
+                                    @endif
+                                </span>
+                                <span class="text-sm font-bold transition-all duration-300 {{ $task['completed'] ? 'text-slate-300 line-through' : 'text-slate-600 group-hover:text-indigo-600' }}">{{ $task['title'] }}</span>
+                            </a>
+                        @empty
+                            <div class="text-slate-400 text-xs font-bold text-center py-4">
+                                📭 لا توجد مهام حالية المطلوبة منك.
+                            </div>
+                        @endforelse
                     </div>
                 </div>
 
                 <div class="bg-white p-8 rounded-[2.5rem] shadow-sm border border-slate-50">
                     <h3 class="font-black text-slate-800 mb-6">الإنجازات المكتسبة</h3>
                     <div class="grid grid-cols-3 gap-4 text-center">
-                        <template x-for="badge in badges" :key="badge.id">
-                            <div class="w-full aspect-square bg-slate-50 rounded-2xl flex flex-col items-center justify-center p-2 cursor-help transition-all duration-300 transform hover:scale-105 border border-transparent"
-                                 :class="badge.unlocked ? 'border-amber-100 bg-amber-50/20' : 'grayscale opacity-40'"
-                                 :title="badge.unlocked ? 'إنجاز مكتمل: ' + badge.description : 'لم يتم فتح الإنجاز بعد: ' + badge.description">
-                                <span class="text-3xl mb-1" x-text="badge.icon"></span>
-                                <span class="text-[9px] font-black tracking-tight text-slate-500 block truncate w-full" x-text="badge.name"></span>
+                        @foreach($badges as $badge)
+                            <div class="w-full aspect-square bg-slate-50 rounded-2xl flex flex-col items-center justify-center p-2 cursor-help transition-all duration-300 transform hover:scale-105 border border-transparent {{ $badge['unlocked'] ? 'border-amber-100 bg-amber-50/20' : 'grayscale opacity-40' }}"
+                                 title="{{ ($badge['unlocked'] ? 'إنجاز مكتمل: ' : 'لم يتم فتح الإنجاز بعد: ') . $badge['description'] }}">
+                                <span class="text-3xl mb-1">{{ $badge['icon'] }}</span>
+                                <span class="text-[9px] font-black tracking-tight text-slate-500 block truncate w-full">{{ $badge['name'] }}</span>
                             </div>
-                        </template>
+                        @endforeach
                     </div>
                 </div>
 
@@ -216,52 +214,11 @@
 
                 <div class="bg-gradient-to-br from-indigo-500 to-purple-600 p-8 rounded-[2.5rem] text-white text-center shadow-lg shadow-indigo-100">
                     <h4 class="font-black mb-4">تحتاج مساعدة؟</h4>
-                    <p class="text-xs opacity-80 mb-6 leading-relaxed">فريق الخبراء لدينا جاهز لمساعدتك في كل خطوة</p>
-                    <a href="{{ route('dashboard.tickets') }}" class="bg-white text-indigo-600 w-full py-3 rounded-xl font-black text-sm hover:bg-slate-50 transition block">تحدث مع مستشار</a>
+                    <p class="text-xs opacity-80 mb-6 leading-relaxed">المساعد الذكي 🤖 متاح دائماً أسفل الشاشة للإجابة على استفساراتك فوراً</p>
                 </div>
             </div>
 
         </div>
     </div>
 </div>
-
-<script>
-function dashboardEngine() {
-    return {
-        // مصفوفة المهام التفاعلية الافتراضية، ويمكنك تمريرها من الباكيند عبر الـ Controller كـ JSON إن أردت
-        tasks: [
-            { id: 1, title: 'إكمال المعلومات الأكاديمية', completed: true },
-            { id: 2, title: 'رفع شهادات اللغة', completed: false },
-            { id: 3, title: 'كتابة رسالة الدوافع', completed: true },
-            { id: 4, title: 'الحصول على توصية أكاديمية', completed: false }
-        ],
-        
-        // نظام شارات الإنجازات الذكي، يعتمد على حالة unlocked
-        badges: [
-            { id: 1, icon: '🏆', name: 'البداية القوية', description: 'إنشاء الحساب وتأكيد البريد الإلكتروني', unlocked: true },
-            { id: 2, icon: '⭐', name: 'الملف الذهبي', description: 'إكمال ملفك الشخصي بنسبة 100%', unlocked: false },
-            { id: 3, icon: '🎓', name: 'المثقف الأديب', description: 'رفع شهادة لغة معتمدة بالملف', unlocked: true },
-            { id: 4, icon: '⚡', name: 'التقديم الأول', description: 'إرسال أول طلب منحة دراسية بنجاح', unlocked: false },
-            { id: 5, icon: '💎', name: 'المفضلة', description: 'حفظ 5 منح في قائمة المنح المحفوظة', unlocked: true },
-            { id: 6, icon: '🚀', name: 'طموح لا ينتهي', description: 'الوصول إلى المستوى الخامس في المنصة', unlocked: false }
-        ],
-
-        initDashboard() {
-            // هنا يمكنك تحديث المصفوفات بشكل ديناميكي عند تحميل الصفحة إذا أردت جلبها عبر Fetch API أو Axios
-        },
-
-        // دالة يتم تشغيلها فوراً عند الضغط على الـ Checkbox لتحديث حالة المهمة
-        toggleTaskStatus(task) {
-            console.log(`Task ${task.id} updated to status: ${task.completed}`);
-            
-            // نصيحة برمجية: يمكنك هنا إرسال طلب Axios سريع للخلفية لحفظ التغيير تلقائياً دون إعادة تحميل الصفحة:
-            /*
-            axios.post('/dashboard/tasks/' + task.id + '/toggle', {
-                completed: task.completed
-            });
-            */
-        }
-    }
-}
-</script>
 @endsection

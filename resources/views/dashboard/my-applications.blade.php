@@ -57,7 +57,9 @@
                                 </div>
 
                                 <p class="text-slate-400 font-bold text-xs">تم التقديم في: {{ $order->created_at->format('d M Y') }}</p>
-                                <p class="text-slate-500 font-bold text-[10px] mt-1">المبلغ: ₪{{ number_format($order->amount, 2) }}</p>
+                                @unless(config('app.free_mode'))
+                                    <p class="text-slate-500 font-bold text-[10px] mt-1">المبلغ: ₪{{ number_format($order->amount, 2) }}</p>
+                                @endunless
                             </div>
 
                             <div class="flex gap-2">
@@ -73,22 +75,24 @@
                             </div>
                         </div>
 
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div class="bg-slate-50 rounded-2xl p-4 border border-slate-100">
-                                <p class="text-[10px] text-slate-400 font-bold">رقم العملية</p>
-                                <p class="text-sm font-black text-slate-700">{{ $order->transaction_id ?? '—' }}</p>
+                        @unless(config('app.free_mode'))
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div class="bg-slate-50 rounded-2xl p-4 border border-slate-100">
+                                    <p class="text-[10px] text-slate-400 font-bold">رقم العملية</p>
+                                    <p class="text-sm font-black text-slate-700">{{ $order->transaction_id ?? '—' }}</p>
+                                </div>
+                                <div class="bg-slate-50 rounded-2xl p-4 border border-slate-100">
+                                    <p class="text-[10px] text-slate-400 font-bold">البنك / المحوّل</p>
+                                    <p class="text-sm font-black text-slate-700">{{ $order->bank_name ?? '—' }} • {{ $order->transfer_from ?? '—' }}</p>
+                                </div>
                             </div>
-                            <div class="bg-slate-50 rounded-2xl p-4 border border-slate-100">
-                                <p class="text-[10px] text-slate-400 font-bold">البنك / المحوّل</p>
-                                <p class="text-sm font-black text-slate-700">{{ $order->bank_name ?? '—' }} • {{ $order->transfer_from ?? '—' }}</p>
-                            </div>
-                        </div>
 
-                        @if($order->receipt_image)
-                            <div class="mt-4">
-                                <a href="{{ asset('storage/' . $order->receipt_image) }}" target="_blank" class="text-[10px] font-black text-indigo-600 hover:underline">عرض الإيصال ↗</a>
-                            </div>
-                        @endif
+                            @if($order->receipt_image)
+                                <div class="mt-4">
+                                    <a href="{{ asset('storage/' . $order->receipt_image) }}" target="_blank" class="text-[10px] font-black text-indigo-600 hover:underline">عرض الإيصال ↗</a>
+                                </div>
+                            @endif
+                        @endunless
                     </div>
                 @empty
                     <div class="bg-white rounded-[2.5rem] p-10 shadow-sm border border-slate-50 text-center">

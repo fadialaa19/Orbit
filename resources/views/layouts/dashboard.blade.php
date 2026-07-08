@@ -7,12 +7,12 @@
     <title>لوحة التحكم - @yield('title', 'منحي')</title>
 
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
-<script src="https://cdn.tailwindcss.com"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.css">
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.js"></script>
     <script defer crossorigin="anonymous" src="https://unpkg.com/alpinejs@3.14.1/dist/cdn.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
     <style>
         body { font-family: 'Cairo', sans-serif; }
         [x-cloak] { display: none !important; }
@@ -92,20 +92,5 @@
 
 @include('components.groq-chat')
 
-<script src="https://js.pusher.com/8.0.1/pusher.min.js"></script>
-    <script defer src="https://cdn.jsdelivr.net/npm/laravel-echo@1.15.3/dist/echo.iife.js"></script>
-
-<script>
-    // إعداد الاتصال بـ Reverb
-    window.Pusher = Pusher;
-    window.Echo = new Echo({
-        broadcaster: 'reverb',
-        key: '{{ env("REVERB_APP_KEY") }}',
-        wsHost: '127.0.0.1',
-        wsPort: 8080,
-        forceTLS: false,
-        enabledTransports: ['ws', 'wss'],
-    });
-</script>
 </body>
 </html>

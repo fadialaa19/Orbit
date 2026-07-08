@@ -27,7 +27,9 @@ class StudentScholarshipCheckoutController extends Controller
                 ->with('success', 'تم الدفع سابقاً — استمرار التقديم');
         }
 
-        return view('dashboard.scholarships.checkout', compact('scholarship'));
+        $setting = \App\Models\Setting::firstOrCreate(['id' => 1]);
+
+        return view('dashboard.scholarships.checkout', compact('scholarship', 'setting'));
     }
 
     public function store(Request $request, Scholarship $scholarship)
@@ -135,24 +137,4 @@ class StudentScholarshipCheckoutController extends Controller
             ->with('success', 'تم إرسال بيانات الدفع بنجاح. سيتم مراجعة طلبك من الأدمن');
     }
 
-    public function showPaymentForm($id)
-{
-    $scholarship = Scholarship::findOrFail($id);
-    
-    // جلب إعدادات المنصة الحالية
-    $setting = \App\Models\Setting::first(); 
-
-    return view('dashboard.scholarships.payment', compact('scholarship', 'setting'));
 }
-}
-$query = Scholarship::query();
-
-if ($request->has('countries')) {
-    $query->whereIn('country', $request->countries);
-}
-
-if ($request->has('funding_type')) {
-    // مثال حسب تقسيم قاعدة بياناتك للتمويل
-    $query->whereIn('type', $request->funding_type); 
-}
-

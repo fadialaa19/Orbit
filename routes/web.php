@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Http\Request;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ChatController;
 use App\Http\Controllers\StudentDashboardController;
@@ -25,13 +26,25 @@ Route::get('/login', function () {
 
 Route::post('/login', [AuthController::class, 'login'])->name('login');
 
-Route::get('/register', function () {
+Route::get('/register', function (Request $request) {
+    if ($request->has('ref')) {
+        // تخزين ID الشخص الداعي في السيشين لمدة نصف ساعة مثلاً
+        session(['referrer_id' => $request->query('ref')]);
+    }
     return view('auth.register');
 })->name('register')->middleware('guest');
 
 Route::post('/register', [AuthController::class, 'register'])->name('register');
 
 Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth')->name('logout');
+
+// Forgot / reset password
+Route::middleware('guest')->group(function () {
+    Route::get('/forgot-password', [\App\Http\Controllers\Auth\PasswordResetController::class, 'showForgotForm'])->name('password.request');
+    Route::post('/forgot-password', [\App\Http\Controllers\Auth\PasswordResetController::class, 'sendResetLink'])->name('password.email');
+    Route::get('/reset-password/{token}', [\App\Http\Controllers\Auth\PasswordResetController::class, 'showResetForm'])->name('password.reset');
+    Route::post('/reset-password', [\App\Http\Controllers\Auth\PasswordResetController::class, 'reset'])->name('password.update');
+});
 
 // Email verification (Signed URL - without storing tokens)
 Route::get('/email/verify/{id}/{hash}', [\App\Http\Controllers\VerifyEmailController::class, 'verify'])
@@ -66,6 +79,11 @@ Route::prefix('admin')->middleware(['auth'])->name('admin.')->group(function () 
         Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
     });
 
+    // إشعارات الأدمن والبحث الشامل (متاحة لأي أدمن مسجّل دخول)
+    Route::get('/notifications/latest', [AdminDashboardController::class, 'getLatestNotifications'])->name('notifications.latest');
+    Route::get('/notifications', [AdminDashboardController::class, 'notifications'])->name('notifications.index');
+    Route::get('/search', [\App\Http\Controllers\Admin\SearchController::class, 'globalSearch'])->name('search');
+
     // 2️⃣ إدارة المنح الدراسية
     Route::middleware(['check.permission:scholarships'])->group(function () {
         Route::resource('scholarships', AdminScholarshipController::class);
@@ -89,8 +107,6 @@ Route::prefix('admin')->middleware(['auth'])->name('admin.')->group(function () 
     Route::middleware(['check.permission:support'])->group(function () {
         Route::resource('tickets', AdminTicketController::class);
         Route::post('tickets/{ticket}/reply', [AdminTicketController::class, 'reply'])->name('tickets.reply');
-        Route::post('tickets/{ticket}/resolve', [AdminTicketController::class, 'resolve'])->name('tickets.resolve');
-        Route::post('tickets/{ticket}/close', [AdminTicketController::class, 'close'])->name('tickets.close');
     });
 
     // 6️⃣ رسائل اتصل بنا وآراء العملاء (Contacts & Testimonials)
@@ -102,7 +118,6 @@ Route::prefix('admin')->middleware(['auth'])->name('admin.')->group(function () 
     // 7️⃣ إدارة المدراء والصلاحيات + الإعدادات العامة
     Route::middleware(['check.permission:admins'])->group(function () {
         Route::resource('admins', AdminAdminController::class);
-        Route::patch('admins/{user}/role', [AdminAdminController::class, 'updateRole'])->name('admins.updateRole');
         Route::resource('settings', AdminSettingsController::class)->only(['index', 'update']);
     });
 });
@@ -115,10 +130,11 @@ Route::prefix('admin')->middleware(['auth'])->name('admin.')->group(function () 
 */
 Route::prefix('dashboard')->middleware(['auth', 'verified.ensure'])->name('dashboard.')->group(function () {
 
-    // Student Dashboard APIs (Mock data)
+    // Student Dashboard APIs
     Route::get('/my-tickets/api', [\App\Http\Controllers\DashboardApiController::class, 'myTickets'])->name('my-tickets-api');
     Route::get('/my-favorites/api', [\App\Http\Controllers\DashboardApiController::class, 'myFavorites'])->name('my-favorites-api');
     Route::get('/my-notifications/api', [\App\Http\Controllers\DashboardApiController::class, 'myNotifications'])->name('my-notifications-api');
+    Route::post('/notifications/read-all', [\App\Http\Controllers\DashboardApiController::class, 'markAllNotificationsRead'])->name('notifications.read-all');
 
     Route::get('/student', [StudentDashboardController::class, 'student'])->name('student');
     Route::get('/scholarships', [StudentDashboardController::class, 'scholarships'])->name('scholarships');
@@ -189,11 +205,3 @@ Route::post('/api/chat/clear', [GroqChatController::class, 'clearHistory'])
 Route::post('/api/chat/clear-ban', [GroqChatController::class, 'clearBan'])
     ->name('api.chat.clear-ban')
     ->middleware('throttle:groq-chat');
-
-    Route::get('/register', function (Request $request) {
-    if ($request->has('ref')) {
-        // تخزين ID الشخص الداعي في السيشين لمدة نصف ساعة مثلاً
-        session(['referrer_id' => $request->query('ref')]);
-    }
-    return view('auth.register'); // أو ملف الـ Register الخاص بـ Livewire/Fortify
-});

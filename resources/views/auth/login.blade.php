@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>تسجيل الدخول - Bedoon Quyood</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>تسجيل الدخول - Orbit ☕️</title>
+    @vite(['resources/css/app.css'])
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Cairo', sans-serif; }
@@ -40,16 +40,6 @@
                     تسجيل الدخول بواسطة Google
                 </a>
 
-                <div class="grid grid-cols-2 gap-3">
-                    <button class="border-2 border-slate-100 py-3 rounded-2xl flex items-center justify-center gap-2 font-bold text-slate-600 hover:bg-slate-50 transition">
-                        <img src="https://www.svgrepo.com/show/512317/github-142.svg" class="w-5 h-5" alt="Github">
-                        GitHub
-                    </button>
-                    <button class="border-2 border-slate-100 py-3 rounded-2xl flex items-center justify-center gap-2 font-bold text-slate-600 hover:bg-slate-50 transition">
-                        <img src="https://www.svgrepo.com/show/473543/apple.svg" class="w-5 h-5" alt="Apple">
-                        Apple
-                    </button>
-                </div>
             </div>
 
             <div class="flex items-center gap-4 mb-8">
@@ -86,7 +76,7 @@
                     @error('password')
                         <p class="mt-1 text-sm text-red-500 font-medium">{{ $message }}</p>
                     @enderror
-                    <a href="#" class="text-indigo-600 text-sm font-bold hover:underline">نسيت كلمة المرور؟</a>
+                    <a href="{{ route('password.request') }}" class="text-indigo-600 text-sm font-bold hover:underline">نسيت كلمة المرور؟</a>
 
                 </div>
 

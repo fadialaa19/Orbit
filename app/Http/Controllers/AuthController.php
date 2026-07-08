@@ -75,7 +75,7 @@ class AuthController extends Controller
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
             'country' => $data['country'] ?? null,
-            'field' => $data['field'] ?? null,
+            'field_of_study' => $data['field'] ?? null,
             'referred_by' => $referrerId, // تخزين الـ ID الخاص بالصديق الداعي أو null
             'xp' => 0,                    // يبدأ الطالب الجديد بـ 0 نقاط
             'email_verified_at' => null,

@@ -17,11 +17,13 @@
 
         <div class="bg-white rounded-[2.5rem] p-8 shadow-sm border border-slate-50 mb-6">
             <h1 class="text-2xl md:text-3xl font-black text-slate-800 mb-2">
-                دفع التقديم عن طريقنا
+                تفعيل التقديم على المنحة
             </h1>
             <p class="text-slate-400 font-bold text-sm">
                 المنحة: <span class="text-slate-700">{{ $scholarship->title_ar }}</span>
-                • القيمة: <span class="text-indigo-600">₪{{ number_format($scholarship->price, 2) }}</span>
+                @unless(config('app.free_mode'))
+                    • القيمة: <span class="text-indigo-600">₪{{ number_format($scholarship->price, 2) }}</span>
+                @endunless
             </p>
         </div>
 

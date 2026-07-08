@@ -60,7 +60,34 @@ class StudentDashboardController extends Controller
                 ];
             });
 
-        return view('dashboard.student', compact('student', 'stats', 'recommended_scholarships', 'activities', 'profileCompletion'));
+        // قائمة المهام: محسوبة من بيانات حقيقية موجودة على حساب الطالب
+        $requiredDocs = $student->required_documents ?? [];
+        $requiredDocsComplete = collect(['passport', 'national_id', 'high_school_cert', 'birth_cert', 'cv'])
+            ->every(fn ($key) => !empty($requiredDocs[$key] ?? null));
+        $hasApplication = ($applicationsCount + $completedCount) > 0;
+
+        $tasks = [
+            ['title' => 'إكمال الملف الشخصي', 'completed' => $profileCompletion >= 100, 'link' => route('dashboard.profile')],
+            ['title' => 'رفع المستندات المطلوبة', 'completed' => $requiredDocsComplete, 'link' => route('dashboard.profile')],
+            ['title' => 'حفظ أول منحة في المفضلة', 'completed' => $favoritesCount > 0, 'link' => route('dashboard.scholarships')],
+            ['title' => 'تقديم أول طلب منحة', 'completed' => $hasApplication, 'link' => route('dashboard.scholarships')],
+        ];
+
+        // الإنجازات: محسوبة من نفس البيانات الحقيقية بدون أي جدول جديد
+        $optionalDocs = $student->optional_documents ?? [];
+        $hasLanguageCert = !empty($optionalDocs['language_cert'] ?? null);
+        $currentLevel = (int) floor(($student->xp ?? 0) / 1000) + 1;
+
+        $badges = [
+            ['icon' => '🏆', 'name' => 'البداية القوية', 'description' => 'إنشاء الحساب وتأكيد البريد الإلكتروني', 'unlocked' => true],
+            ['icon' => '⭐', 'name' => 'الملف الذهبي', 'description' => 'إكمال ملفك الشخصي بنسبة 100%', 'unlocked' => $profileCompletion >= 100],
+            ['icon' => '🎓', 'name' => 'المثقف الأديب', 'description' => 'رفع شهادة لغة معتمدة بالملف', 'unlocked' => $hasLanguageCert],
+            ['icon' => '⚡', 'name' => 'التقديم الأول', 'description' => 'إرسال أول طلب منحة دراسية بنجاح', 'unlocked' => $hasApplication],
+            ['icon' => '💎', 'name' => 'المفضلة', 'description' => 'حفظ أول منحة في قائمة المفضلة', 'unlocked' => $favoritesCount > 0],
+            ['icon' => '🚀', 'name' => 'طموح لا ينتهي', 'description' => 'الوصول إلى المستوى الخامس في المنصة', 'unlocked' => $currentLevel >= 5],
+        ];
+
+        return view('dashboard.student', compact('student', 'stats', 'recommended_scholarships', 'activities', 'profileCompletion', 'tasks', 'badges'));
     }
 
     public function scholarships(Request $request)
@@ -173,8 +200,8 @@ class StudentDashboardController extends Controller
             // جلب حقل الصورة الفعلي المخزن بالداتابيز (لو كان مخزن كمسار، نمرره عبر Storage)
             'logo_image' => $scholarship->logo_image ? (filter_var($scholarship->logo_image, FILTER_VALIDATE_URL) ? $scholarship->logo_image : asset('storage/' . $scholarship->logo_image)) : null,
             'financial_value' => $scholarship->financial_value,
-            'amount' => $scholarship->amount ?? '$50,000',
-            'funding' => $scholarship->funding ?? 'ممولة بالكامل',
+            'amount' => $scholarship->price ? ('$' . number_format((float) $scholarship->price, 0)) : '$50,000',
+            'funding' => $scholarship->financial_value ?: 'ممولة بالكامل',
         ];
     });
 
@@ -288,29 +315,63 @@ class StudentDashboardController extends Controller
 
     public function settings()
     {
-        return view('dashboard.settings');
+        $user = Auth::user();
+        return view('dashboard.settings', compact('user'));
     }
 
     public function updateSettings(Request $request)
     {
         $user = Auth::user();
-        
-        if ($request->has('current_password')) {
+        $formType = $request->input('form_type');
+
+        if ($formType === 'profile') {
             $request->validate([
-                'current_password' => 'required|string',
-                'new_password' => 'required|string|min:8|confirmed',
+                'name' => 'required|string|max:255',
+                'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
+                'current_password' => 'nullable|required_with:new_password|string',
+                'new_password' => 'nullable|string|min:8|confirmed',
             ]);
-            
-            if (!Hash::check($request->current_password, $user->password)) {
-                return back()->with('error', 'كلمة المرور الحالية غير صحيحة');
+
+            if ($request->filled('new_password')) {
+                if (!Hash::check($request->current_password, $user->password)) {
+                    return back()->with('error', 'كلمة المرور الحالية غير صحيحة');
+                }
+                $user->password = $request->new_password;
             }
-            
-            $user->password = $request->new_password;
+
+            $user->name = $request->name;
+
+            if ($request->hasFile('avatar')) {
+                if ($user->avatar && Storage::disk('public')->exists($user->avatar)) {
+                    Storage::disk('public')->delete($user->avatar);
+                }
+                $user->avatar = $request->file('avatar')->store('avatars', 'public');
+            }
+
             $user->save();
-            
-            return back()->with('success', 'تم تغيير كلمة المرور بنجاح');
+
+            return back()->with('success', 'تم تحديث الحساب بنجاح');
         }
-        
+
+        if ($formType === 'privacy') {
+            $preferences = $user->preferences ?? [];
+            $preferences['profile_visible_to_scholarships'] = $request->boolean('profile_visible_to_scholarships');
+            $preferences['receive_university_messages'] = $request->boolean('receive_university_messages');
+            $user->preferences = $preferences;
+            $user->save();
+
+            return back()->with('success', 'تم حفظ إعدادات الخصوصية بنجاح');
+        }
+
+        if ($formType === 'notifications') {
+            $preferences = $user->preferences ?? [];
+            $preferences['notify_new_scholarships'] = $request->boolean('notify_new_scholarships');
+            $user->preferences = $preferences;
+            $user->save();
+
+            return back()->with('success', 'تم حفظ تفضيلات الإشعارات بنجاح');
+        }
+
         return back();
     }
 

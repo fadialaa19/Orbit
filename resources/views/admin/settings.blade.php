@@ -5,7 +5,7 @@
     <div class="flex items-center justify-between">
         <div>
             <h1 class="text-3xl font-black text-slate-900">إعدادات المنصة</h1>
-            <p class="text-sm font-bold text-slate-400 mt-1">إدارة بوابات الدفع، المساعد الذكي، وحالة الموقع</p>
+            <p class="text-sm font-bold text-slate-400 mt-1">إدارة المساعد الذكي وحالة الموقع</p>
         </div>
         <button onclick="document.getElementById('settings-form').submit()" class="bg-indigo-600 text-white px-8 py-3 rounded-xl font-black shadow-lg hover:bg-indigo-700 transition-all flex items-center gap-2">
             حفظ جميع التغييرات

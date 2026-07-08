@@ -5,27 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="csrf-token" content="{{ csrf_token() }}">
 <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
-    <title>@yield('title', 'لوحة الإدارة') - BEDOON QUYOOD</title>
+    <title>@yield('title', 'لوحة الإدارة') - Orbit ☕️</title>
 
     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
-    <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
-
-    <script src="https://js.pusher.com/8.0.1/pusher.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/laravel-echo@1.15.3/dist/echo.iife.js"></script>
-
-<script>
-    // إعداد الاتصال بـ Reverb
-    window.Pusher = Pusher;
-    window.Echo = new Echo({
-        broadcaster: 'reverb',
-        key: '{{ env("REVERB_APP_KEY") }}', // سيجلب المفتاح من ملف .env تلقائياً
-        wsHost: '127.0.0.1',
-        wsPort: 8080,
-        forceTLS: false,
-        enabledTransports: ['ws', 'wss'],
-    });
-</script>
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
     <style>
         body { font-family: 'Cairo', sans-serif; letter-spacing: -0.01em; }
         [x-cloak] { display: none !important; }
@@ -40,9 +24,9 @@
            :class="sidebarOpen ? 'translate-x-0' : 'translate-x-full lg:translate-x-0'">
 
         <div class="p-7 flex items-center gap-3">
-            <div class="w-11 h-11 bg-gradient-to-br from-indigo-600 to-purple-500 rounded-2xl flex items-center justify-center text-white font-black shadow-lg text-lg italic">B</div>
+            <div class="w-11 h-11 bg-gradient-to-br from-indigo-600 to-purple-500 rounded-2xl flex items-center justify-center text-white font-black shadow-lg text-lg italic">O</div>
             <div>
-                <h2 class="font-black text-xl text-slate-900 leading-tight">بدون قيود</h2>
+                <h2 class="font-black text-xl text-slate-900 leading-tight">Orbit ☕️</h2>
                 <p class="text-[11px] text-indigo-500 font-bold uppercase tracking-wider">لوحة الإدارة الذكية</p>
             </div>
         </div>
@@ -68,13 +52,16 @@
                 <span>المنح الدراسية</span>
             </a>
             @endif
-@if(auth()->user()->role === 'super_admin' || in_array('support', auth()->user()->permissions ?? []))            <a href="{{ url('/admin/tickets') }}"
+{{-- الدعم الفني (تذاكر البث المباشر) مخفي مؤقتاً لحين نشر الموقع
+            @if(auth()->user()->role === 'super_admin' || in_array('support', auth()->user()->permissions ?? []))
+            <a href="{{ url('/admin/tickets') }}"
                class="group flex items-center gap-4 px-4 py-3.5 rounded-[1.3rem] font-bold text-sm transition-all {{ request()->is('admin/tickets*') ? 'bg-indigo-50 text-indigo-600' : 'text-slate-600 hover:bg-slate-50' }}">
                 <svg class="w-5 h-5 opacity-80" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"/></svg>
                 <span>الدعم الفني</span>
                 <span class="mr-auto px-2.5 py-1 bg-rose-100 text-rose-600 rounded-xl text-[10px] font-black">{{ \App\Models\SupportTicket::where('status', 'pending')->count() }}</span>
             </a>
             @endif
+            --}}
 
 <!-- <a href="{{ url('/admin/orders') }}"
                class="group flex items-center gap-4 px-4 py-3.5 rounded-[1.3rem] font-bold text-sm transition-all {{ request()->is('admin/orders*') ? 'bg-indigo-50 text-indigo-600' : 'text-slate-600 hover:bg-slate-50' }}">
@@ -156,7 +143,7 @@
                                         <p class="text-[11px] font-black text-slate-900 group-hover:text-indigo-600 transition" x-text="n.data.title"></p>
                                         <span x-show="!n.read_at" class="w-1.5 h-1.5 bg-indigo-600 rounded-full"></span>
                                     </div>
-                                    <p class="text-[10px] font-bold text-slate-400 mt-1" x-text="n.data.message"></p>
+                                    <p class="text-[10px] font-bold text-slate-400 mt-1" x-text="n.data.body"></p>
                                     <p class="text-[9px] text-indigo-400 mt-2 font-black uppercase" x-text="n.created_at_human"></p>
                                 </a>
                             </template>

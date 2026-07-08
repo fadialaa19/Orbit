@@ -128,8 +128,19 @@
                     }
                 },
 
-                markAllAsRead() {
-                    // frontend only (mock). When real API exists, we will call it.
+                async markAllAsRead() {
+                    try {
+                        await fetch('{{ route("dashboard.notifications.read-all") }}', {
+                            method: 'POST',
+                            headers: {
+                                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content,
+                                'Content-Type': 'application/json',
+                                'Accept': 'application/json',
+                            },
+                        });
+                    } catch (e) {
+                        console.error(e);
+                    }
                     this.notifications = (this.notifications || []).map(n => ({ ...n, is_read: true, read_at: n.read_at ?? new Date().toISOString() }));
                     this.stats.count = 0;
                     this.tab = 'old';

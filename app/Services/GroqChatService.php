@@ -86,7 +86,7 @@ PROMPT;
         foreach (self::SUPPORT_KEYWORDS as $keyword) {
             if (str_contains($normalized, $keyword)) {
                 return [
-                    'content' => 'سأحولك الآن إلى الدعم الفني. يرجى الانتظار...',
+                    'content' => 'تم تسجيل طلبك، وسيتواصل معك فريق الدعم قريباً.',
                     'force_close' => false,
                     'trigger_support' => true,
                     'support_ticket_id' => null,

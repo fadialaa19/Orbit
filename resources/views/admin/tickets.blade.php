@@ -58,7 +58,15 @@
                             <span class="text-[10px] font-black px-2 py-1 rounded-lg uppercase" :class="statusClass('{{ $ticket->status }}')">{{ $ticket->status }}</span>
                         </td>
                         <td class="px-6 py-5 text-left">
-                            <button @click="openChat({{ $ticket->id }})" class="px-4 py-1.5 bg-indigo-600 text-white rounded-lg text-[10px] font-black hover:bg-indigo-700 shadow-sm transition-all">فتح المحادثة</button>
+                            <div class="flex items-center gap-2 justify-end">
+                                <button @click="openChat({{ $ticket->id }})" class="px-4 py-1.5 bg-indigo-600 text-white rounded-lg text-[10px] font-black hover:bg-indigo-700 shadow-sm transition-all">فتح المحادثة</button>
+                                @if($ticket->status !== 'resolved')
+                                <button @click="resolveTicket({{ $ticket->id }})" class="px-4 py-1.5 bg-emerald-600 text-white rounded-lg text-[10px] font-black hover:bg-emerald-700 shadow-sm transition-all">حلّ</button>
+                                @endif
+                                @if($ticket->status !== 'closed')
+                                <button @click="closeTicket({{ $ticket->id }})" class="px-4 py-1.5 bg-slate-500 text-white rounded-lg text-[10px] font-black hover:bg-slate-600 shadow-sm transition-all">إغلاق</button>
+                                @endif
+                            </div>
                         </td>
                     </tr>
                     @empty
@@ -81,7 +89,11 @@
                         <span class="text-[10px] font-black uppercase px-2 py-0.5 rounded" :class="statusClass(activeTicket.status)" x-text="activeTicket.status"></span>
                     </div>
                 </div>
-                <button @click="chatModal = false" class="text-slate-400 hover:text-slate-600">✕</button>
+                <div class="flex items-center gap-2">
+                    <button x-show="activeTicket.status !== 'resolved'" @click="resolveTicket(activeTicket.id)" class="px-3 py-1.5 bg-emerald-600 text-white rounded-lg text-[10px] font-black hover:bg-emerald-700 shadow-sm transition-all">حلّ</button>
+                    <button x-show="activeTicket.status !== 'closed'" @click="closeTicket(activeTicket.id)" class="px-3 py-1.5 bg-slate-500 text-white rounded-lg text-[10px] font-black hover:bg-slate-600 shadow-sm transition-all">إغلاق</button>
+                    <button @click="chatModal = false" class="text-slate-400 hover:text-slate-600">✕</button>
+                </div>
             </div>
 
             {{-- Messages --}}
@@ -226,6 +238,36 @@ loadTickets() {
                 const container = document.getElementById('admin-chat-messages');
                 if (container) container.scrollTop = container.scrollHeight;
             });
+        },
+
+        async updateTicketStatus(ticketId, action) {
+            try {
+                const token = document.querySelector('meta[name="csrf-token"]').content;
+                const res = await fetch(`/admin/tickets/${ticketId}/${action}`, {
+                    method: 'POST',
+                    headers: { 'X-CSRF-TOKEN': token, 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                });
+                const data = await res.json();
+                if (res.ok && data.success) {
+                    if (this.activeTicket.id === ticketId) {
+                        this.activeTicket.status = action === 'resolve' ? 'resolved' : 'closed';
+                    }
+                    this.loadTickets();
+                    window.location.reload();
+                } else {
+                    alert(data.message || 'فشل تحديث حالة التذكرة');
+                }
+            } catch (e) {
+                console.error("Update status error:", e);
+            }
+        },
+
+        resolveTicket(ticketId) {
+            this.updateTicketStatus(ticketId, 'resolve');
+        },
+
+        closeTicket(ticketId) {
+            this.updateTicketStatus(ticketId, 'close');
         }
     };
 }

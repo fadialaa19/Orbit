@@ -32,7 +32,7 @@ class CheckMaintenanceMode
         // 3. إذا كان وضع الصيانة مفعلاً (ولم ينتهِ وقته بعد)
         if ($maintenanceMode) {
             // السماح للأدمن بالدخول (تعديل حسب نظام الأدمن عندك)
-            if (Auth::check() && Auth::user()->is_admin) {
+            if (Auth::check() && Auth::user()->isAdmin()) {
                 return $next($request);
             }
 

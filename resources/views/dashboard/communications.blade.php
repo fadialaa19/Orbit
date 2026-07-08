@@ -11,9 +11,10 @@
             <button @click="switchPanel('ai')" :class="activePanel === 'ai' ? 'bg-white/20 rounded-2xl p-2 shadow-lg' : 'hover:bg-white/10 rounded-xl p-2'" title="الذكاء الاصطناعي">
                 <svg class="w-7 h-7 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
             </button>
-            <button @click="switchPanel('support')" :class="activePanel === 'support' ? 'bg-white/20 rounded-2xl p-2 shadow-lg' : 'hover:bg-white/10 rounded-xl p-2'" title="الدعم الفني">
+            {{-- زر الدعم الفني مخفي مؤقتاً لحين نشر الموقع (يعتمد على البث المباشر) --}}
+            {{-- <button @click="switchPanel('support')" :class="activePanel === 'support' ? 'bg-white/20 rounded-2xl p-2 shadow-lg' : 'hover:bg-white/10 rounded-xl p-2'" title="الدعم الفني">
                 <svg class="w-7 h-7 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
-            </button>
+            </button> --}}
         </div>
 
         <div class="flex-1 max-w-md border-l border-slate-100/50 bg-gradient-to-b from-slate-50/50 backdrop-blur-sm flex flex-col">
@@ -101,7 +102,7 @@
 <script>
 function communicationHub() {
     return {
-        activePanel: 'support',
+        activePanel: 'ai',
         selectedChat: null,
         selectedMessages: [],
         newMessage: '',

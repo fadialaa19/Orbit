@@ -1,3 +1,8 @@
+import Echo from 'laravel-echo';
+import Pusher from 'pusher-js';
+
+window.Pusher = Pusher;
+
 // Detect broadcasting driver from environment
 const broadcaster = import.meta.env.VITE_BROADCAST_CONNECTION || 'pusher';
 

@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>تحسينات جارية</title>
 
-<script src="https://cdn.tailwindcss.com"></script>
+@vite(['resources/css/app.css'])
 <style>
 
         @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;600;700&display=swap');
@@ -39,7 +39,7 @@
         <div class="mb-10">
             
                 <img src="{{ asset('assets/images/logo.png') }}" class="h-12 md:h-14 mx-auto" alt="Logo">
-                <h2 class="text-2xl font-black tracking-tighter italic">BEDOON QUYOOD</h2>
+                <h2 class="text-2xl font-black tracking-tighter italic">Orbit ☕️</h2>
             
         </div>
 
