@@ -4,11 +4,12 @@ namespace App\Notifications;
 
 use App\Models\User;
 use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Notification;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Support\Facades\URL;
 
-class VerifyEmailSignedUrlNotification extends Notification
+class VerifyEmailSignedUrlNotification extends Notification implements ShouldQueue
 {
     use Queueable;
 

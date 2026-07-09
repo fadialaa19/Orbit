@@ -21,6 +21,15 @@ class User extends Authenticatable
         return (string) $this->email;
     }
 
+    /**
+     * Send the queued reset-password notification instead of Laravel's default
+     * synchronous one, so the request doesn't block on the SMTP call.
+     */
+    public function sendPasswordResetNotification($token): void
+    {
+        $this->notify(new \App\Notifications\QueuedResetPasswordNotification($token));
+    }
+
     /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable;
 

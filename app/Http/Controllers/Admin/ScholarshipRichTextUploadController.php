@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Admin;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Storage;
 
 class ScholarshipRichTextUploadController
 {
@@ -23,7 +22,9 @@ class ScholarshipRichTextUploadController
 
         $path = $file->storeAs($dir, $filename, 'public');
 
-        $url = Storage::disk('public')->url($path);
+        // نبني الرابط عبر asset() وقت الطلب (وليس رابطاً كاملاً محفوظاً مسبقاً)
+        // حتى لا يتعطل إذا تغيّر النطاق أو البروتوكول لاحقاً.
+        $url = asset('storage/' . $path);
 
         // Quill expects { url: "..." }
         return response()->json(['url' => $url], Response::HTTP_OK);

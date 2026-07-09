@@ -294,6 +294,7 @@
     .word-editor-card .ql-container.ql-snow { border: 1px solid rgba(15, 23, 42, 0.06) !important; border-top: none !important; border-bottom-left-radius: 0.75rem !important; border-bottom-right-radius: 0.75rem !important; min-height: 180px; max-height: 400px; overflow-y: auto; background: #ffffff; }
     .word-editor-card .ql-editor { direction: rtl; text-align: right; font-size: 0.9rem; font-weight: 600; line-height: 1.7; color: #334155; padding: 16px !important; }
     .word-editor-card .ql-editor.ql-blank::before { left: auto !important; right: 16px !important; text-align: right; direction: rtl; color: #cbd5e1; font-style: normal; }
+    .word-editor-card .ql-editor img { max-width: 100%; height: auto; border-radius: 0.5rem; }
 </style>
 
 <script>
@@ -307,20 +308,20 @@ function initAllEditors() {
         ['bold', 'italic', 'underline', 'strike'],
         [{ 'list': 'ordered' }, { 'list': 'bullet' }],
         [{ 'align': [] }],
-        ['link'],
+        ['link', 'image'],
         ['clean']
     ];
 
     fields.forEach(field => {
         const containerSelector = `#${field}_editor`;
         const inputSelector = `#${field}_input`;
-        
+
         if (document.querySelector(containerSelector)) {
             editors[field] = new Quill(containerSelector, {
                 theme: 'snow',
                 dir: 'rtl',
                 placeholder: `أدخل تفاصيل وعناصر حقل ${field === 'overview' ? 'النظرة العامة' : field}...`,
-                modules: { toolbar: toolbarOptions }
+                modules: { toolbar: { container: toolbarOptions, handlers: { image: () => uploadEditorImage(field) } } }
             });
 
             // مزامنة فورية عند الكتابة والتعديل إلى الـ input المخفي
@@ -329,6 +330,43 @@ function initAllEditors() {
             });
         }
     });
+}
+
+// رفع صورة من داخل المحرر وإدراجها عند موضع المؤشر بالضبط (تحكم كامل بمكان الصورة)
+function uploadEditorImage(field) {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = 'image/*';
+    input.onchange = async () => {
+        const file = input.files[0];
+        if (!file) return;
+
+        const editor = editors[field];
+        const range = editor.getSelection(true);
+
+        const formData = new FormData();
+        formData.append('image', file);
+
+        try {
+            const response = await fetch("{{ route('admin.scholarships.rich-text.upload-image') }}", {
+                method: 'POST',
+                headers: { 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content') },
+                body: formData
+            });
+            const data = await response.json();
+            if (response.ok && data.url) {
+                editor.insertEmbed(range.index, 'image', data.url, 'user');
+                editor.setSelection(range.index + 1);
+                document.querySelector(`#${field}_input`).value = editor.root.innerHTML;
+            } else {
+                alert(data.message || 'تعذّر رفع الصورة، الرجاء المحاولة مجدداً.');
+            }
+        } catch (error) {
+            console.error('Image upload error:', error);
+            alert('حدث خطأ أثناء رفع الصورة، تحقق من الاتصال بالشبكة.');
+        }
+    };
+    input.click();
 }
 
 function setQuillHtml(field, html) {

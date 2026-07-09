@@ -5,6 +5,7 @@
 @section('header_search', '')
 
 @section('content')
+<style>.prose img { max-width: 100%; height: auto; border-radius: 0.75rem; margin: 1rem 0; }</style>
 <div class="bg-slate-50 min-h-screen py-8 px-4 md:px-10">
     <div class="max-w-5xl mx-auto">
         
@@ -182,7 +183,7 @@
                         </div>
                         <div class="prose prose-slate max-w-none text-slate-600 font-medium leading-relaxed">
                             @if($scholarship->overview)
-                                {!! nl2br(e($scholarship->overview)) !!}
+                                {!! $scholarship->overview !!}
                             @elseif($scholarship->description)
                                 {!! nl2br(e($scholarship->description)) !!}
                             @else
@@ -201,7 +202,7 @@
                         </div>
                         <div class="prose prose-slate max-w-none text-slate-600 font-medium leading-relaxed">
                             @if($scholarship->conditions)
-                                {!! nl2br(e($scholarship->conditions)) !!}
+                                {!! $scholarship->conditions !!}
                             @else
                                 <p class="text-slate-400 italic">الشروط ستُحدد قريباً من قبل الإدارة</p>
                             @endif
@@ -218,7 +219,7 @@
                         </div>
                         <div class="prose prose-slate max-w-none text-slate-600 font-medium leading-relaxed">
                             @if($scholarship->documents)
-                                {!! nl2br(e($scholarship->documents)) !!}
+                                {!! $scholarship->documents !!}
                             @else
                                 <p class="text-slate-400 italic">قائمة المستندات ستُحدد قريباً</p>
                             @endif
@@ -235,7 +236,7 @@
                         </div>
                         <div class="prose prose-slate max-w-none text-slate-600 font-medium leading-relaxed">
                             @if($scholarship->features)
-                                {!! nl2br(e($scholarship->features)) !!}
+                                {!! $scholarship->features !!}
                             @else
                                 <p class="text-slate-400 italic">المميزات ستُحدد قريباً من قبل الإدارة</p>
                             @endif

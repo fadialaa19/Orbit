@@ -30,15 +30,42 @@
         support_admin: ['dashboard', 'support', 'contacts']
     },
     
-    // الصلاحيات المحددة تلقائياً عند فتح الواجهة لأول مرة
-    addRole: 'super_admin',
-    addPermissions: ['dashboard', 'scholarships', 'students', 'applications', 'support', 'contacts', 'admins'],
+    // الصلاحيات المحددة تلقائياً عند فتح الواجهة لأول مرة (أو المحتفظ بها بعد فشل التحقق)
+    addRole: '{{ old('form_name') === 'add' ? old('role', 'super_admin') : 'super_admin' }}',
+    addPermissions: {!! old('form_name') === 'add' ? json_encode(old('permissions', ['dashboard', 'scholarships', 'students', 'applications', 'support', 'contacts', 'admins'])) : json_encode(['dashboard', 'scholarships', 'students', 'applications', 'support', 'contacts', 'admins']) !!},
     
     // دالة لتحديث الصلاحيات تلقائياً عند تغيير الدور في الإضافة
     updateAddPermissions() {
         this.addPermissions = this.roleDefaults[this.addRole] ? [...this.roleDefaults[this.addRole]] : [];
     }
-}" class="max-w-full mx-auto space-y-6">
+}" x-init="addModal = {{ $errors->any() && old('form_name') === 'add' ? 'true' : 'false' }}" class="max-w-full mx-auto space-y-6">
+
+    @if(session('success'))
+        <div x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 4000)"
+             class="fixed top-5 left-1/2 -translate-x-1/2 z-[100] min-w-[300px] p-4 bg-emerald-500 text-white rounded-2xl font-black text-sm shadow-2xl flex items-center justify-center gap-3">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
+            {{ session('success') }}
+        </div>
+    @endif
+
+    @if(session('error'))
+        <div x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 4000)"
+             class="fixed top-5 left-1/2 -translate-x-1/2 z-[100] min-w-[300px] p-4 bg-rose-500 text-white rounded-2xl font-black text-sm shadow-2xl flex items-center justify-center gap-3">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M6 18L18 6M6 6l12 12"></path></svg>
+            {{ session('error') }}
+        </div>
+    @endif
+
+    @if($errors->any())
+        <div class="bg-rose-50 border-2 border-rose-200 text-rose-700 rounded-2xl p-4 font-bold text-sm space-y-1">
+            <p class="font-black">تعذّر حفظ البيانات، الرجاء تصحيح الآتي:</p>
+            <ul class="list-disc mr-5 space-y-0.5">
+                @foreach($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
 
     {{-- Header --}}
     <div class="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4">
@@ -184,10 +211,11 @@
             <h2 class="text-xl font-black text-slate-900 mb-6">إضافة مدير جديد وصلاحياته</h2>
             <form action="{{ route('admin.admins.store') }}" method="POST" class="space-y-4">
                 @csrf
-                <input type="text" name="name" placeholder="الاسم الكامل" required class="w-full bg-slate-50 border border-slate-100 rounded-xl px-4 py-3 text-sm font-bold outline-none focus:border-indigo-300">
-                <input type="email" name="email" placeholder="البريد الإلكتروني" required class="w-full bg-slate-50 border border-slate-100 rounded-xl px-4 py-3 text-sm font-bold outline-none focus:border-indigo-300">
+                <input type="hidden" name="form_name" value="add">
+                <input type="text" name="name" value="{{ old('form_name') === 'add' ? old('name') : '' }}" placeholder="الاسم الكامل" required class="w-full bg-slate-50 border border-slate-100 rounded-xl px-4 py-3 text-sm font-bold outline-none focus:border-indigo-300">
+                <input type="email" name="email" value="{{ old('form_name') === 'add' ? old('email') : '' }}" placeholder="البريد الإلكتروني" required class="w-full bg-slate-50 border border-slate-100 rounded-xl px-4 py-3 text-sm font-bold outline-none focus:border-indigo-300">
                 <input type="password" name="password" placeholder="كلمة المرور" required class="w-full bg-slate-50 border border-slate-100 rounded-xl px-4 py-3 text-sm font-bold outline-none focus:border-indigo-300">
-                
+
                 <div>
                     <label class="text-[10px] font-black text-slate-400 uppercase mr-2 block mb-1">الدور الوظيفي الأساسي</label>
                     <select name="role" x-model="addRole" @change="updateAddPermissions()" class="w-full bg-slate-50 border border-slate-100 rounded-xl px-4 py-3 text-sm font-bold outline-none">
