@@ -118,29 +118,32 @@
     </div>
     
     <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-7xl mx-auto">
-        @foreach([
-            ['أحمد محمد', 'جامعة تورنتو - كندا', 'أ', 'https://images.unsplash.com/photo-1544717297-fa95b3ee51f8?q=80&w=400'],
-            ['فاطمة علي', 'جامعة برلين - ألمانيا', 'ف', 'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=400'],
-            ['محمد حسن', 'جامعة ملبورن - أستراليا', 'م', 'https://images.unsplash.com/photo-1519337265831-281ec6cc8514?q=80&w=400']
-        ] as $index => $student)
-        <div data-aos="fade-right" data-aos-delay="{{ $index * 150 }}" 
+        @forelse($testimonials as $index => $testimonial)
+        <div data-aos="fade-right" data-aos-delay="{{ $index * 150 }}"
              class="border border-slate-100 rounded-[2.5rem] p-8 hover:shadow-2xl transition-all duration-500 group bg-slate-50/50 hover:bg-white">
             <div class="overflow-hidden rounded-2xl mb-8 shadow-md">
-                <img src="{{ $student[3] }}" class="w-full h-52 object-cover transition-transform duration-700 group-hover:scale-110" alt="Student">
+                <img src="{{ $testimonial->avatar ?: 'https://ui-avatars.com/api/?name=' . urlencode($testimonial->name) . '&background=6366f1&color=fff&size=400' }}" class="w-full h-52 object-cover transition-transform duration-700 group-hover:scale-110" alt="{{ $testimonial->name }}">
             </div>
-            <div class="flex text-yellow-400 mb-4 text-sm tracking-widest group-hover:scale-110 transition-transform">★★★★★</div>
-            <p class="text-slate-600 italic mb-8 leading-relaxed">"تجربة استثنائية مع فريق Orbit ☕️، الدعم الفني والمساعد الذكي اختصروا عليّ شهور من البحث العشوائي."</p>
+            <div class="flex text-yellow-400 mb-4 text-sm tracking-widest group-hover:scale-110 transition-transform">
+                @for($i = 0; $i < $testimonial->rating; $i++)★@endfor
+            </div>
+            <p class="text-slate-600 italic mb-8 leading-relaxed">"{{ $testimonial->content }}"</p>
             <div class="flex items-center gap-4 border-t border-slate-100 pt-6">
                 <div class="w-14 h-14 bg-indigo-600 rounded-2xl flex items-center justify-center font-black text-white shadow-lg shadow-indigo-100 group-hover:rotate-12 transition-transform">
-                    {{ $student[2] }}
+                    {{ mb_substr($testimonial->name, 0, 1) }}
                 </div>
                 <div>
-                    <h4 class="font-black text-slate-800 text-lg">{{ $student[0] }}</h4>
-                    <p class="text-xs text-indigo-500 font-bold uppercase tracking-tighter">{{ $student[1] }}</p>
+                    <h4 class="font-black text-slate-800 text-lg">{{ $testimonial->name }}</h4>
+                    <p class="text-xs text-indigo-500 font-bold uppercase tracking-tighter">{{ $testimonial->university }}</p>
                 </div>
             </div>
         </div>
-        @endforeach
+        @empty
+        <div class="col-span-full text-center py-16">
+            <span class="text-6xl block mb-6 opacity-30">💬</span>
+            <h3 class="text-xl font-black text-slate-500">لا توجد تجارب مشاركة حالياً</h3>
+        </div>
+        @endforelse
     </div>
 </section>
 

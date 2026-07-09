@@ -91,8 +91,8 @@
         <div class="bg-white rounded-[2.5rem] shadow-2xl p-8 md:p-12 border border-slate-50 relative">
             
             <div class="flex justify-center mb-6">
-                <div class="w-16 h-16 grad-bg rounded-2xl flex items-center justify-center shadow-lg shadow-indigo-100">
-                    <img src="{{ asset('assets/images/logo.png') }}" class="w-10 h-10" alt="Logo">
+                <div class="w-16 h-16 flex items-center justify-center">
+                    <img src="{{ asset('assets/images/logo.png') }}" class="w-16 h-16 object-contain" alt="Logo">
                 </div>
             </div>
 

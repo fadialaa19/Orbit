@@ -7,7 +7,7 @@
 <div x-data="{ 
     showModal: false, 
     editMode: false, 
-    currentTestimonial: null,
+    currentTestimonial: { name: '', university: '', content: '', rating: 5, avatar: '', user_id: '', is_active: true },
     storeUrl: '{{ route('admin.testimonials.store') }}',
     updateUrl() { 
         return this.currentTestimonial ? '{{ url('/admin/testimonials') }}/' + this.currentTestimonial.id : ''; 
@@ -27,7 +27,7 @@
             <h1 class="text-2xl font-black text-slate-900">تجارب الطلاب</h1>
             <p class="text-xs font-bold text-slate-400 mt-1">إدارة تجارب الطلاب المعروضة في صفحة الخدمات</p>
         </div>
-        <button @click="showModal = true; editMode = false; currentTestimonial = null;"
+        <button @click="showModal = true; editMode = false; currentTestimonial = { name: '', university: '', content: '', rating: 5, avatar: '', user_id: '', is_active: true };"
                 class="bg-indigo-600 text-white px-6 py-3 rounded-2xl font-black text-sm hover:bg-indigo-700 transition-all shadow-lg shadow-indigo-100 flex items-center gap-2">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
             إضافة تجربة جديدة
@@ -81,7 +81,7 @@
                         </td>
                         <td class="p-6">
                             <div class="flex items-center gap-2">
-                                <button @click="showModal = true; editMode = true; currentTestimonial = {{ $testimonial->toJson() }};"
+                                <button @click="showModal = true; editMode = true; currentTestimonial = {{ json_encode($testimonial->toArray(), JSON_INVALID_UTF8_SUBSTITUTE | JSON_UNESCAPED_UNICODE) }};"
                                         class="p-2 bg-indigo-50 text-indigo-600 rounded-xl hover:bg-indigo-100 transition">
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
                                 </button>

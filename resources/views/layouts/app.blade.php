@@ -81,7 +81,7 @@
             <div>
                 <h4 class="font-bold mb-4">تواصل معنا</h4>
                 <p class="text-gray-400">khaledelhobe@gmail.com</p>
-                <p class="text-gray-400">+966 123 456 789</p>
+                <p class="text-gray-400" dir="ltr">+970 59 270 4945</p>
             </div>
         </div>
         <div class="border-t border-gray-700 mt-10 pt-6 text-center text-gray-500">

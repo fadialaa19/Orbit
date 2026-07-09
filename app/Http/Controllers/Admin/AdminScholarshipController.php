@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Scholarship;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
@@ -88,19 +87,19 @@ class AdminScholarshipController extends Controller
     $data['tags'] = $request->has('tags') ? $request->input('tags') : [];
     $data['coverage'] = $request->has('coverage') ? $request->input('coverage') : [];
 
-    // رفع الصور
+    // رفع الصور: نخزّن المسار النسبي فقط (وليس رابطاً كاملاً جاهزاً)، لأن
+    // الرابط الكامل المُخزَّن مسبقاً يتعطّل لو تغيّر النطاق أو البروتوكول
+    // لاحقاً. الرابط الفعلي يُبنى تلقائياً عند العرض دائماً (Scholarship model).
     if ($request->hasFile('main_image')) {
         $file = $request->file('main_image');
         $filename = Str::random(20) . '_' . time() . '.' . $file->getClientOriginalExtension();
-        $path = $file->storeAs('scholarships/main-images', $filename, 'public');
-        $data['main_image'] = Storage::disk('public')->url($path);
+        $data['main_image'] = $file->storeAs('scholarships/main-images', $filename, 'public');
     }
 
     if ($request->hasFile('logo_image')) {
         $file = $request->file('logo_image');
         $filename = Str::random(20) . '_' . time() . '.' . $file->getClientOriginalExtension();
-        $path = $file->storeAs('scholarships/logos', $filename, 'public');
-        $data['logo_image'] = Storage::disk('public')->url($path);
+        $data['logo_image'] = $file->storeAs('scholarships/logos', $filename, 'public');
     }
 
     Scholarship::create(array_merge($data, ['status' => 'active']));
@@ -160,19 +159,19 @@ public function update(Request $request, Scholarship $scholarship)
     if ($request->hasFile('main_image')) {
         $file = $request->file('main_image');
         $filename = Str::random(20) . '_' . time() . '.' . $file->getClientOriginalExtension();
-        $path = $file->storeAs('scholarships/main-images', $filename, 'public');
-        $data['main_image'] = Storage::disk('public')->url($path);
+        $data['main_image'] = $file->storeAs('scholarships/main-images', $filename, 'public');
     } else {
-        $data['main_image'] = $scholarship->main_image;
+        // نستخدم القيمة الخام (غير المحوّلة عبر accessor) حتى لا يُعاد حفظ
+        // رابط كامل جاهز بدل المسار النسبي الأصلي عند عدم تغيير الصورة.
+        $data['main_image'] = $scholarship->getRawOriginal('main_image');
     }
 
     if ($request->hasFile('logo_image')) {
         $file = $request->file('logo_image');
         $filename = Str::random(20) . '_' . time() . '.' . $file->getClientOriginalExtension();
-        $path = $file->storeAs('scholarships/logos', $filename, 'public');
-        $data['logo_image'] = Storage::disk('public')->url($path);
+        $data['logo_image'] = $file->storeAs('scholarships/logos', $filename, 'public');
     } else {
-        $data['logo_image'] = $scholarship->logo_image;
+        $data['logo_image'] = $scholarship->getRawOriginal('logo_image');
     }
 
     $scholarship->update($data);

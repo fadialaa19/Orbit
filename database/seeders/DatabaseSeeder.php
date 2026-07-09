@@ -15,18 +15,18 @@ class DatabaseSeeder extends Seeder
         $email = env('ADMIN_EMAIL');
         $password = env('ADMIN_PASSWORD');
 
-        if (! $email || ! $password) {
-            return;
+        if ($email && $password) {
+            User::firstOrCreate(
+                ['email' => $email],
+                [
+                    'name' => env('ADMIN_NAME', 'Admin'),
+                    'password' => bcrypt($password),
+                    'role' => 'super_admin',
+                    'email_verified_at' => now(),
+                ]
+            );
         }
 
-        User::firstOrCreate(
-            ['email' => $email],
-            [
-                'name' => env('ADMIN_NAME', 'Admin'),
-                'password' => bcrypt($password),
-                'role' => 'super_admin',
-                'email_verified_at' => now(),
-            ]
-        );
+        $this->call(TestimonialSeeder::class);
     }
 }

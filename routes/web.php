@@ -17,7 +17,8 @@ use App\Http\Controllers\Admin\AdminTestimonialController;
 use App\Http\Controllers\Admin\ScholarshipRichTextUploadController;
 
 Route::get('/', function () {
-    return view('home');
+    $testimonials = \App\Models\Testimonial::active()->latest()->take(3)->get();
+    return view('home', compact('testimonials'));
 });
 
 Route::get('/login', function () {

@@ -26,8 +26,8 @@
         <div class="bg-white rounded-[2.5rem] shadow-2xl shadow-indigo-100/50 p-10 border border-slate-50 relative overflow-hidden">
 
             <div class="flex justify-center mb-8">
-                <div class="w-20 h-20 login-gradient rounded-3xl flex items-center justify-center shadow-lg shadow-indigo-200 rotate-12 group hover:rotate-0 transition-transform duration-500">
-                    <img src="{{ asset('assets/images/logo.png') }}" class="w-12 h-12 -rotate-12 group-hover:rotate-0 transition-transform" alt="Logo">
+                <div class="w-20 h-20 flex items-center justify-center">
+                    <img src="{{ asset('assets/images/logo.png') }}" class="w-20 h-20 object-contain" alt="Logo">
                 </div>
             </div>
 

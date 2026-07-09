@@ -48,6 +48,31 @@ public function getFormattedDeadlineAttribute()
         return $this->deadline->format('Y-m-d');
     }
 
+    /**
+     * Resolve a stored image value to a usable URL, whether it's an older
+     * fully pre-baked absolute URL (breaks if the domain/scheme changes
+     * after upload) or a relative storage path (resolved fresh against the
+     * current request every time, so it never goes stale).
+     */
+    protected function resolveImageUrl(?string $value): ?string
+    {
+        if (!$value) {
+            return null;
+        }
+
+        return filter_var($value, FILTER_VALIDATE_URL) ? $value : asset('storage/' . $value);
+    }
+
+    public function getLogoImageAttribute($value)
+    {
+        return $this->resolveImageUrl($value);
+    }
+
+    public function getMainImageAttribute($value)
+    {
+        return $this->resolveImageUrl($value);
+    }
+
     public function scopeActive($query)
     {
         return $query->where('status', 'active');
