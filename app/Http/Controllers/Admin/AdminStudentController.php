@@ -98,4 +98,14 @@ class AdminStudentController extends Controller
 
         return redirect()->back()->with('success', 'تم حذف الطالب بنجاح');
     }
+
+    // تفعيل يدوي للبريد الإلكتروني (لحالات وصول الإيميل متعثراً أو غير مضمون)
+    public function verifyEmail($id)
+    {
+        $user = User::findOrFail($id);
+        $user->email_verified_at = now();
+        $user->save();
+
+        return redirect()->back()->with('success', 'تم تفعيل حساب الطالب يدوياً بنجاح');
+    }
     }

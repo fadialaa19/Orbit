@@ -96,6 +96,7 @@ Route::prefix('admin')->middleware(['auth'])->name('admin.')->group(function () 
     Route::middleware(['check.permission:students'])->group(function () {
         Route::resource('students', AdminStudentController::class);
         Route::patch('students/{user}/toggle', [AdminStudentController::class, 'toggleStatus'])->name('students.toggle');
+        Route::post('students/{id}/verify-email', [AdminStudentController::class, 'verifyEmail'])->name('students.verify-email');
     });
 
     // 4️⃣ طلبات التقديم (Orders)
