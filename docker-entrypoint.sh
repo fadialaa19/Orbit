@@ -1,6 +1,7 @@
 #!/bin/sh
 set -e
 
+php artisan package:discover --ansi
 php artisan storage:link || true
 php artisan migrate --force
 php artisan config:cache
