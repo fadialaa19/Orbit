@@ -97,50 +97,9 @@
         </div>
     </div>
 
-    <!-- Team / Values -->
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center mb-24">
-        <div data-aos="fade-right">
-            <h2 class="text-4xl font-black text-slate-900 mb-8">فريقنا</h2>
-            <div class="space-y-6">
-                @php
-                    $roleLabels = [
-                        'super_admin' => 'مؤسس ومدير تنفيذي',
-                        'scholarship_admin' => 'خبير منح دراسية',
-                        'support_admin' => 'مدير دعم فني',
-                    ];
-                    $roleColors = [
-                        'super_admin' => 'from-indigo-500 to-purple-500',
-                        'scholarship_admin' => 'from-emerald-500 to-green-500',
-                        'support_admin' => 'from-orange-500 to-amber-500',
-                    ];
-                    $roleBios = [
-                        'super_admin' => 'يقود المنصة نحو تمكين آلاف الطلاب من تحقيق أحلامهم الدراسية حول العالم.',
-                        'scholarship_admin' => 'خبير في مجال المنح الدولية وشراكات الجامعات العالمية ودعم الطلاب.',
-                        'support_admin' => 'مختص في تطوير حلول الدعم الفني وتحسين تجربة المستخدم على المنصة.',
-                    ];
-                @endphp
-
-                @forelse($teamMembers as $member)
-                <div class="flex items-start gap-4 p-6 bg-slate-50 rounded-[2rem] hover:bg-white hover:shadow-lg transition-all">
-                    <div class="w-14 h-14 bg-gradient-to-br {{ $roleColors[$member->role] ?? 'from-indigo-500 to-purple-500' }} rounded-2xl flex items-center justify-center text-white font-black text-xl shadow-lg mt-1 flex-shrink-0">
-                        {{ mb_substr($member->name, 0, 1) }}
-                    </div>
-                    <div>
-                        <h4 class="font-black text-xl text-slate-800">{{ $member->name }}</h4>
-                        <p class="text-indigo-600 font-bold">{{ $roleLabels[$member->role] ?? 'عضو فريق' }}</p>
-                        <p class="text-slate-600 mt-2 leading-relaxed">{{ $roleBios[$member->role] ?? 'خبير في إدارة المنح الدراسية ودعم الطلاب لتحقيق طموحاتهم الأكاديمية.' }}</p>
-                    </div>
-                </div>
-                @empty
-                <div class="text-center py-10">
-                    <p class="text-slate-400 font-bold">سيتم الإعلان عن الفريق قريباً</p>
-                </div>
-                @endforelse
-            </div>
-        </div>
-        <div data-aos="fade-left">
-            <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=800&q=80" alt="Team" class="rounded-[3rem] shadow-2xl w-full h-auto transform hover:scale-105 transition-all duration-500 group-hover:-rotate-1">
-        </div>
+    <!-- فريقنا: انتقل هذا القسم للصفحة الرئيسية ليكون أكثر بروزاً -->
+    <div class="text-center mb-24">
+        <a href="{{ route('home') }}#team" class="text-indigo-600 font-black hover:underline">تعرّف على فريقنا من الصفحة الرئيسية ←</a>
     </div>
 
     <!-- CTA -->

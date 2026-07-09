@@ -18,8 +18,9 @@ use App\Http\Controllers\Admin\ScholarshipRichTextUploadController;
 
 Route::get('/', function () {
     $testimonials = \App\Models\Testimonial::active()->latest()->take(3)->get();
-    return view('home', compact('testimonials'));
-});
+    $teamMembers = \App\Models\User::admins()->where('status', 'active')->get();
+    return view('home', compact('testimonials', 'teamMembers'));
+})->name('home');
 
 Route::get('/login', function () {
     return view('auth.login');

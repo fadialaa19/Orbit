@@ -111,6 +111,55 @@
     </div>
 </section>
 
+<section id="team" class="py-24 px-8 bg-white scroll-mt-20">
+    <div class="text-center mb-16">
+        <h2 data-aos="fade-up" class="text-4xl font-black text-slate-900 mb-4">فريقنا</h2>
+        <div data-aos="fade-up" data-aos-delay="200" class="w-24 h-1.5 bg-indigo-600 mx-auto rounded-full mb-6"></div>
+        <p data-aos="fade-up" data-aos-delay="300" class="text-gray-500 text-lg max-w-xl mx-auto">الأشخاص وراء منصة Orbit</p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
+        @php
+            $roleLabels = [
+                'super_admin' => 'مؤسس ومدير تنفيذي',
+                'scholarship_admin' => 'خبير منح دراسية',
+                'support_admin' => 'مدير دعم فني',
+            ];
+            $roleColors = [
+                'super_admin' => 'from-indigo-500 to-purple-500',
+                'scholarship_admin' => 'from-emerald-500 to-green-500',
+                'support_admin' => 'from-orange-500 to-amber-500',
+            ];
+            $roleBios = [
+                'super_admin' => 'يقود المنصة نحو تمكين آلاف الطلاب من تحقيق أحلامهم الدراسية حول العالم.',
+                'scholarship_admin' => 'خبير في مجال المنح الدولية وشراكات الجامعات العالمية ودعم الطلاب.',
+                'support_admin' => 'مختص في تطوير حلول الدعم الفني وتحسين تجربة المستخدم على المنصة.',
+            ];
+        @endphp
+
+        {{-- عضو ثابت دائم الظهور: مبرمج المنصة، غير مرتبط بحسابات لوحة التحكم --}}
+        <div data-aos="fade-up" class="bg-slate-50 p-8 rounded-[2rem] hover:bg-white hover:shadow-xl transition-all duration-500 text-center border-2 border-indigo-100">
+            <div class="w-20 h-20 bg-gradient-to-br from-sky-500 to-blue-700 rounded-2xl flex items-center justify-center text-white font-black text-2xl shadow-lg mx-auto mb-5">
+                ف
+            </div>
+            <h4 class="font-black text-xl text-slate-800">Fadi Hamad</h4>
+            <p class="text-indigo-600 font-bold mb-2">مطور ومبرمج المنصة</p>
+            <p class="text-slate-500 text-sm leading-relaxed">صمّم وبرمج منصة Orbit بالكامل من الفكرة إلى التنفيذ، تطوعاً وبدون أي مقابل، ليقدّم للطلاب تجربة تقنية سلسة وموثوقة.</p>
+        </div>
+
+        @foreach($teamMembers as $member)
+        <div data-aos="fade-up" class="bg-slate-50 p-8 rounded-[2rem] hover:bg-white hover:shadow-xl transition-all duration-500 text-center">
+            <div class="w-20 h-20 bg-gradient-to-br {{ $roleColors[$member->role] ?? 'from-indigo-500 to-purple-500' }} rounded-2xl flex items-center justify-center text-white font-black text-2xl shadow-lg mx-auto mb-5">
+                {{ mb_substr($member->name, 0, 1) }}
+            </div>
+            <h4 class="font-black text-xl text-slate-800">{{ $member->name }}</h4>
+            <p class="text-indigo-600 font-bold mb-2">{{ $roleLabels[$member->role] ?? 'عضو فريق' }}</p>
+            <p class="text-slate-500 text-sm leading-relaxed">{{ $roleBios[$member->role] ?? 'خبير في إدارة المنح الدراسية ودعم الطلاب لتحقيق طموحاتهم الأكاديمية.' }}</p>
+        </div>
+        @endforeach
+    </div>
+</section>
+
 <section class="py-24 px-8 bg-white">
     <div class="text-center mb-16">
         <h2 data-aos="zoom-in" class="text-4xl font-black text-slate-900 mb-4 text-indigo-900">قصص النجاح</h2>
