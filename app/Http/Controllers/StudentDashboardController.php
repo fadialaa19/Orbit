@@ -197,8 +197,8 @@ class StudentDashboardController extends Controller
             'id' => $scholarship->id,
             'title' => $scholarship->title_ar ?? $scholarship->title_en,
             'category' => $scholarship->category ?? 'منحة دراسية',
-            // جلب حقل الصورة الفعلي المخزن بالداتابيز (لو كان مخزن كمسار، نمرره عبر Storage)
-            'logo_image' => $scholarship->logo_image ? (filter_var($scholarship->logo_image, FILTER_VALIDATE_URL) ? $scholarship->logo_image : asset('storage/' . $scholarship->logo_image)) : null,
+            // $scholarship->logo_image يمر أصلاً عبر accessor الموديل الذي يبني الرابط الكامل
+            'logo_image' => $scholarship->logo_image,
             'financial_value' => $scholarship->financial_value,
             'amount' => $scholarship->price ? ('$' . number_format((float) $scholarship->price, 0)) : '$50,000',
             'funding' => $scholarship->financial_value ?: 'ممولة بالكامل',
@@ -274,37 +274,35 @@ class StudentDashboardController extends Controller
         $optDocs = $user->optional_documents ?? [];
         $legacyDocs = $user->documents ?? [];
 
-        foreach (['required_documents', 'optional_documents'] as $docType) {
-            $docArray = ($docType === 'required_documents') ? $reqDocs : $optDocs;
-            if ($request->hasFile($docType)) {
-                $files = $request->file($docType);
-                foreach ($files as $key => $file) {
-                    if ($file && $file->isValid()) {
-                        $oldPath = ($docArray[$key] ?? $legacyDocs[$key] ?? null);
-                        if ($oldPath && Storage::disk('public')->exists($oldPath)) {
-                            Storage::disk('public')->delete($oldPath);
-                        }
-                        $docArray[$key] = $file->store('documents', 'public');
-                    }
-                }
-            }
-        }
+        // نفس أسماء المفاتيح المستخدمة في resources/views/dashboard/profile.blade.php
+        // و User::calculateProfileCompletion() لتمييز أي حقل "docs[key]" إلزامي وأيها اختياري
+        $requiredDocKeys = ['passport', 'national_id', 'high_school_cert', 'birth_cert', 'cv'];
+        $optionalDocKeys = ['language_cert', 'courses_cert', 'recommendation', 'intent_letter'];
 
         if ($request->hasFile('docs')) {
             foreach ($request->file('docs') as $key => $file) {
                 if ($file && $file->isValid()) {
-                    $oldPath = $legacyDocs[$key] ?? null;
+                    $isOptional = in_array($key, $optionalDocKeys);
+                    $docArray = $isOptional ? $optDocs : $reqDocs;
+
+                    $oldPath = $docArray[$key] ?? $legacyDocs[$key] ?? null;
                     if ($oldPath && Storage::disk('public')->exists($oldPath)) {
                         Storage::disk('public')->delete($oldPath);
                     }
-                    $reqDocs[$key] = $file->store('documents', 'public');
+
+                    $storedPath = $file->store('documents', 'public');
+                    if ($isOptional) {
+                        $optDocs[$key] = $storedPath;
+                    } else {
+                        $reqDocs[$key] = $storedPath;
+                    }
                 }
             }
         }
 
         $user->required_documents = $reqDocs;
         $user->optional_documents = $optDocs;
-        $user->documents = array_merge($legacyDocs, $reqDocs);
+        $user->documents = array_merge($legacyDocs, $reqDocs, $optDocs);
 
         $user->fill($validated);
         $user->profile_completion = $user->calculateProfileCompletion();
