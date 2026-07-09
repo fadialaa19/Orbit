@@ -12,6 +12,11 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
+        // Trust the reverse proxy Render (and most PaaS hosts) put in front of
+        // the app, so Laravel correctly detects HTTPS via X-Forwarded-Proto
+        // instead of generating http:// asset/URL links behind an https:// page.
+        $middleware->trustProxies(at: '*');
+
         $middleware->web(append: [
             \App\Http\Middleware\CheckAccountStatus::class,
             \App\Http\Middleware\CheckMaintenanceMode::class,
