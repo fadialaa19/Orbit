@@ -38,7 +38,19 @@
     updateAddPermissions() {
         this.addPermissions = this.roleDefaults[this.addRole] ? [...this.roleDefaults[this.addRole]] : [];
     }
-}" x-init="addModal = {{ $errors->any() && old('form_name') === 'add' ? 'true' : 'false' }}" class="max-w-full mx-auto space-y-6">
+}" x-init="
+    addModal = {{ $errors->any() && old('form_name') === 'add' ? 'true' : 'false' }};
+    @if($errors->any() && old('form_name') === 'edit')
+        editModal = true;
+        currentAdmin = {
+            id: {{ (int) old('id') }},
+            name: @js(old('name')),
+            email: @js(old('email')),
+            role: @js(old('role')),
+            permissions: {!! json_encode(old('permissions', [])) !!}
+        };
+    @endif
+" class="max-w-full mx-auto space-y-6">
 
     @if(session('success'))
         <div x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 4000)"
@@ -258,6 +270,8 @@
             <form :action="'{{ url('admin/admins') }}/' + currentAdmin.id" method="POST" class="space-y-4">
                 @csrf
                 @method('PATCH')
+                <input type="hidden" name="form_name" value="edit">
+                <input type="hidden" name="id" :value="currentAdmin.id">
                 <div class="space-y-1">
                     <label class="text-[10px] font-black text-slate-400 uppercase mr-2">الاسم</label>
                     <input type="text" name="name" x-model="currentAdmin.name" required class="w-full bg-slate-50 border border-slate-100 rounded-xl px-4 py-3 text-sm font-bold outline-none focus:border-indigo-300">
@@ -265,6 +279,10 @@
                 <div class="space-y-1">
                     <label class="text-[10px] font-black text-slate-400 uppercase mr-2">البريد الإلكتروني</label>
                     <input type="email" name="email" x-model="currentAdmin.email" required class="w-full bg-slate-50 border border-slate-100 rounded-xl px-4 py-3 text-sm font-bold outline-none focus:border-indigo-300">
+                </div>
+                <div class="space-y-1">
+                    <label class="text-[10px] font-black text-slate-400 uppercase mr-2">كلمة المرور الجديدة (اتركها فارغة لعدم التغيير)</label>
+                    <input type="password" name="password" placeholder="••••••••" minlength="6" class="w-full bg-slate-50 border border-slate-100 rounded-xl px-4 py-3 text-sm font-bold outline-none focus:border-indigo-300">
                 </div>
                 <div class="space-y-1">
                     <label class="text-[10px] font-black text-slate-400 uppercase mr-2">الدور الوظيفي</label>

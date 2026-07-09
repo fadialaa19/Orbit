@@ -72,19 +72,26 @@ class AdminAdminController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users,email,'.$id,
             'role' => 'required|string',
-            'permissions' => 'nullable|array'
+            'permissions' => 'nullable|array',
+            'password' => 'nullable|string|min:6',
         ]);
 
-        $permissions = $request->role === 'super_admin' 
-            ? ['dashboard', 'scholarships', 'students', 'applications', 'support', 'contacts', 'admins'] 
+        $permissions = $request->role === 'super_admin'
+            ? ['dashboard', 'scholarships', 'students', 'applications', 'support', 'contacts', 'admins']
             : $request->input('permissions', []);
 
-        $admin->update([
+        $data = [
             'name' => $request->name,
             'email' => $request->email,
             'role' => $request->role,
-            'permissions' => $permissions
-        ]);
+            'permissions' => $permissions,
+        ];
+
+        if ($request->filled('password')) {
+            $data['password'] = Hash::make($request->password);
+        }
+
+        $admin->update($data);
 
         return redirect()->back()->with('success', 'تم تحديث بيانات وصلاحيات المدير بنجاح');
     }
