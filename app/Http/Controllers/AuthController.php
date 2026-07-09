@@ -96,8 +96,13 @@ class AuthController extends Controller
         // Logout user (must verify email)
         Auth::logout();
 
-        // Send verification email
-        $user->notify(new \App\Notifications\VerifyEmailSignedUrlNotification($user));
+        // Send verification email (don't let a mail-delivery failure crash registration
+        // itself - the account is already created at this point)
+        try {
+            $user->notify(new \App\Notifications\VerifyEmailSignedUrlNotification($user));
+        } catch (\Exception $e) {
+            Log::error('Failed to send verification email to ' . $user->email . ': ' . $e->getMessage());
+        }
 
         // Redirect to a success page (no error message)
         return redirect()->route('verification.sent');

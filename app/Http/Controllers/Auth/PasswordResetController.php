@@ -19,7 +19,12 @@ class PasswordResetController extends Controller
     {
         $request->validate(['email' => 'required|email']);
 
-        $status = Password::sendResetLink($request->only('email'));
+        try {
+            $status = Password::sendResetLink($request->only('email'));
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error('Failed to send password reset email: ' . $e->getMessage());
+            return back()->withErrors(['email' => 'تعذّر إرسال رابط الاستعادة حالياً، يرجى المحاولة لاحقاً.']);
+        }
 
         return $status === Password::RESET_LINK_SENT
             ? back()->with('success', 'تم إرسال رابط استعادة كلمة المرور إلى بريدك الإلكتروني.')

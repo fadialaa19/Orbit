@@ -2,26 +2,31 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
 use App\Models\User;
-use App\Models\Scholarship;
-use App\Models\Plan;
-use App\Models\SupportTicket;
-use Illuminate\Support\Facades\Hash;
+use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
 {
-    public function run()
+    public function run(): void
     {
-        \App\Models\User::factory()->create([
-        'name' => 'Eng Fadi Alaa',
-        'email' => 'fadi@test.com', // الإيميل الذي ستدخل به
-        'password' => bcrypt('12345678'), // الباسورد
-        'role' => 'super_admin',
-    ]);
+        // Only seed an initial super_admin when explicit credentials are
+        // provided via the environment - never hardcode a real password
+        // here, since this seeder runs against the production database.
+        $email = env('ADMIN_EMAIL');
+        $password = env('ADMIN_PASSWORD');
+
+        if (! $email || ! $password) {
+            return;
+        }
+
+        User::firstOrCreate(
+            ['email' => $email],
+            [
+                'name' => env('ADMIN_NAME', 'Admin'),
+                'password' => bcrypt($password),
+                'role' => 'super_admin',
+                'email_verified_at' => now(),
+            ]
+        );
     }
 }
-
-    
-
-
