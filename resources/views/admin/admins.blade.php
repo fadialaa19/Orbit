@@ -31,8 +31,8 @@
     },
     
     // الصلاحيات المحددة تلقائياً عند فتح الواجهة لأول مرة (أو المحتفظ بها بعد فشل التحقق)
-    addRole: '{{ old('form_name') === 'add' ? old('role', 'super_admin') : 'super_admin' }}',
-    addPermissions: {!! old('form_name') === 'add' ? json_encode(old('permissions', ['dashboard', 'scholarships', 'students', 'applications', 'support', 'contacts', 'admins'])) : json_encode(['dashboard', 'scholarships', 'students', 'applications', 'support', 'contacts', 'admins']) !!},
+    addRole: @js(old('form_name') === 'add' ? old('role', 'super_admin') : 'super_admin'),
+    addPermissions: @js(old('form_name') === 'add' ? old('permissions', ['dashboard', 'scholarships', 'students', 'applications', 'support', 'contacts', 'admins']) : ['dashboard', 'scholarships', 'students', 'applications', 'support', 'contacts', 'admins']),
     
     // دالة لتحديث الصلاحيات تلقائياً عند تغيير الدور في الإضافة
     updateAddPermissions() {
@@ -47,7 +47,7 @@
             name: @js(old('name')),
             email: @js(old('email')),
             role: @js(old('role')),
-            permissions: {!! json_encode(old('permissions', [])) !!}
+            permissions: @js(old('permissions', []))
         };
     @endif
 " class="max-w-full mx-auto space-y-6">
