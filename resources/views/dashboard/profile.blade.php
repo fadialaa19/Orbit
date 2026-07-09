@@ -392,6 +392,7 @@
                 <div class="w-full lg:w-80 order-1 lg:order-2">
                     <div class="bg-white rounded-[2.5rem] p-8 shadow-sm border border-slate-50 text-center sticky top-8">
                         <div class="relative w-32 h-32 mx-auto mb-6 group">
+                            <div id="avatarDisplay">
                             @if($user->avatar)
                             <img src="{{ asset('storage/'.$user->avatar) }}" alt="Avatar" class="w-full h-full rounded-full object-cover border-4 border-white shadow-lg">
                             @else
@@ -399,6 +400,7 @@
                                 {{ Str::substr($user->name, 0, 1) }}
                             </div>
                             @endif
+                            </div>
                             
                             <!-- Camera Icon for Uploading -->
                             <label for="avatar_upload" class="absolute -bottom-2 -right-2 bg-indigo-600 text-white p-3 rounded-full cursor-pointer shadow-lg hover:bg-indigo-700 transition-all hover:scale-110 border-4 border-white">
@@ -527,16 +529,20 @@ function profileData() {
                     const file = e.target.files[0];
                     if (file) {
                         this.avatarFile = file;
-                        this.showAvatarCropper(file);
+                        this.previewAvatar(file);
                     }
                 });
             }
         },
 
-        showAvatarCropper(file) {
-            // Create cropper modal (simplified)
-            this.showToast('info', 'اضغط و اسحب لتقطيع الصورة');
-            // Full implementation would show modal with Cropper.js
+        previewAvatar(file) {
+            const reader = new FileReader();
+            reader.onload = (ev) => {
+                document.getElementById('avatarDisplay').innerHTML =
+                    `<img src="${ev.target.result}" alt="Avatar" class="w-full h-full rounded-full object-cover border-4 border-white shadow-lg">`;
+            };
+            reader.readAsDataURL(file);
+            this.showToast('success', 'تم اختيار الصورة، اضغط "حفظ" لتأكيد التحديث');
         },
 
         quickSave() {

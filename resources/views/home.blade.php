@@ -29,13 +29,13 @@
             اكتشف آلاف المنح الدراسية المتاحة حول العالم وقدم طلباتك بسهولة مع خدماتنا المتخصصة.
         </p>
         <div class="flex flex-wrap gap-5 mt-12">
-            <button class="bg-indigo-600 text-white px-10 py-4 rounded-2xl shadow-xl flex items-center gap-3 hover:bg-indigo-700 transition-all duration-300 transform hover:-translate-y-1 btn-pulse">
+            <a href="{{ route('guest.scholarships') }}" class="bg-indigo-600 text-white px-10 py-4 rounded-2xl shadow-xl flex items-center gap-3 hover:bg-indigo-700 transition-all duration-300 transform hover:-translate-y-1 btn-pulse">
                 <span class="font-bold">استكشف المنح</span>
                 <span class="text-xl">←</span>
-            </button>
-            <button class="border-2 border-slate-200 px-10 py-4 rounded-2xl font-bold text-slate-700 hover:bg-slate-50 transition-all duration-300">
+            </a>
+            <a href="{{ route('register') }}" class="border-2 border-slate-200 px-10 py-4 rounded-2xl font-bold text-slate-700 hover:bg-slate-50 transition-all duration-300">
                 ابدأ الآن مجاناً
-            </button>
+            </a>
         </div>
     </div>
     
@@ -152,12 +152,10 @@
         <div class="relative z-10">
             <h2 class="text-5xl font-black mb-6">جاهز لبدء رحلتك؟</h2>
             <p class="opacity-80 mb-12 text-xl max-w-lg mx-auto">انضم إلى آلاف الطلاب الذين حققوا أحلامهم معنا اليوم مجاناً</p>
-            <div class="flex flex-col md:flex-row justify-center gap-4 max-w-2xl mx-auto">
-                <input type="email" placeholder="أدخل بريدك الإلكتروني" 
-                       class="px-10 py-5 rounded-[2rem] text-slate-800 focus:outline-none w-full md:w-2/3 shadow-inner text-lg font-medium">
-                <button class="bg-white text-indigo-600 font-black px-12 py-5 rounded-[2rem] hover:bg-slate-100 transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-xl text-lg">
-                    ابدأ الآن
-                </button>
+            <div class="flex justify-center">
+                <a href="{{ route('register') }}" class="bg-white text-indigo-600 font-black px-16 py-5 rounded-[2rem] hover:bg-slate-100 transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-xl text-lg">
+                    ابدأ الآن مجاناً
+                </a>
             </div>
         </div>
         <div class="absolute top-0 right-0 w-96 h-96 bg-white opacity-10 rounded-full -mr-48 -mt-48 blur-3xl"></div>
