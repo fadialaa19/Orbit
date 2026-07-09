@@ -24,7 +24,7 @@ Route::get('/login', function () {
     return view('auth.login');
 })->name('login')->middleware('guest');
 
-Route::post('/login', [AuthController::class, 'login'])->name('login');
+Route::post('/login', [AuthController::class, 'login']);
 
 Route::get('/register', function (Request $request) {
     if ($request->has('ref')) {
@@ -34,7 +34,7 @@ Route::get('/register', function (Request $request) {
     return view('auth.register');
 })->name('register')->middleware('guest');
 
-Route::post('/register', [AuthController::class, 'register'])->name('register');
+Route::post('/register', [AuthController::class, 'register']);
 
 Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth')->name('logout');
 
@@ -158,8 +158,7 @@ Route::prefix('dashboard')->middleware(['auth', 'verified.ensure'])->name('dashb
         ->middleware(\App\Http\Middleware\AllowFreeModeForPayments::class)
         ->name('scholarships.pay');
     Route::post('/scholarships/{scholarship}/pay', [\App\Http\Controllers\StudentScholarshipCheckoutController::class, 'store'])
-        ->middleware(\App\Http\Middleware\AllowFreeModeForPayments::class)
-        ->name('scholarships.pay');
+        ->middleware(\App\Http\Middleware\AllowFreeModeForPayments::class);
 });
 
 
