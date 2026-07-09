@@ -144,7 +144,7 @@
             </div>
             <h4 class="font-black text-xl text-slate-800">Fadi Hamad</h4>
             <p class="text-indigo-600 font-bold mb-2">مطور ومبرمج المنصة</p>
-            <p class="text-slate-500 text-sm leading-relaxed">صمّم وبرمج منصة Orbit بالكامل من الفكرة إلى التنفيذ، تطوعاً وبدون أي مقابل، ليقدّم للطلاب تجربة تقنية سلسة وموثوقة.</p>
+            <p class="text-slate-500 text-sm leading-relaxed">مطور برمجيات Front-End و Back-End، صمّم وبرمج منصة Orbit بالكامل من الفكرة إلى التنفيذ ليقدّم للطلاب تجربة تقنية سلسة وموثوقة.</p>
         </div>
 
         @foreach($teamMembers as $member)
