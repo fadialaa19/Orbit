@@ -3,7 +3,7 @@ FROM php:8.2-cli
 RUN apt-get update && apt-get install -y --no-install-recommends \
         git curl zip unzip ca-certificates gnupg \
         libpng-dev libjpeg62-turbo-dev libfreetype6-dev libwebp-dev \
-        libonig-dev libxml2-dev libzip-dev libpq-dev \
+        libonig-dev libxml2-dev libzip-dev libpq-dev libsqlite3-dev \
     && docker-php-ext-configure gd --with-jpeg --with-freetype --with-webp \
     && docker-php-ext-install pdo pdo_mysql pdo_pgsql pdo_sqlite mbstring exif pcntl bcmath gd zip \
     && curl -fsSL https://deb.nodesource.com/setup_22.x | bash - \
