@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+﻿@extends('layouts.admin')
 
 @section('title', 'إدارة المدراء')
 @section('breadcrumb', 'المدراء والصلاحيات')
@@ -86,7 +86,7 @@
             <p class="text-xs font-bold text-slate-400 mt-1">التحكم في وصول الموظفين وتخصيص صفحات العمل بدقة</p>
         </div>
         <div class="flex gap-2">
-            <button @click="addModal = true" class="bg-indigo-600 text-white px-5 py-2.5 rounded-xl font-black text-xs hover:bg-indigo-700 shadow-lg shadow-indigo-100 transition-all">
+            <button @click="addModal = true" class="bg-gold-600 text-white px-5 py-2.5 rounded-xl font-black text-xs hover:bg-gold-700 shadow-lg shadow-gold-100 transition-all">
                 + إضافة مدير جديد وصلاحياته
             </button>
         </div>
@@ -96,7 +96,7 @@
     <div class="bg-white rounded-[2rem] shadow-sm border border-slate-100 overflow-hidden">
         <div class="p-6 border-b border-slate-50 flex flex-col md:flex-row md:items-center justify-between gap-4 bg-slate-50/30">
             <div class="flex items-center gap-4">
-                <h3 class="text-sm font-black text-slate-800">قائمة الفريق <span class="text-indigo-500 mr-1">({{ $admins->total() }})</span></h3>
+                <h3 class="text-sm font-black text-slate-800">قائمة الفريق <span class="text-gold-500 mr-1">({{ $admins->total() }})</span></h3>
                 <div class="h-4 w-[1px] bg-slate-200"></div>
                 <div class="flex gap-2">
                     <span class="text-[10px] font-black text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-md">{{ $activeAdmins }} نشط</span>
@@ -104,7 +104,7 @@
                 </div>
             </div>
             <form action="{{ route('admin.admins.index') }}" method="GET" class="relative">
-                <input type="text" name="search" value="{{ request('search') }}" placeholder="البحث عن مدير..." class="bg-white border border-slate-200 rounded-xl py-2 pr-10 pl-4 text-xs font-bold focus:border-indigo-500 outline-none w-full md:w-64">
+                <input type="text" name="search" value="{{ request('search') }}" placeholder="البحث عن مدير..." class="bg-white border border-slate-200 rounded-xl py-2 pr-10 pl-4 text-xs font-bold focus:border-gold-500 outline-none w-full md:w-64">
                 <svg class="w-4 h-4 text-slate-400 absolute right-3 top-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" stroke-width="2"/></svg>
             </form>
         </div>
@@ -135,9 +135,9 @@
                         <td class="px-6 py-5">
                             @php
                                 $roles = [
-                                    'super_admin' => ['المدير العام', 'indigo'],
+                                    'super_admin' => ['المدير العام', 'gold'],
                                     'scholarship_admin' => ['مدير المنح', 'emerald'],
-                                    'support_admin' => ['الدعم الفني', 'purple']
+                                    'support_admin' => ['الدعم الفني', 'orange']
                                 ];
                                 $roleInfo = $roles[$admin->role] ?? ['موظف مخصص', 'slate'];
                             @endphp
@@ -195,7 +195,7 @@
                             <div class="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
                                 {{-- زر التعديل المطور --}}
                                 <button @click="currentAdmin = {{ json_encode($admin) }}; editModal = true;" 
-                                        class="p-2 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors">
+                                        class="p-2 text-slate-400 hover:text-gold-600 hover:bg-gold-100 rounded-lg transition-colors">
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" stroke-width="2.5"/></svg>
                                 </button>
                                 <form action="{{ route('admin.admins.destroy', $admin->id) }}" method="POST" onsubmit="return confirm('هل أنت متأكد من حذف هذا المدير؟')">
@@ -224,9 +224,9 @@
             <form action="{{ route('admin.admins.store') }}" method="POST" class="space-y-4">
                 @csrf
                 <input type="hidden" name="form_name" value="add">
-                <input type="text" name="name" value="{{ old('form_name') === 'add' ? old('name') : '' }}" placeholder="الاسم الكامل" required class="w-full bg-slate-50 border border-slate-100 rounded-xl px-4 py-3 text-sm font-bold outline-none focus:border-indigo-300">
-                <input type="email" name="email" value="{{ old('form_name') === 'add' ? old('email') : '' }}" placeholder="البريد الإلكتروني" required class="w-full bg-slate-50 border border-slate-100 rounded-xl px-4 py-3 text-sm font-bold outline-none focus:border-indigo-300">
-                <input type="password" name="password" placeholder="كلمة المرور" required class="w-full bg-slate-50 border border-slate-100 rounded-xl px-4 py-3 text-sm font-bold outline-none focus:border-indigo-300">
+                <input type="text" name="name" value="{{ old('form_name') === 'add' ? old('name') : '' }}" placeholder="الاسم الكامل" required class="w-full bg-slate-50 border border-slate-100 rounded-xl px-4 py-3 text-sm font-bold outline-none focus:border-gold-300">
+                <input type="email" name="email" value="{{ old('form_name') === 'add' ? old('email') : '' }}" placeholder="البريد الإلكتروني" required class="w-full bg-slate-50 border border-slate-100 rounded-xl px-4 py-3 text-sm font-bold outline-none focus:border-gold-300">
+                <input type="password" name="password" placeholder="كلمة المرور" required class="w-full bg-slate-50 border border-slate-100 rounded-xl px-4 py-3 text-sm font-bold outline-none focus:border-gold-300">
 
                 <div>
                     <label class="text-[10px] font-black text-slate-400 uppercase mr-2 block mb-1">الدور الوظيفي الأساسي</label>
@@ -244,8 +244,8 @@
                     
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
                         <template x-for="page in systemPages" :key="page.key">
-                            <label class="flex items-center gap-3 bg-white p-3 rounded-xl border border-slate-100 shadow-sm cursor-pointer hover:border-indigo-200 transition-all select-none">
-                                <input type="checkbox" name="permissions[]" :value="page.key" x-model="addPermissions" :disabled="addRole === 'super_admin'" class="rounded border-slate-200 text-indigo-600 focus:ring-indigo-500 disabled:opacity-50">
+                            <label class="flex items-center gap-3 bg-white p-3 rounded-xl border border-slate-100 shadow-sm cursor-pointer hover:border-navy-100 transition-all select-none">
+                                <input type="checkbox" name="permissions[]" :value="page.key" x-model="addPermissions" :disabled="addRole === 'super_admin'" class="rounded border-slate-200 text-gold-600 focus:ring-gold-500 disabled:opacity-50">
                                 <span class="text-lg" x-text="page.icon"></span>
                                 <span class="text-xs font-black text-slate-700" x-text="page.name"></span>
                             </label>
@@ -256,7 +256,7 @@
                 <input type="hidden" name="status" value="active">
                 <div class="flex gap-2 pt-2">
                     <button type="button" @click="addModal = false" class="flex-1 bg-slate-100 text-slate-600 py-3 rounded-xl font-black text-xs transition">إلغاء</button>
-                    <button type="submit" class="flex-[2] bg-indigo-600 text-white py-3 rounded-xl font-black text-xs shadow-lg hover:bg-indigo-700 transition">حفظ المدير والصلاحيات</button>
+                    <button type="submit" class="flex-[2] bg-gold-600 text-white py-3 rounded-xl font-black text-xs shadow-lg hover:bg-gold-700 transition">حفظ المدير والصلاحيات</button>
                 </div>
             </form>
         </div>
@@ -274,15 +274,15 @@
                 <input type="hidden" name="id" :value="currentAdmin.id">
                 <div class="space-y-1">
                     <label class="text-[10px] font-black text-slate-400 uppercase mr-2">الاسم</label>
-                    <input type="text" name="name" x-model="currentAdmin.name" required class="w-full bg-slate-50 border border-slate-100 rounded-xl px-4 py-3 text-sm font-bold outline-none focus:border-indigo-300">
+                    <input type="text" name="name" x-model="currentAdmin.name" required class="w-full bg-slate-50 border border-slate-100 rounded-xl px-4 py-3 text-sm font-bold outline-none focus:border-gold-300">
                 </div>
                 <div class="space-y-1">
                     <label class="text-[10px] font-black text-slate-400 uppercase mr-2">البريد الإلكتروني</label>
-                    <input type="email" name="email" x-model="currentAdmin.email" required class="w-full bg-slate-50 border border-slate-100 rounded-xl px-4 py-3 text-sm font-bold outline-none focus:border-indigo-300">
+                    <input type="email" name="email" x-model="currentAdmin.email" required class="w-full bg-slate-50 border border-slate-100 rounded-xl px-4 py-3 text-sm font-bold outline-none focus:border-gold-300">
                 </div>
                 <div class="space-y-1">
                     <label class="text-[10px] font-black text-slate-400 uppercase mr-2">كلمة المرور الجديدة (اتركها فارغة لعدم التغيير)</label>
-                    <input type="password" name="password" placeholder="••••••••" minlength="6" class="w-full bg-slate-50 border border-slate-100 rounded-xl px-4 py-3 text-sm font-bold outline-none focus:border-indigo-300">
+                    <input type="password" name="password" placeholder="••••••••" minlength="6" class="w-full bg-slate-50 border border-slate-100 rounded-xl px-4 py-3 text-sm font-bold outline-none focus:border-gold-300">
                 </div>
                 <div class="space-y-1">
                     <label class="text-[10px] font-black text-slate-400 uppercase mr-2">الدور الوظيفي</label>
@@ -300,7 +300,7 @@
                     
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
                         <template x-for="page in systemPages" :key="page.key">
-                            <label class="flex items-center gap-3 bg-white p-3 rounded-xl border border-slate-100 shadow-sm cursor-pointer hover:border-indigo-200 transition-all select-none">
+                            <label class="flex items-center gap-3 bg-white p-3 rounded-xl border border-slate-100 shadow-sm cursor-pointer hover:border-navy-100 transition-all select-none">
                                 {{-- نقوم بفحص مصفوفة الـ permissions الخاصة بالمسؤول الحالي المختار عبر الـ Alpine --}}
                                 <input type="checkbox" name="permissions[]" :value="page.key" 
                                        :checked="currentAdmin.permissions && currentAdmin.permissions.includes(page.key)"
@@ -313,7 +313,7 @@
                                             }
                                        "
                                        :disabled="currentAdmin.role === 'super_admin'" 
-                                       class="rounded border-slate-200 text-indigo-600 focus:ring-indigo-500 disabled:opacity-50">
+                                       class="rounded border-slate-200 text-gold-600 focus:ring-gold-500 disabled:opacity-50">
                                 <span class="text-lg" x-text="page.icon"></span>
                                 <span class="text-xs font-black text-slate-700" x-text="page.name"></span>
                             </label>
@@ -323,7 +323,7 @@
 
                 <div class="pt-4 flex gap-2">
                     <button type="button" @click="editModal = false" class="flex-1 bg-slate-100 text-slate-600 py-3 rounded-xl font-black text-xs transition">إلغاء</button>
-                    <button type="submit" class="flex-[2] bg-slate-900 text-white py-3 rounded-xl font-black text-xs shadow-lg hover:bg-indigo-600 transition">تحديث البيانات والصلاحيات</button>
+                    <button type="submit" class="flex-[2] bg-slate-900 text-white py-3 rounded-xl font-black text-xs shadow-lg hover:bg-gold-600 transition">تحديث البيانات والصلاحيات</button>
                 </div>
             </form>
         </div>

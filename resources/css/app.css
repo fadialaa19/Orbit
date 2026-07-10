@@ -8,4 +8,22 @@
 @theme {
     --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
         'Segoe UI Symbol', 'Noto Color Emoji';
+
+    /* كحلي: خلفيات داكنة، هيدر، سايدبار، أقسام الهيرو الداكنة */
+    --color-navy-950: #0A1229;
+    --color-navy-900: #0F1B3D;
+    --color-navy-800: #141F3E;
+    --color-navy-700: #1D2C52;
+    --color-navy-500: #3B4A78;
+    --color-navy-100: #E8EBF5;
+
+    /* ذهبي: أزرار CTA، حالات نشطة، تمييز (يحل محل indigo/purple بالكامل) */
+    --color-gold-700: #C97A3D;
+    --color-gold-600: #DB8A47;
+    --color-gold-500: #E8935B;
+    --color-gold-400: #F0A468;
+    --color-gold-300: #F5A855;
+    --color-gold-100: #FCEEDF;
+    --color-gold-50: #FEF6EC;
+    --color-cream-50: #FFF8EF;
 }

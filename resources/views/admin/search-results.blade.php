@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+﻿@extends('layouts.admin')
 
 @section('title', 'نتائج البحث')
 @section('breadcrumb', 'نتائج البحث')
@@ -7,7 +7,7 @@
 <div class="max-w-5xl mx-auto space-y-8">
 
     <div class="bg-white rounded-[2rem] p-6 shadow-sm border border-slate-100">
-        <p class="text-slate-500 font-bold text-sm">نتائج البحث عن: <span class="text-indigo-600 font-black">{{ $q ?: '—' }}</span></p>
+        <p class="text-slate-500 font-bold text-sm">نتائج البحث عن: <span class="text-gold-600 font-black">{{ $q ?: '—' }}</span></p>
     </div>
 
     <div class="bg-white rounded-[2rem] shadow-sm border border-slate-100 overflow-hidden">
@@ -21,7 +21,7 @@
                         <p class="text-sm font-black text-slate-800">{{ $student->name }}</p>
                         <p class="text-xs font-bold text-slate-400 mt-1">{{ $student->email }}</p>
                     </div>
-                    <span class="text-indigo-600 font-black text-sm">←</span>
+                    <span class="text-gold-600 font-black text-sm">←</span>
                 </a>
             @empty
                 <div class="p-8 text-center text-slate-400 font-bold text-sm">لا توجد نتائج</div>
@@ -40,7 +40,7 @@
                         <p class="text-sm font-black text-slate-800">{{ $ticket->subject }}</p>
                         <p class="text-xs font-bold text-slate-400 mt-1">{{ $ticket->user->name ?? 'مستخدم' }} • {{ $ticket->status }}</p>
                     </div>
-                    <span class="text-indigo-600 font-black text-sm">←</span>
+                    <span class="text-gold-600 font-black text-sm">←</span>
                 </a>
             @empty
                 <div class="p-8 text-center text-slate-400 font-bold text-sm">لا توجد نتائج</div>
@@ -59,7 +59,7 @@
                         <p class="text-sm font-black text-slate-800">{{ $scholarship->title_ar ?? $scholarship->title_en }}</p>
                         <p class="text-xs font-bold text-slate-400 mt-1">{{ $scholarship->country }}</p>
                     </div>
-                    <span class="text-indigo-600 font-black text-sm">←</span>
+                    <span class="text-gold-600 font-black text-sm">←</span>
                 </a>
             @empty
                 <div class="p-8 text-center text-slate-400 font-bold text-sm">لا توجد نتائج</div>

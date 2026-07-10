@@ -1,4 +1,4 @@
-<div x-data="aiSections()" x-show="show" class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+﻿<div x-data="aiSections()" x-show="show" class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
     <div class="bg-white rounded-3xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
         <div class="p-8 border-b border-slate-200">
             <h3 class="text-2xl font-black text-slate-800 flex items-center gap-3">
@@ -18,7 +18,7 @@
                         x-model="sections[section]" 
                         :name="section"
                         rows="8" 
-                        class="w-full bg-white border border-slate-200 rounded-xl px-4 py-3 text-sm font-bold focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 resize-vertical transition-all placeholder-slate-400"
+                        class="w-full bg-white border border-slate-200 rounded-xl px-4 py-3 text-sm font-bold focus:border-gold-400 focus:ring-2 focus:ring-gold-100 resize-vertical transition-all placeholder-slate-400"
                         placeholder="المحتوى سيتم ملؤه هنا..."></textarea>
                 </div>
             </template>

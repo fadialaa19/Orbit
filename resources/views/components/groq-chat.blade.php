@@ -1,4 +1,4 @@
-<div id="groq-chat-widget"
+﻿<div id="groq-chat-widget"
      class="fixed bottom-6 right-6 z-[9999] rtl:font-sans"
      style="font-family:'Cairo',sans-serif;direction:rtl;"
      x-data="{
@@ -120,7 +120,7 @@
     {{-- Toggle Button --}}
     <button @click="toggle()"
             class="w-14 h-14 rounded-full shadow-2xl flex items-center justify-center transition-all duration-300 hover:scale-110 active:scale-95"
-            :class="open ? 'bg-rose-500 hover:bg-rose-600' : 'bg-indigo-600 hover:bg-indigo-700'">
+            :class="open ? 'bg-rose-500 hover:bg-rose-600' : 'bg-gold-600 hover:bg-gold-700'">
         <svg x-show="!open" class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                   d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"/>
@@ -136,7 +136,7 @@
          style="max-height:600px;height:500px;">
 
         {{-- Header --}}
-        <div class="bg-indigo-600 p-4 text-white flex items-center justify-between shrink-0">
+        <div class="bg-gold-600 p-4 text-white flex items-center justify-between shrink-0">
             <div class="flex items-center gap-3">
                 <div class="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center text-lg">🤖</div>
                 <div>
@@ -159,7 +159,7 @@
 
             {{-- Welcome --}}
             <div x-show="!banned" class="flex gap-3 items-start">
-                <div class="w-8 h-8 bg-indigo-600 rounded-xl flex items-center justify-center text-white text-sm shrink-0">AI</div>
+                <div class="w-8 h-8 bg-gold-600 rounded-xl flex items-center justify-center text-white text-sm shrink-0">AI</div>
                 <div class="bg-white p-3 rounded-2xl rounded-tr-sm shadow-sm border border-slate-100 text-sm font-bold text-slate-700 leading-relaxed max-w-[85%]">
                     مرحباً! أنا مستشارك الذكي في شؤون المنح الدراسية. كيف يمكنني مساعدتك اليوم؟ 💡
                 </div>
@@ -188,11 +188,11 @@
                 <div class="flex gap-3 items-start animate-in fade-in slide-in-from-bottom-2 duration-300"
                      :class="msg.role === 'user' ? 'flex-row-reverse' : ''">
                     <div class="w-8 h-8 rounded-xl flex items-center justify-center text-white text-sm shrink-0"
-                         :class="msg.role === 'user' ? 'bg-slate-700' : 'bg-indigo-600'"
+                         :class="msg.role === 'user' ? 'bg-slate-700' : 'bg-gold-600'"
                          x-text="msg.role === 'user' ? 'أنت' : 'AI'"></div>
                     <div class="p-3 rounded-2xl text-sm font-bold leading-relaxed max-w-[85%]"
                          :class="msg.role === 'user'
-                             ? 'bg-indigo-600 text-white rounded-tl-sm'
+                             ? 'bg-gold-600 text-white rounded-tl-sm'
                              : 'bg-white text-slate-700 rounded-tr-sm shadow-sm border border-slate-100'">
                         <span x-html="formatMessage(msg.content)"></span>
                     </div>
@@ -201,7 +201,7 @@
 
             {{-- Loading --}}
             <div x-show="loading && !banned" class="flex gap-3 items-start">
-                <div class="w-8 h-8 bg-indigo-600 rounded-xl flex items-center justify-center text-white text-sm shrink-0">AI</div>
+                <div class="w-8 h-8 bg-gold-600 rounded-xl flex items-center justify-center text-white text-sm shrink-0">AI</div>
                 <div class="bg-white p-4 rounded-2xl rounded-tr-sm shadow-sm border border-slate-100">
                     <div class="flex gap-1 items-center h-3">
                         <span class="w-2 h-2 bg-slate-300 rounded-full animate-bounce"></span>
@@ -261,11 +261,11 @@
         <div x-show="!banned && !supportCreated" class="p-4 bg-white border-t border-slate-100 shrink-0">
             <form @submit.prevent="sendMessage()" class="flex gap-2">
                 <input type="text" x-model="input" placeholder="اكتب سؤالك هنا..."
-                       class="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm font-bold outline-none focus:border-indigo-500 focus:bg-white transition-all"
+                       class="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm font-bold outline-none focus:border-gold-500 focus:bg-white transition-all"
                        :disabled="loading"
                        @keydown.enter.prevent="sendMessage()">
                 <button type="submit"
-                        class="bg-indigo-600 text-white w-10 h-10 rounded-xl flex items-center justify-center hover:bg-indigo-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
+                        class="bg-gold-600 text-white w-10 h-10 rounded-xl flex items-center justify-center hover:bg-gold-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
                         :disabled="loading || !input.trim()">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14M12 5l7 7-7 7"/>

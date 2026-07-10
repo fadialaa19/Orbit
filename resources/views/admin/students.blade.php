@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+﻿@extends('layouts.admin')
 
 @section('title', 'إدارة الطلاب')
 @section('breadcrumb', 'الطلاب')
@@ -26,7 +26,7 @@
             <h1 class="text-2xl font-black text-slate-900 leading-tight">إدارة الطلاب</h1>
             <p class="text-xs font-bold text-slate-400 mt-1">عرض وتحليل بيانات جميع المنتسبين للنظام</p>
         </div>
-        <button @click="addModal = true" class="bg-indigo-600 text-white px-6 py-3 rounded-2xl font-black text-sm shadow-lg shadow-indigo-100 hover:bg-indigo-700 hover:-translate-y-0.5 transition-all flex items-center gap-2">
+        <button @click="addModal = true" class="bg-gold-600 text-white px-6 py-3 rounded-2xl font-black text-sm shadow-lg shadow-gold-100 hover:bg-gold-700 hover:-translate-y-0.5 transition-all flex items-center gap-2">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M12 4v16m8-8H4"></path></svg>
             إضافة طالب جديد
         </button>
@@ -34,7 +34,7 @@
 
     <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
         <div class="bg-white p-5 rounded-[1.5rem] border border-slate-100 shadow-sm flex items-center gap-4">
-            <div class="w-12 h-12 bg-indigo-50 text-indigo-600 rounded-xl flex items-center justify-center font-black text-xl">Σ</div>
+            <div class="w-12 h-12 bg-gold-100 text-gold-600 rounded-xl flex items-center justify-center font-black text-xl">Σ</div>
             <div>
                 <p class="text-[10px] font-black text-slate-400 uppercase tracking-tighter">الإجمالي</p>
                 <p class="text-xl font-black text-slate-800">{{ $stats['total'] }}</p>
@@ -66,7 +66,7 @@
     <div class="bg-white rounded-[2rem] shadow-sm border border-slate-100 overflow-hidden">
         <div class="p-6 border-b border-slate-50">
             <form action="{{ route('admin.students.index') }}" method="GET" class="relative max-w-sm">
-                <input type="text" name="search" value="{{ request('search') }}" placeholder="ابحث عن اسم، بريد..." class="w-full bg-slate-50 border border-slate-100 focus:bg-white focus:border-indigo-300 rounded-xl px-10 py-2.5 text-xs font-bold transition-all outline-none">
+                <input type="text" name="search" value="{{ request('search') }}" placeholder="ابحث عن اسم، بريد..." class="w-full bg-slate-50 border border-slate-100 focus:bg-white focus:border-gold-300 rounded-xl px-10 py-2.5 text-xs font-bold transition-all outline-none">
                 <svg class="w-4 h-4 text-slate-400 absolute right-4 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
             </form>
         </div>
@@ -116,7 +116,7 @@
                                 @endunless
                                 <button @click="currentUser = {{ $student }}; $refs.editForm.action = '/admin/students/' + {{ $student->id }}; editModal = true"
                                         title="تعديل"
-                                        class="p-2 text-slate-400 hover:text-indigo-600 transition-all">
+                                        class="p-2 text-slate-400 hover:text-gold-600 transition-all">
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
                                 </button>
 
@@ -146,15 +146,15 @@
                 @csrf
                 <div>
                     <label class="text-[10px] font-black text-slate-400 uppercase block mb-1">الاسم الكامل</label>
-                    <input type="text" name="name" required class="w-full bg-slate-50 border border-slate-100 rounded-xl px-4 py-3 text-sm font-bold outline-none focus:border-indigo-300">
+                    <input type="text" name="name" required class="w-full bg-slate-50 border border-slate-100 rounded-xl px-4 py-3 text-sm font-bold outline-none focus:border-gold-300">
                 </div>
                 <div>
                     <label class="text-[10px] font-black text-slate-400 uppercase block mb-1">البريد الإلكتروني</label>
-                    <input type="email" name="email" required class="w-full bg-slate-50 border border-slate-100 rounded-xl px-4 py-3 text-sm font-bold outline-none focus:border-indigo-300">
+                    <input type="email" name="email" required class="w-full bg-slate-50 border border-slate-100 rounded-xl px-4 py-3 text-sm font-bold outline-none focus:border-gold-300">
                 </div>
                 <div>
                     <label class="text-[10px] font-black text-slate-400 uppercase block mb-1">كلمة المرور</label>
-                    <input type="password" name="password" required class="w-full bg-slate-50 border border-slate-100 rounded-xl px-4 py-3 text-sm font-bold outline-none focus:border-indigo-300">
+                    <input type="password" name="password" required class="w-full bg-slate-50 border border-slate-100 rounded-xl px-4 py-3 text-sm font-bold outline-none focus:border-gold-300">
                 </div>
                 <div>
                     <label class="text-[10px] font-black text-slate-400 uppercase block mb-1">الحالة</label>
@@ -165,7 +165,7 @@
                     </select>
                 </div>
                 <div class="flex gap-2 pt-4">
-                    <button type="submit" class="flex-1 bg-indigo-600 text-white py-3 rounded-xl font-black text-xs shadow-lg hover:bg-indigo-700 transition">حفظ الطالب</button>
+                    <button type="submit" class="flex-1 bg-gold-600 text-white py-3 rounded-xl font-black text-xs shadow-lg hover:bg-gold-700 transition">حفظ الطالب</button>
                     <button type="button" @click="addModal = false" class="flex-1 bg-slate-50 text-slate-400 py-3 rounded-xl font-black text-xs">إلغاء</button>
                 </div>
             </form>
@@ -180,11 +180,11 @@
                 @method('PUT')
                 <div>
                     <label class="text-[10px] font-black text-slate-400 uppercase block mb-1">الاسم الكامل</label>
-                    <input type="text" name="name" x-model="currentUser.name" required class="w-full bg-slate-50 border border-slate-100 rounded-xl px-4 py-3 text-sm font-bold outline-none focus:border-indigo-300">
+                    <input type="text" name="name" x-model="currentUser.name" required class="w-full bg-slate-50 border border-slate-100 rounded-xl px-4 py-3 text-sm font-bold outline-none focus:border-gold-300">
                 </div>
                 <div>
                     <label class="text-[10px] font-black text-slate-400 uppercase block mb-1">البريد الإلكتروني</label>
-                    <input type="email" name="email" x-model="currentUser.email" required class="w-full bg-slate-50 border border-slate-100 rounded-xl px-4 py-3 text-sm font-bold outline-none focus:border-indigo-300">
+                    <input type="email" name="email" x-model="currentUser.email" required class="w-full bg-slate-50 border border-slate-100 rounded-xl px-4 py-3 text-sm font-bold outline-none focus:border-gold-300">
                 </div>
                 <div>
                     <label class="text-[10px] font-black text-slate-400 uppercase block mb-1">كلمة المرور (اختياري)</label>
@@ -199,7 +199,7 @@
                     </select>
                 </div>
                 <div class="flex gap-2 pt-4">
-                    <button type="submit" class="flex-1 bg-indigo-600 text-white py-3 rounded-xl font-black text-xs shadow-lg hover:bg-indigo-700 transition">تحديث البيانات</button>
+                    <button type="submit" class="flex-1 bg-gold-600 text-white py-3 rounded-xl font-black text-xs shadow-lg hover:bg-gold-700 transition">تحديث البيانات</button>
                     <button type="button" @click="editModal = false" class="flex-1 bg-slate-50 text-slate-400 py-3 rounded-xl font-black text-xs">إلغاء</button>
                 </div>
             </form>

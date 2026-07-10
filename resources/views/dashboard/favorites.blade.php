@@ -1,4 +1,4 @@
-@extends('layouts.dashboard')
+﻿@extends('layouts.dashboard')
 @section('title', 'المفضلات')
 
 @section('content')
@@ -9,7 +9,7 @@
         <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-10 gap-6">
             <div>
                 <h1 class="text-3xl font-black text-slate-800 flex items-center gap-3">
-                    المفضلات <span class="text-2xl text-indigo-600">(<span x-text="stats.count">0</span>)</span>
+                    المفضلات <span class="text-2xl text-gold-600">(<span x-text="stats.count">0</span>)</span>
                 </h1>
                 <p class="text-slate-500 font-bold mt-2">المنح التي اخترتها للمتابعة لاحقاً</p>
             </div>
@@ -32,7 +32,7 @@
             </template>
 
             <template x-for="f in favorites" :key="f.id">
-                <div class="bg-white rounded-[2.5rem] p-6 shadow-sm border border-slate-100 hover:shadow-md hover:border-indigo-200 transition-all duration-300 group flex flex-col justify-between">
+                <div class="bg-white rounded-[2.5rem] p-6 shadow-sm border border-slate-100 hover:shadow-md hover:border-navy-100 transition-all duration-300 group flex flex-col justify-between">
                     
                     <div class="flex items-start gap-4 mb-4">
                         {{-- 1. صندوق اللوجو الموحد والمطابق تماماً والمحلول برمجياً --}}
@@ -42,7 +42,7 @@
                             <img x-show="f.logo_image" :src="f.logo_image" :alt="f.title" class="w-full h-full object-contain" x-cloak>
 
                             {{-- يعرض الأيقونة الافتراضية فقط إذا كان الحقل فارغاً --}}
-                            <div x-show="!f.logo_image" class="w-full h-full bg-indigo-50 rounded-xl flex items-center justify-center text-indigo-600" x-cloak>
+                            <div x-show="!f.logo_image" class="w-full h-full bg-gold-100 rounded-xl flex items-center justify-center text-gold-600" x-cloak>
                                 <svg class="w-10 h-10" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M4.26 10.174L11.25 15.89c.445.365 1.055.365 1.5 0l6.99-5.717m-.003 4.31v4.454a2.25 2.25 0 01-2.247 2.247H6.75a2.25 2.25 0 01-2.247-2.247v-4.454m15.122-4.31L12 3l-8.12 6.634m16.24 0l-1.92 11.52H5.8l-1.92-11.52z"/>
                                 </svg>
@@ -55,8 +55,8 @@
                             <h4 class="font-black text-slate-800 text-lg mb-1 truncate" x-text="f.title"></h4>
                             <p class="text-sm text-slate-500 font-bold mb-2" x-text="f.category"></p>
                             <div class="flex flex-wrap gap-1">
-                                <span class="bg-indigo-50 text-indigo-600 px-2.5 py-1 rounded-lg text-[10px] font-black" x-text="f.financial_value ?? f.amount"></span>
-                                <span class="bg-purple-50 text-purple-600 px-2.5 py-1 rounded-lg text-[10px] font-black" x-text="f.funding ?? 'ممولة بالكامل'"></span>
+                                <span class="bg-gold-100 text-gold-600 px-2.5 py-1 rounded-lg text-[10px] font-black" x-text="f.financial_value ?? f.amount"></span>
+                                <span class="bg-gold-100 text-gold-600 px-2.5 py-1 rounded-lg text-[10px] font-black" x-text="f.funding ?? 'ممولة بالكامل'"></span>
                             </div>
                         </div>
 
@@ -70,7 +70,7 @@
 
                     {{-- أزرار التحكم السفلية المربوطة بالـ ID الديناميكي للمنحة --}}
                     <div class="flex gap-3 pt-4 border-t border-slate-100 mt-auto">
-                        <a :href="'/dashboard/scholarships/' + f.id" class="flex-1 bg-indigo-600 text-white py-3 px-6 rounded-xl font-black text-sm text-center hover:bg-indigo-700 transition shadow-md shadow-indigo-100">عرض التفاصيل</a>
+                        <a :href="'/dashboard/scholarships/' + f.id" class="flex-1 bg-gold-600 text-white py-3 px-6 rounded-xl font-black text-sm text-center hover:bg-gold-700 transition shadow-md shadow-gold-100">عرض التفاصيل</a>
                         
                         <button class="p-3 text-red-500 bg-red-50 rounded-xl hover:bg-red-100 transition" type="button" @click="toggleRemove(f.id)" aria-label="favorite">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -84,7 +84,7 @@
 
         {{-- زر تحميل المزيد --}}
         <div class="text-center mt-16" x-show="!loading && favorites.length > 0">
-            <button class="text-slate-400 font-bold text-base hover:text-indigo-600 transition" type="button" @click="loadMore">تحميل المزيد...</button>
+            <button class="text-slate-400 font-bold text-base hover:text-gold-600 transition" type="button" @click="loadMore">تحميل المزيد...</button>
         </div>
     </div>
 

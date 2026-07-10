@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+﻿@extends('layouts.admin')
 
 @section('title', 'طلبات الدعم')
 @section('breadcrumb', 'الدعم الفني')
@@ -46,7 +46,7 @@
                     @forelse($tickets as $ticket)
                     <tr class="hover:bg-slate-50/80 transition-all">
                         <td class="px-6 py-5">
-                            <span class="text-xs font-black text-indigo-600 bg-indigo-50 px-2 py-1 rounded-lg">#{{ $ticket->id }}</span>
+                            <span class="text-xs font-black text-gold-600 bg-gold-100 px-2 py-1 rounded-lg">#{{ $ticket->id }}</span>
                         </td>
                         <td class="px-6 py-5">
                             <p class="text-xs font-black text-slate-800">{{ $ticket->user->name ?? 'مستخدم' }}</p>
@@ -59,7 +59,7 @@
                         </td>
                         <td class="px-6 py-5 text-left">
                             <div class="flex items-center gap-2 justify-end">
-                                <button @click="openChat({{ $ticket->id }})" class="px-4 py-1.5 bg-indigo-600 text-white rounded-lg text-[10px] font-black hover:bg-indigo-700 shadow-sm transition-all">فتح المحادثة</button>
+                                <button @click="openChat({{ $ticket->id }})" class="px-4 py-1.5 bg-gold-600 text-white rounded-lg text-[10px] font-black hover:bg-gold-700 shadow-sm transition-all">فتح المحادثة</button>
                                 @if($ticket->status !== 'resolved')
                                 <button @click="resolveTicket({{ $ticket->id }})" class="px-4 py-1.5 bg-emerald-600 text-white rounded-lg text-[10px] font-black hover:bg-emerald-700 shadow-sm transition-all">حلّ</button>
                                 @endif
@@ -83,7 +83,7 @@
             {{-- Modal Header --}}
             <div class="p-6 border-b border-slate-50 flex items-center justify-between bg-slate-50/50 shrink-0">
                 <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 bg-indigo-600 rounded-2xl flex items-center justify-center text-white shadow-lg font-black">#<span x-text="activeTicket.id"></span></div>
+                    <div class="w-10 h-10 bg-gold-600 rounded-2xl flex items-center justify-center text-white shadow-lg font-black">#<span x-text="activeTicket.id"></span></div>
                     <div>
                         <h3 class="text-sm font-black text-slate-900" x-text="activeTicket.subject"></h3>
                         <span class="text-[10px] font-black uppercase px-2 py-0.5 rounded" :class="statusClass(activeTicket.status)" x-text="activeTicket.status"></span>
@@ -101,7 +101,7 @@
                 <template x-for="msg in messages" :key="msg.id">
                     <div class="flex gap-3 items-start" :class="msg.sender_type === 'admin' ? 'flex-row-reverse' : ''">
                         <div class="w-8 h-8 rounded-xl flex items-center justify-center text-white text-[10px] font-black shrink-0"
-                             :class="msg.sender_type === 'admin' ? 'bg-emerald-600' : (msg.sender_type === 'ai' ? 'bg-indigo-500' : 'bg-slate-700')"
+                             :class="msg.sender_type === 'admin' ? 'bg-emerald-600' : (msg.sender_type === 'ai' ? 'bg-gold-500' : 'bg-slate-700')"
                              x-text="msg.sender_type === 'admin' ? 'A' : (msg.sender_type === 'ai' ? 'AI' : 'ط')"></div>
                         <div class="p-3 rounded-2xl text-xs font-bold leading-relaxed max-w-[80%]"
                              :class="msg.sender_type === 'admin' ? 'bg-emerald-600 text-white rounded-tr-sm' : 'bg-white text-slate-700 rounded-tl-sm shadow-sm border border-slate-100'">
@@ -115,8 +115,8 @@
             {{-- Input --}}
             <div class="p-6 bg-white border-t border-slate-50 shrink-0">
                 <form @submit.prevent="sendReply()" class="flex gap-3">
-                    <input type="text" x-model="replyText" placeholder="اكتب ردك..." class="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm font-bold outline-none focus:border-indigo-500 transition-all" :disabled="loading">
-                    <button type="submit" class="bg-indigo-600 text-white px-6 py-2.5 rounded-xl text-xs font-black hover:bg-indigo-700 disabled:opacity-50" :disabled="loading || !replyText.trim()">إرسال</button>
+                    <input type="text" x-model="replyText" placeholder="اكتب ردك..." class="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm font-bold outline-none focus:border-gold-500 transition-all" :disabled="loading">
+                    <button type="submit" class="bg-gold-600 text-white px-6 py-2.5 rounded-xl text-xs font-black hover:bg-gold-700 disabled:opacity-50" :disabled="loading || !replyText.trim()">إرسال</button>
                 </form>
             </div>
         </div>

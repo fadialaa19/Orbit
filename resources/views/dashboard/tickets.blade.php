@@ -1,4 +1,4 @@
-@extends('layouts.dashboard')
+﻿@extends('layouts.dashboard')
 
 @section('title', 'طلباتي / التذاكر')
 
@@ -15,7 +15,7 @@
             </div>
 
             <div class="flex gap-3">
-                <button type="button" @click="refresh()" class="bg-indigo-600 text-white px-6 py-3 rounded-2xl font-black shadow-lg hover:bg-indigo-700 transition">
+                <button type="button" @click="refresh()" class="bg-gold-600 text-white px-6 py-3 rounded-2xl font-black shadow-lg hover:bg-gold-700 transition">
                     تحديث
                 </button>
             </div>
@@ -24,11 +24,11 @@
         <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
             <div class="bg-white p-6 rounded-[2rem] shadow-sm border border-slate-50 text-center">
                 <p class="text-xs font-black text-slate-400 uppercase">قيد الانتظار</p>
-                <p class="text-3xl font-black text-indigo-600 mt-2" x-text="stats.pending ?? 0"></p>
+                <p class="text-3xl font-black text-gold-600 mt-2" x-text="stats.pending ?? 0"></p>
             </div>
             <div class="bg-white p-6 rounded-[2rem] shadow-sm border border-slate-50 text-center">
                 <p class="text-xs font-black text-slate-400 uppercase">محلولة</p>
-                <p class="text-3xl font-black text-purple-600 mt-2" x-text="stats.resolved ?? 0"></p>
+                <p class="text-3xl font-black text-gold-600 mt-2" x-text="stats.resolved ?? 0"></p>
             </div>
             <div class="bg-white p-6 rounded-[2rem] shadow-sm border border-slate-50 text-center">
                 <p class="text-xs font-black text-slate-400 uppercase">مغلقة</p>
@@ -47,7 +47,7 @@
                     <p class="text-xs text-slate-400 font-bold">اضغط على التذكرة لفتح المحادثة</p>
                 </div>
                 <div class="text-right">
-                    <input type="text" class="bg-white border border-slate-200 rounded-xl px-4 py-2 text-sm font-bold outline-none focus:border-indigo-200 w-full md:w-72"
+                    <input type="text" class="bg-white border border-slate-200 rounded-xl px-4 py-2 text-sm font-bold outline-none focus:border-navy-100 w-full md:w-72"
                            placeholder="ابحث بالعنوان..." x-model="query" @input.debounce.300ms="filter()" />
                 </div>
             </div>
@@ -62,7 +62,7 @@
                 <template x-if="!loading">
                     <div class="space-y-3">
                         <template x-for="t in filteredTickets" :key="t.id">
-                            <a :href="routeTicketShow(t.id)" class="group block rounded-3xl border border-slate-100 hover:border-indigo-100 hover:bg-indigo-50/20 transition p-5">
+                            <a :href="routeTicketShow(t.id)" class="group block rounded-3xl border border-slate-100 hover:border-gold-100 hover:bg-gold-100/20 transition p-5">
                                 <div class="flex items-center justify-between gap-4">
                                     <div class="min-w-0">
                                         <div class="flex items-center gap-3">
@@ -78,7 +78,7 @@
                                     <div class="flex items-center gap-2">
                                         <span class="text-[10px] px-3 py-1 rounded-full font-black"
                                               :class="statusPillClass(t.status)" x-text="statusLabel(t.status)"></span>
-                                        <span class="text-indigo-600 font-black text-sm group-hover:translate-x-[-2px] transition">→</span>
+                                        <span class="text-gold-600 font-black text-sm group-hover:translate-x-[-2px] transition">→</span>
                                     </div>
                                 </div>
                             </a>

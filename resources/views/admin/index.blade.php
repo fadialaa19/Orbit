@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+﻿@extends('layouts.admin')
 
 @section('title', 'نظرة عامة')
 @section('breadcrumb', 'نظرة عامة')
@@ -8,14 +8,14 @@
 
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
         @if(auth()->user()->role === 'super_admin' || in_array('students', auth()->user()->permissions ?? []))
-        <div class="group bg-white rounded-[1.8rem] p-6 shadow-sm border border-slate-100 hover:border-indigo-200 transition-all duration-300">
+        <div class="group bg-white rounded-[1.8rem] p-6 shadow-sm border border-slate-100 hover:border-navy-100 transition-all duration-300">
             <div class="flex items-center justify-between">
                 <div>
                     <p class="text-[11px] font-black text-slate-400 uppercase tracking-widest">إجمالي الطلاب</p>
                     <p class="text-2xl font-black text-slate-900 mt-1">{{ number_format($stats['total_students']) }}</p>
                     <span class="text-emerald-600 font-bold text-[10px] bg-emerald-50 px-2 py-0.5 rounded-lg inline-block mt-2">مستخدم نشط</span>
                 </div>
-                <div class="w-14 h-14 bg-indigo-50 text-indigo-600 rounded-2xl flex items-center justify-center group-hover:bg-indigo-600 group-hover:text-white transition-all duration-300">
+                <div class="w-14 h-14 bg-gold-100 text-gold-600 rounded-2xl flex items-center justify-center group-hover:bg-gold-600 group-hover:text-white transition-all duration-300">
                     <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
                 </div>
             </div>
@@ -34,14 +34,14 @@
             </div>
         </div>
 @endif
-      <!--   <div class="group bg-white rounded-[1.8rem] p-6 shadow-sm border border-slate-100 hover:border-purple-200 transition-all duration-300">
+      <!--   <div class="group bg-white rounded-[1.8rem] p-6 shadow-sm border border-slate-100 hover:border-gold-100 transition-all duration-300">
             <div class="flex items-center justify-between">
                 <div>
                     <p class="text-[11px] font-black text-slate-400 uppercase tracking-widest">الإيرادات</p>
                     <p class="text-2xl font-black text-slate-900 mt-1">{{ number_format($stats['total_revenue'], 1) }}K <span class="text-xs font-bold text-slate-400">ر.س</span></p>
-                    <span class="text-purple-600 font-bold text-[10px] bg-purple-50 px-2 py-0.5 rounded-lg inline-block mt-2">إجمالي المدفوعات</span>
+                    <span class="text-gold-600 font-bold text-[10px] bg-gold-100 px-2 py-0.5 rounded-lg inline-block mt-2">إجمالي المدفوعات</span>
                 </div>
-                <div class="w-14 h-14 bg-purple-50 text-purple-600 rounded-2xl flex items-center justify-center group-hover:bg-purple-600 group-hover:text-white transition-all duration-300">
+                <div class="w-14 h-14 bg-gold-100 text-gold-600 rounded-2xl flex items-center justify-center group-hover:bg-gold-600 group-hover:text-white transition-all duration-300">
                     <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path></svg>
                 </div>
             </div>
@@ -66,7 +66,7 @@
     <div class="bg-white rounded-[2rem] shadow-sm border border-slate-100 overflow-hidden">
         <div class="p-6 border-b border-slate-50 flex items-center justify-between">
             <div class="flex items-center gap-3">
-                <div class="w-2 h-6 bg-indigo-600 rounded-full"></div>
+                <div class="w-2 h-6 bg-gold-600 rounded-full"></div>
                 <h2 class="text-lg font-black text-slate-800">أحدث طلبات الالتحاق</h2>
             </div>
         </div>
@@ -87,7 +87,7 @@
                     <tr class="hover:bg-slate-50/80 transition-all group">
                         <td class="px-6 py-4">
                             <div class="flex items-center gap-3">
-                                <div class="w-10 h-10 bg-indigo-50 rounded-xl flex items-center justify-center font-black text-indigo-600 text-xs">
+                                <div class="w-10 h-10 bg-gold-100 rounded-xl flex items-center justify-center font-black text-gold-600 text-xs">
                                     {{ mb_substr($app->user->name, 0, 1) }}
                                 </div>
                                 <div>
@@ -117,7 +117,7 @@
                         </td>
                         <td class="px-6 py-4 text-left">
                             <div class="flex items-center gap-1 justify-end">
-                                <a href="{{ route('admin.scholarships.edit', $app->scholarship_id) }}" class="p-2 text-slate-400 hover:text-indigo-600 hover:bg-white rounded-lg transition shadow-sm border border-transparent hover:border-slate-100">
+                                <a href="{{ route('admin.scholarships.edit', $app->scholarship_id) }}" class="p-2 text-slate-400 hover:text-gold-600 hover:bg-white rounded-lg transition shadow-sm border border-transparent hover:border-slate-100">
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
                                 </a>
                             </div>
@@ -136,19 +136,19 @@
 
     <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-8">
         @if(auth()->user()->role === 'super_admin' || in_array('scholarships', auth()->user()->permissions ?? []))
-        <a href="{{ url('/admin/scholarships/create') }}" class="flex items-center justify-center gap-3 p-5 bg-indigo-600 text-white rounded-[1.5rem] hover:bg-indigo-700 transition-all shadow-lg shadow-indigo-200">
+        <a href="{{ url('/admin/scholarships/create') }}" class="flex items-center justify-center gap-3 p-5 bg-gold-600 text-white rounded-[1.5rem] hover:bg-gold-700 transition-all shadow-lg shadow-navy-100">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
             <span class="font-black text-sm">إضافة منحة جديدة</span>
         </a>
         @endif
         @if(auth()->user()->role === 'super_admin' || in_array('students', auth()->user()->permissions ?? []))
         <a href="{{ url('/admin/students/create') }}" class="flex items-center justify-center gap-3 p-5 bg-white text-slate-700 border border-slate-200 rounded-[1.5rem] hover:bg-slate-50 transition-all shadow-sm">
-            <svg class="w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"></path></svg>
+            <svg class="w-5 h-5 text-gold-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"></path></svg>
             <span class="font-black text-sm">تسجيل طالب يدوياً</span>
         </a>
 @endif
         <button class="flex items-center justify-center gap-3 p-5 bg-white text-slate-700 border border-slate-200 rounded-[1.5rem] hover:bg-slate-50 transition-all shadow-sm">
-            <svg class="w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+            <svg class="w-5 h-5 text-gold-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
             <span class="font-black text-sm">تصدير التقارير</span>
         </button>
     </div>

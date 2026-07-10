@@ -1,4 +1,4 @@
-@extends('layouts.dashboard')
+﻿@extends('layouts.dashboard')
 
 @section('title', 'الملف الشخصي')
 
@@ -11,13 +11,13 @@
         <div class="bg-white rounded-[2.5rem] p-8 shadow-sm border border-slate-50 mb-8">
             <div class="flex justify-between items-center mb-4">
                 <div class="text-right">
-                    <h1 class="text-3xl font-black bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent animate-pulse mb-2">الملف الشخصي</h1>
+                    <h1 class="text-3xl font-black bg-gradient-to-r from-gold-600 to-gold-700 bg-clip-text text-transparent animate-pulse mb-2">الملف الشخصي</h1>
                     <p class="text-slate-400 text-xs font-bold">🎯 أكمل ملفك الشخصي للحصول على توصيات منح دراسية مخصصة أفضل</p>
                 </div>
                 <div class="text-center">
-                    <span class="text-4xl lg:text-5xl font-black text-indigo-600 drop-shadow-lg">{{ $profileCompletion }}%</span>
+                    <span class="text-4xl lg:text-5xl font-black text-gold-600 drop-shadow-lg">{{ $profileCompletion }}%</span>
                     <div class="w-full bg-gradient-to-r from-slate-200 to-slate-300 h-4 rounded-full overflow-hidden mt-2 shadow-inner">
-                        <div class="bg-gradient-to-r from-indigo-500 to-purple-600 h-full transition-all duration-1000 shadow-lg" :style="'width: ' + completion() + '%'"></div>
+                        <div class="bg-gradient-to-r from-gold-500 to-gold-600 h-full transition-all duration-1000 shadow-lg" :style="'width: ' + completion() + '%'"></div>
                     </div>
                     <p class="text-xs text-slate-500 mt-1 font-bold" x-text="completionStatus()"></p>
                 </div>
@@ -34,16 +34,16 @@
                     <div class="bg-white rounded-[2.5rem] shadow-sm border border-slate-50 overflow-hidden">
                         
                         <div class="flex border-b border-slate-100 bg-slate-50/50 p-2">
-                            <button type="button" @click="tab = 'personal'" :class="tab === 'personal' ? 'bg-white shadow-sm text-indigo-600 border-r-4 border-indigo-500' : 'text-slate-400 hover:text-slate-600'" class="flex-1 py-3 rounded-2xl font-black text-sm transition-all duration-300">
+                            <button type="button" @click="tab = 'personal'" :class="tab === 'personal' ? 'bg-white shadow-sm text-gold-600 border-r-4 border-gold-500' : 'text-slate-400 hover:text-slate-600'" class="flex-1 py-3 rounded-2xl font-black text-sm transition-all duration-300">
                                 معلومات شخصية
                             </button>
-                            <button type="button" @click="tab = 'education'" :class="tab === 'education' ? 'bg-white shadow-sm text-indigo-600 border-r-4 border-indigo-500' : 'text-slate-400 hover:text-slate-600'" class="flex-1 py-3 rounded-2xl font-bold text-sm transition-all duration-300">
+                            <button type="button" @click="tab = 'education'" :class="tab === 'education' ? 'bg-white shadow-sm text-gold-600 border-r-4 border-gold-500' : 'text-slate-400 hover:text-slate-600'" class="flex-1 py-3 rounded-2xl font-bold text-sm transition-all duration-300">
                                 تعليم
                             </button>
-                            <button type="button" @click="tab = 'languages'" :class="tab === 'languages' ? 'bg-white shadow-sm text-indigo-600 border-r-4 border-indigo-500' : 'text-slate-400 hover:text-slate-600'" class="flex-1 py-3 rounded-2xl font-black text-sm transition-all duration-300">
+                            <button type="button" @click="tab = 'languages'" :class="tab === 'languages' ? 'bg-white shadow-sm text-gold-600 border-r-4 border-gold-500' : 'text-slate-400 hover:text-slate-600'" class="flex-1 py-3 rounded-2xl font-black text-sm transition-all duration-300">
                                 لغات
                             </button>
-                            <button type="button" @click="tab = 'documents'" :class="tab === 'documents' ? 'bg-white shadow-sm text-indigo-600 border-r-4 border-indigo-500' : 'text-slate-400 hover:text-slate-600'" class="flex-1 py-3 rounded-2xl font-black text-sm transition-all duration-300">
+                            <button type="button" @click="tab = 'documents'" :class="tab === 'documents' ? 'bg-white shadow-sm text-gold-600 border-r-4 border-gold-500' : 'text-slate-400 hover:text-slate-600'" class="flex-1 py-3 rounded-2xl font-black text-sm transition-all duration-300">
                                 مستندات
                             </button>
                         </div>
@@ -56,7 +56,7 @@
                                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                         <div>
                                             <label class="block text-slate-500 font-bold mb-2 text-sm">الاسم الكامل</label>
-                                            <input type="text" name="name" value="{{ old('name', $user->name) }}" class="w-full bg-slate-50 border-0 rounded-2xl p-4 text-slate-700 font-bold focus:ring-2 focus:ring-indigo-500">
+                                            <input type="text" name="name" value="{{ old('name', $user->name) }}" class="w-full bg-slate-50 border-0 rounded-2xl p-4 text-slate-700 font-bold focus:ring-2 focus:ring-gold-500">
                                         </div>
                                         <div>
                                             <label class="block text-slate-500 font-bold mb-2 text-sm">البريد الإلكتروني</label>
@@ -65,41 +65,41 @@
                                         </div>
                                         <div>
                                             <label class="block text-slate-500 font-bold mb-2 text-sm">رقم الهاتف</label>
-                                            <input type="text" name="phone" value="{{ old('phone', $user->phone) }}" placeholder="+966 50 123 4567" dir="ltr" class="w-full bg-slate-50 border-0 rounded-2xl p-4 text-slate-700 font-bold text-right focus:ring-2 focus:ring-indigo-500">
+                                            <input type="text" name="phone" value="{{ old('phone', $user->phone) }}" placeholder="+966 50 123 4567" dir="ltr" class="w-full bg-slate-50 border-0 rounded-2xl p-4 text-slate-700 font-bold text-right focus:ring-2 focus:ring-gold-500">
                                         </div>
                                         <div>
                                             <label class="block text-slate-500 font-bold mb-2 text-sm">تاريخ الميلاد</label>
-                                            <input type="date" name="birthdate" value="{{ old('birthdate', $user->birthdate?->format('Y-m-d')) }}" class="w-full bg-slate-50 border-0 rounded-2xl p-4 text-slate-700 font-bold focus:ring-2 focus:ring-indigo-500">
+                                            <input type="date" name="birthdate" value="{{ old('birthdate', $user->birthdate?->format('Y-m-d')) }}" class="w-full bg-slate-50 border-0 rounded-2xl p-4 text-slate-700 font-bold focus:ring-2 focus:ring-gold-500">
                                         </div>
                                         <div>
                                             <label class="block text-slate-500 font-bold mb-2 text-sm">الدولة</label>
-                                            <input type="text" name="country" value="{{ old('country', $user->country) }}" placeholder="المملكة العربية السعودية" class="w-full bg-slate-50 border-0 rounded-2xl p-4 text-slate-700 font-bold focus:ring-2 focus:ring-indigo-500">
+                                            <input type="text" name="country" value="{{ old('country', $user->country) }}" placeholder="المملكة العربية السعودية" class="w-full bg-slate-50 border-0 rounded-2xl p-4 text-slate-700 font-bold focus:ring-2 focus:ring-gold-500">
                                         </div>
                                         <div>
                                             <label class="block text-slate-500 font-bold mb-2 text-sm">المدينة</label>
-                                            <input type="text" name="city" value="{{ old('city', $user->city) }}" placeholder="الرياض" class="w-full bg-slate-50 border-0 rounded-2xl p-4 text-slate-700 font-bold focus:ring-2 focus:ring-indigo-500">
+                                            <input type="text" name="city" value="{{ old('city', $user->city) }}" placeholder="الرياض" class="w-full bg-slate-50 border-0 rounded-2xl p-4 text-slate-700 font-bold focus:ring-2 focus:ring-gold-500">
                                         </div>
                                     </div>
                                     
                                     <!-- IDs Section -->
-                                    <div class="bg-indigo-50 border border-indigo-100 rounded-3xl p-6">
-                                        <h3 class="text-indigo-600 font-black mb-4">المعلومات التعريفية</h3>
+                                    <div class="bg-gold-100 border border-gold-100 rounded-3xl p-6">
+                                        <h3 class="text-gold-600 font-black mb-4">المعلومات التعريفية</h3>
                                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                             <div>
                                                 <label class="block text-slate-500 font-bold mb-2 text-xs">رقم الهوية</label>
-                                                <input type="text" name="national_id" value="{{ old('national_id', $user->national_id) }}" placeholder="رقم الهوية الشخصية" class="w-full bg-white border-0 rounded-2xl p-3 text-slate-700 font-bold focus:ring-2 focus:ring-indigo-500">
+                                                <input type="text" name="national_id" value="{{ old('national_id', $user->national_id) }}" placeholder="رقم الهوية الشخصية" class="w-full bg-white border-0 rounded-2xl p-3 text-slate-700 font-bold focus:ring-2 focus:ring-gold-500">
                                             </div>
                                             <div>
                                                 <label class="block text-slate-500 font-bold mb-2 text-xs">رقم جواز السفر</label>
-                                                <input type="text" name="passport_number" value="{{ old('passport_number', $user->passport_number) }}" placeholder="رقم جواز السفر" class="w-full bg-white border-0 rounded-2xl p-3 text-slate-700 font-bold focus:ring-2 focus:ring-indigo-500">
+                                                <input type="text" name="passport_number" value="{{ old('passport_number', $user->passport_number) }}" placeholder="رقم جواز السفر" class="w-full bg-white border-0 rounded-2xl p-3 text-slate-700 font-bold focus:ring-2 focus:ring-gold-500">
                                             </div>
                                             <div>
                                                 <label class="block text-slate-500 font-bold mb-2 text-xs">تاريخ انتهاء جواز السفر</label>
-                                                <input type="date" name="passport_expiry" value="{{ old('passport_expiry', $user->passport_expiry?->format('Y-m-d')) }}" class="w-full bg-white border-0 rounded-2xl p-3 text-slate-700 font-bold focus:ring-2 focus:ring-indigo-500">
+                                                <input type="date" name="passport_expiry" value="{{ old('passport_expiry', $user->passport_expiry?->format('Y-m-d')) }}" class="w-full bg-white border-0 rounded-2xl p-3 text-slate-700 font-bold focus:ring-2 focus:ring-gold-500">
                                             </div>
                                             <div>
                                                 <label class="block text-slate-500 font-bold mb-2 text-xs">دولة إصدار جواز السفر</label>
-                                                <input type="text" name="passport_country" value="{{ old('passport_country', $user->passport_country) }}" placeholder="الدولة" class="w-full bg-white border-0 rounded-2xl p-3 text-slate-700 font-bold focus:ring-2 focus:ring-indigo-500">
+                                                <input type="text" name="passport_country" value="{{ old('passport_country', $user->passport_country) }}" placeholder="الدولة" class="w-full bg-white border-0 rounded-2xl p-3 text-slate-700 font-bold focus:ring-2 focus:ring-gold-500">
                                             </div>
                                         </div>
                                     </div>
@@ -206,34 +206,34 @@
                                     </div>
 
                                     <!-- Master (Optional) -->
-                                    <div class="bg-purple-50 border border-purple-100 rounded-3xl p-6" x-data="{ has_master: {{ $user->master_university ? 'true' : 'false' }} }">
+                                    <div class="bg-gold-100 border border-gold-100 rounded-3xl p-6" x-data="{ has_master: {{ $user->master_university ? 'true' : 'false' }} }">
                                         <div class="flex justify-between items-center mb-4">
-                                            <h3 class="text-purple-600 font-black">الماجستير</h3>
+                                            <h3 class="text-gold-600 font-black">الماجستير</h3>
                                             <label class="flex items-center gap-2 cursor-pointer">
-                                                <input type="checkbox" name="has_master" x-model="has_master" class="w-4 h-4 text-purple-600 rounded">
-                                                <span class="text-purple-700 text-xs font-bold">لديك ماجستير</span>
+                                                <input type="checkbox" name="has_master" x-model="has_master" class="w-4 h-4 text-gold-600 rounded">
+                                                <span class="text-gold-700 text-xs font-bold">لديك ماجستير</span>
                                             </label>
                                         </div>
                                         <div x-show="has_master" class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                             <div>
                                                 <label class="block text-slate-500 font-bold mb-2 text-xs">الجامعة</label>
-                                                <input type="text" name="master_university" value="{{ old('master_university', $user->master_university) }}" placeholder="اسم الجامعة" class="w-full bg-white border-0 rounded-2xl p-3 text-slate-700 font-bold focus:ring-2 focus:ring-purple-500">
+                                                <input type="text" name="master_university" value="{{ old('master_university', $user->master_university) }}" placeholder="اسم الجامعة" class="w-full bg-white border-0 rounded-2xl p-3 text-slate-700 font-bold focus:ring-2 focus:ring-gold-500">
                                             </div>
                                             <div>
                                                 <label class="block text-slate-500 font-bold mb-2 text-xs">الدولة</label>
-                                                <input type="text" name="master_country" value="{{ old('master_country', $user->master_country) }}" placeholder="الدولة" class="w-full bg-white border-0 rounded-2xl p-3 text-slate-700 font-bold focus:ring-2 focus:ring-purple-500">
+                                                <input type="text" name="master_country" value="{{ old('master_country', $user->master_country) }}" placeholder="الدولة" class="w-full bg-white border-0 rounded-2xl p-3 text-slate-700 font-bold focus:ring-2 focus:ring-gold-500">
                                             </div>
                                             <div>
                                                 <label class="block text-slate-500 font-bold mb-2 text-xs">سنة التخرج</label>
-                                                <input type="number" name="master_year" value="{{ old('master_year', $user->master_year) }}" placeholder="سنة التخرج" min="1950" max="2030" class="w-full bg-white border-0 rounded-2xl p-3 text-slate-700 font-bold focus:ring-2 focus:ring-purple-500">
+                                                <input type="number" name="master_year" value="{{ old('master_year', $user->master_year) }}" placeholder="سنة التخرج" min="1950" max="2030" class="w-full bg-white border-0 rounded-2xl p-3 text-slate-700 font-bold focus:ring-2 focus:ring-gold-500">
                                             </div>
                                             <div>
                                                 <label class="block text-slate-500 font-bold mb-2 text-xs">التخصص</label>
-                                                <input type="text" name="master_degree" value="{{ old('master_degree', $user->master_degree) }}" placeholder="التخصص" class="w-full bg-white border-0 rounded-2xl p-3 text-slate-700 font-bold focus:ring-2 focus:ring-purple-500">
+                                                <input type="text" name="master_degree" value="{{ old('master_degree', $user->master_degree) }}" placeholder="التخصص" class="w-full bg-white border-0 rounded-2xl p-3 text-slate-700 font-bold focus:ring-2 focus:ring-gold-500">
                                             </div>
                                             <div>
                                                 <label class="block text-slate-500 font-bold mb-2 text-xs">المعدل (GPA)</label>
-                                                <input type="number" name="master_gpa" value="{{ old('master_gpa', $user->master_gpa) }}" placeholder="المعدل" step="0.01" min="0" max="4" class="w-full bg-white border-0 rounded-2xl p-3 text-slate-700 font-bold focus:ring-2 focus:ring-purple-500">
+                                                <input type="number" name="master_gpa" value="{{ old('master_gpa', $user->master_gpa) }}" placeholder="المعدل" step="0.01" min="0" max="4" class="w-full bg-white border-0 rounded-2xl p-3 text-slate-700 font-bold focus:ring-2 focus:ring-gold-500">
                                             </div>
                                         </div>
                                     </div>
@@ -291,7 +291,7 @@
                     <input type="file" name="docs[{{ $key }}]" @change="handleDocChange('required', '{{ $key }}', $event)" class="hidden" accept="{{ $doc['accept'] }}">
                     
                     <div :class="isDocUploaded('required', '{{ $key }}') ? 'border-green-500 bg-green-50/30' : 'border-slate-200 bg-slate-50/50'" 
-                         class="border-2 border-dashed rounded-2xl p-4 transition-all duration-300 group-hover:border-indigo-400 group-hover:bg-white">
+                         class="border-2 border-dashed rounded-2xl p-4 transition-all duration-300 group-hover:border-gold-400 group-hover:bg-white">
                         
                         <div class="flex items-center justify-between">
                             <div class="flex items-center gap-3">
@@ -311,7 +311,7 @@
                         </div>
 
                         <div x-show="temp_required_docs['{{ $key }}']" class="mt-3 flex items-center justify-between bg-white/80 p-2 rounded-xl border border-green-100">
-                            <span class="text-[10px] text-indigo-600 font-bold truncate flex-1">📎 <span x-text="temp_required_docs['{{ $key }}']"></span></span>
+                            <span class="text-[10px] text-gold-600 font-bold truncate flex-1">📎 <span x-text="temp_required_docs['{{ $key }}']"></span></span>
                             <button type="button" @click.prevent="removeTempDoc('required', '{{ $key }}')" class="text-red-500 hover:scale-110 px-2 font-black text-lg">×</button>
                         </div>
                     </div>
@@ -346,7 +346,7 @@
                 <label class="block cursor-pointer">
                     <input type="file" name="docs[{{ $key }}]" @change="handleDocChange('optional', '{{ $key }}', $event)" class="hidden" accept="{{ $doc['accept'] }}">
                     <div :class="isDocUploaded('optional', '{{ $key }}') ? 'border-amber-400 bg-amber-50/30' : 'border-slate-200 bg-slate-50/50'" 
-                         class="border-2 border-dashed rounded-2xl p-4 transition-all duration-300 group-hover:border-indigo-400 group-hover:bg-white">
+                         class="border-2 border-dashed rounded-2xl p-4 transition-all duration-300 group-hover:border-gold-400 group-hover:bg-white">
                         
                         <div class="flex items-center justify-between">
                             <span class="text-slate-700 font-black text-xs">{{ $doc['label'] }}</span>
@@ -368,7 +368,7 @@
 
                             <div class="mt-10 pt-6 border-t border-slate-100">
                             <button type="submit" :disabled="saving" @click="showToast('success', 'جاري حفظ التغييرات...')" 
-                                class="bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-12 py-4 rounded-3xl font-black shadow-xl shadow-indigo-200 hover:shadow-indigo-300 hover:scale-105 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed">
+                                class="bg-gradient-to-r from-gold-600 to-gold-700 text-white px-12 py-4 rounded-3xl font-black shadow-xl shadow-navy-100 hover:shadow-gold-300 hover:scale-105 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed">
                                     <span x-show="!saving">
                                         <svg class="w-5 h-5 inline -ml-1 mr-2" fill="none" stroke="currentColor">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
@@ -396,14 +396,14 @@
                             @if($user->avatar)
                             <img src="{{ asset('storage/'.$user->avatar) }}" alt="Avatar" class="w-full h-full rounded-full object-cover border-4 border-white shadow-lg">
                             @else
-                            <div class="w-full h-full rounded-full bg-gradient-to-tr from-indigo-600 to-purple-500 flex items-center justify-center text-white text-4xl font-black shadow-xl border-4 border-white">
+                            <div class="w-full h-full rounded-full bg-gradient-to-tr from-gold-600 to-gold-400 flex items-center justify-center text-white text-4xl font-black shadow-xl border-4 border-white">
                                 {{ Str::substr($user->name, 0, 1) }}
                             </div>
                             @endif
                             </div>
                             
                             <!-- Camera Icon for Uploading -->
-                            <label for="avatar_upload" class="absolute -bottom-2 -right-2 bg-indigo-600 text-white p-3 rounded-full cursor-pointer shadow-lg hover:bg-indigo-700 transition-all hover:scale-110 border-4 border-white">
+                            <label for="avatar_upload" class="absolute -bottom-2 -right-2 bg-gold-600 text-white p-3 rounded-full cursor-pointer shadow-lg hover:bg-gold-700 transition-all hover:scale-110 border-4 border-white">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path>
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"></path>
@@ -419,9 +419,9 @@
                                 <span class="text-blue-600 font-black">{{ $user->favoriteScholarships()->count() }}</span>
                                 <span class="text-blue-900 text-[10px] font-bold">منح محفوظة</span>
                             </div>
-                            <div class="bg-purple-50 p-4 rounded-2xl flex justify-between items-center">
-                                <span class="text-purple-600 font-black">{{ $user->orders()->where('status', 'pending')->count() }}</span>
-                                <span class="text-purple-900 text-[10px] font-bold">طلبات نشطة</span>
+                            <div class="bg-gold-100 p-4 rounded-2xl flex justify-between items-center">
+                                <span class="text-gold-600 font-black">{{ $user->orders()->where('status', 'pending')->count() }}</span>
+                                <span class="text-navy-900 text-[10px] font-bold">طلبات نشطة</span>
                             </div>
                             <div class="bg-green-50 p-4 rounded-2xl flex justify-between items-center">
                                 <span class="text-green-600 font-black">{{ $user->orders()->where('status', 'paid')->count() }}</span>

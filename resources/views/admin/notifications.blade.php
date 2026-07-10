@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+﻿@extends('layouts.admin')
 
 @section('title', 'الإشعارات')
 @section('breadcrumb', 'كل الإشعارات')
@@ -20,7 +20,7 @@
                         </div>
                         <div class="flex items-center gap-2 shrink-0">
                             @if(!$n->read_at)
-                                <span class="w-2 h-2 bg-indigo-600 rounded-full"></span>
+                                <span class="w-2 h-2 bg-gold-600 rounded-full"></span>
                             @endif
                             <span class="text-[10px] text-slate-400 font-bold whitespace-nowrap">{{ $n->created_at->diffForHumans() }}</span>
                         </div>

@@ -1,4 +1,4 @@
-@extends('layouts.dashboard')
+﻿@extends('layouts.dashboard')
 @section('title', 'التنبيهات')
 
 @section('content')
@@ -8,13 +8,13 @@
         <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-10 gap-6">
             <div>
                 <h1 class="text-3xl font-black text-slate-800 flex items-center gap-3">
-                    التنبيهات <span class="text-2xl text-indigo-600">(<span x-text="stats.count">0</span> جديدة)</span>
+                    التنبيهات <span class="text-2xl text-gold-600">(<span x-text="stats.count">0</span> جديدة)</span>
                 </h1>
                 <p class="text-slate-500 font-bold mt-2">ابقَ على اطلاع بالتحديثات والفرص</p>
             </div>
 
             <div class="flex gap-3">
-                <button class="bg-indigo-600 text-white px-6 py-3 rounded-2xl font-black shadow-lg hover:bg-indigo-700" type="button" @click="markAllAsRead">
+                <button class="bg-gold-600 text-white px-6 py-3 rounded-2xl font-black shadow-lg hover:bg-gold-700" type="button" @click="markAllAsRead">
                     قراءة الكل
                 </button>
                 <button class="border border-slate-200 text-slate-500 px-6 py-3 rounded-2xl font-bold hover:bg-slate-50" type="button" @click="filter='unread'">
@@ -26,12 +26,12 @@
         <div class="bg-white rounded-[2.5rem] shadow-sm border border-slate-50 p-2 mb-8">
             <div class="flex bg-slate-50/50 rounded-2xl overflow-hidden">
                 <button @click="tab = 'new'"
-                    :class="tab === 'new' ? 'bg-white shadow-sm text-indigo-600 border-b-2 border-indigo-500' : 'text-slate-400 hover:text-slate-600'"
+                    :class="tab === 'new' ? 'bg-white shadow-sm text-gold-600 border-b-2 border-gold-500' : 'text-slate-400 hover:text-slate-600'"
                     class="flex-1 py-4 font-black text-sm transition" type="button">
                     الجديدة
                 </button>
                 <button @click="tab = 'old'"
-                    :class="tab === 'old' ? 'bg-white shadow-sm text-indigo-600 border-b-2 border-indigo-500' : 'text-slate-400 hover:text-slate-600'"
+                    :class="tab === 'old' ? 'bg-white shadow-sm text-gold-600 border-b-2 border-gold-500' : 'text-slate-400 hover:text-slate-600'"
                     class="flex-1 py-4 font-black text-sm transition" type="button">
                     السابقة
                 </button>
@@ -58,9 +58,9 @@
 
                 <template x-for="n in visibleNotifications" :key="n.id">
                     <div class="bg-white rounded-[2.5rem] p-6 shadow-sm border border-slate-100 hover:shadow-md transition flex items-start gap-4 group"
-                         :class="n.is_read ? '' : 'ring-2 ring-indigo-100 bg-indigo-50/50'">
+                         :class="n.is_read ? '' : 'ring-2 ring-gold-100 bg-gold-100/50'">
                         <div class="w-12 h-12 bg-gradient-to-r"
-                             :class="n.is_read ? 'from-slate-100 to-slate-200' : 'from-indigo-600 to-purple-600'"
+                             :class="n.is_read ? 'from-slate-100 to-slate-200' : 'from-gold-600 to-gold-700'"
                              rounded-2xl flex items-center justify-center text-white font-black text-xl flex-shrink-0 mt-1">
                             <span x-text="n.icon ?? '🔔'"></span>
                         </div>
@@ -69,13 +69,13 @@
                             <div class="flex items-center gap-2 mb-1">
                                 <span class="text-xs text-slate-400 font-bold" x-text="n.title"></span>
                                 <template x-if="!n.is_read">
-                                    <span class="w-2 h-2 bg-indigo-600 rounded-full"></span>
+                                    <span class="w-2 h-2 bg-gold-600 rounded-full"></span>
                                 </template>
                             </div>
                             <p class="font-black text-slate-800 text-sm mb-2 leading-relaxed" x-text="n.text"></p>
 
                             <a :href="n.url || '#'
-                                    " class="text-indigo-600 text-xs font-bold hover:underline inline-flex items-center gap-1">
+                                    " class="text-gold-600 text-xs font-bold hover:underline inline-flex items-center gap-1">
                                 عرض <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
                             </a>
                         </div>

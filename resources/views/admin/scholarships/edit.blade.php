@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+﻿@extends('layouts.admin')
 
 @section('title', 'تعديل المنحة')
 @section('breadcrumb', 'المنح الدراسية > تعديل')
@@ -28,27 +28,27 @@
                     <div class="bg-white rounded-[1.5rem] border border-slate-100 p-6 shadow-sm space-y-6">
                         <div>
                             <label class="text-[11px] font-black text-slate-400 uppercase mb-2 block tracking-widest">عنوان المنحة (عربي)</label>
-                            <input type="text" name="title_ar" value="{{ old('title_ar', $scholarship->title_ar) }}" required class="w-full bg-slate-50 border border-slate-100 rounded-xl px-5 py-3 text-sm font-bold focus:border-indigo-300 outline-none transition-all">
+                            <input type="text" name="title_ar" value="{{ old('title_ar', $scholarship->title_ar) }}" required class="w-full bg-slate-50 border border-slate-100 rounded-xl px-5 py-3 text-sm font-bold focus:border-gold-300 outline-none transition-all">
                         </div>
 
                         <div>
                             <label class="text-[11px] font-black text-slate-400 uppercase mb-2 block tracking-widest">Scholarship Title (English)</label>
-                            <input type="text" name="title_en" value="{{ old('title_en', $scholarship->title_en) }}" required class="w-full bg-slate-50 border border-slate-100 rounded-xl px-5 py-3 text-sm font-bold focus:border-indigo-300 outline-none transition-all text-left">
+                            <input type="text" name="title_en" value="{{ old('title_en', $scholarship->title_en) }}" required class="w-full bg-slate-50 border border-slate-100 rounded-xl px-5 py-3 text-sm font-bold focus:border-gold-300 outline-none transition-all text-left">
                         </div>
 
                         <div>
                             <label class="text-[11px] font-black text-slate-400 uppercase mb-2 block tracking-widest">القيمة المالية</label>
-                            <input type="text" name="financial_value" value="{{ old('financial_value', $scholarship->financial_value) }}" placeholder="₪50,000 كامل التمويل" class="w-full bg-slate-50 border border-slate-100 rounded-xl px-5 py-3 text-sm font-bold focus:border-indigo-300 outline-none transition-all">
+                            <input type="text" name="financial_value" value="{{ old('financial_value', $scholarship->financial_value) }}" placeholder="₪50,000 كامل التمويل" class="w-full bg-slate-50 border border-slate-100 rounded-xl px-5 py-3 text-sm font-bold focus:border-gold-300 outline-none transition-all">
                         </div>
 
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div>
                                 <label class="text-[11px] font-black text-slate-400 uppercase mb-2 block tracking-widest">عدد المتقدمين</label>
-                                <input type="number" name="applicants_count" value="{{ old('applicants_count', $scholarship->applicants_count) }}" min="0" class="w-full bg-slate-50 border border-slate-100 rounded-xl px-5 py-3 text-sm font-bold focus:border-indigo-300 outline-none transition-all">
+                                <input type="number" name="applicants_count" value="{{ old('applicants_count', $scholarship->applicants_count) }}" min="0" class="w-full bg-slate-50 border border-slate-100 rounded-xl px-5 py-3 text-sm font-bold focus:border-gold-300 outline-none transition-all">
                             </div>
                             <div>
                                 <label class="text-[11px] font-black text-slate-400 uppercase mb-2 block tracking-widest">الكلمات المفتاحية</label>
-                                <input type="text" name="recommended_tags" value="{{ old('recommended_tags', is_array($scholarship->recommended_tags) ? implode(', ', $scholarship->recommended_tags) : $scholarship->recommended_tags) }}" placeholder="ممولة كاملاً, ماجستير" class="w-full bg-slate-50 border border-slate-100 rounded-xl px-5 py-3 text-sm font-bold focus:border-indigo-300 outline-none transition-all">                        </div>
+                                <input type="text" name="recommended_tags" value="{{ old('recommended_tags', is_array($scholarship->recommended_tags) ? implode(', ', $scholarship->recommended_tags) : $scholarship->recommended_tags) }}" placeholder="ممولة كاملاً, ماجستير" class="w-full bg-slate-50 border border-slate-100 rounded-xl px-5 py-3 text-sm font-bold focus:border-gold-300 outline-none transition-all">                        </div>
                         </div>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div>
@@ -142,14 +142,14 @@
                 <div class="lg:col-span-4 space-y-8 lg:border-r lg:border-slate-100 lg:pr-6">
                     {{-- حقول حالة النشاط --}}
                     <div class="bg-white rounded-[1.5rem] border border-slate-100 p-6 shadow-sm space-y-4">
-                        <label class="text-[11px] font-black text-slate-400 uppercase block tracking-widest text-indigo-600">حالة المنحة الحالية</label>
+                        <label class="text-[11px] font-black text-slate-400 uppercase block tracking-widest text-gold-600">حالة المنحة الحالية</label>
                         <div class="flex gap-6">
                             <label class="flex items-center gap-2 cursor-pointer group">
-                                <input type="radio" name="status" value="active" {{ old('status', $scholarship->status) == 'active' ? 'checked' : '' }} class="w-5 h-5 rounded-full text-indigo-600">
+                                <input type="radio" name="status" value="active" {{ old('status', $scholarship->status) == 'active' ? 'checked' : '' }} class="w-5 h-5 rounded-full text-gold-600">
                                 <span class="font-black text-sm text-emerald-600">نشطة</span>
                             </label>
                             <label class="flex items-center gap-2 cursor-pointer group">
-                                <input type="radio" name="status" value="closed" {{ old('status', $scholarship->status) == 'closed' ? 'checked' : '' }} class="w-5 h-5 rounded-full text-indigo-600">
+                                <input type="radio" name="status" value="closed" {{ old('status', $scholarship->status) == 'closed' ? 'checked' : '' }} class="w-5 h-5 rounded-full text-gold-600">
                                 <span class="font-black text-sm text-rose-600">منتهية</span>
                             </label>
                         </div>
@@ -157,7 +157,7 @@
 
                     {{-- الفلاتر (التخصصات - Tags) المفقودة --}}
                     <div class="bg-white rounded-[1.5rem] border border-slate-100 p-6 shadow-sm space-y-4">
-                        <label class="text-[11px] font-black text-slate-400 uppercase block tracking-widest text-indigo-600">التخصصات (Tags)</label>
+                        <label class="text-[11px] font-black text-slate-400 uppercase block tracking-widest text-gold-600">التخصصات (Tags)</label>
                         <div class="flex flex-wrap gap-2">
                             @php 
                                 $currentTags = is_array($scholarship->tags) ? $scholarship->tags : json_decode($scholarship->tags, true) ?? [];
@@ -165,7 +165,7 @@
                             @foreach(['هندسة', 'طب', 'تقنية', 'إدارة', 'علوم', 'فن'] as $tag)
                             <label class="group cursor-pointer">
                                 <input type="checkbox" name="tags[]" value="{{ $tag }}" {{ in_array($tag, $currentTags) ? 'checked' : '' }} class="hidden peer">
-                                <span class="px-4 py-2 bg-slate-50 text-slate-500 rounded-xl text-[10px] font-black peer-checked:bg-indigo-600 peer-checked:text-white transition-all border border-slate-100 inline-block">
+                                <span class="px-4 py-2 bg-slate-50 text-slate-500 rounded-xl text-[10px] font-black peer-checked:bg-gold-600 peer-checked:text-white transition-all border border-slate-100 inline-block">
                                     {{ $tag }}
                                 </span>
                             </label>
@@ -175,14 +175,14 @@
 
                     {{-- الفلاتر (التغطية الماليّة - Coverage) المفقودة --}}
                     <div class="bg-white rounded-[1.5rem] border border-slate-100 p-6 shadow-sm space-y-4">
-                        <label class="text-[11px] font-black text-slate-400 uppercase block tracking-widest text-indigo-600">التغطية المالية (Coverage)</label>
+                        <label class="text-[11px] font-black text-slate-400 uppercase block tracking-widest text-gold-600">التغطية المالية (Coverage)</label>
                         <div class="space-y-3">
                             @php 
                                 $currentCoverage = is_array($scholarship->coverage) ? $scholarship->coverage : json_decode($scholarship->coverage, true) ?? [];
                             @endphp
                             @foreach(['تمويل كامل', 'إعفاء من الرسوم', 'راتب شهري', 'تأمين صحي', 'سكن'] as $cov)
                             <label class="flex items-center gap-3 group cursor-pointer">
-                                <input type="checkbox" name="coverage[]" value="{{ $cov }}" {{ in_array($cov, $currentCoverage) ? 'checked' : '' }} class="w-5 h-5 rounded-lg border-slate-200 text-indigo-600">
+                                <input type="checkbox" name="coverage[]" value="{{ $cov }}" {{ in_array($cov, $currentCoverage) ? 'checked' : '' }} class="w-5 h-5 rounded-lg border-slate-200 text-gold-600">
                                 <span class="text-xs font-bold text-slate-600">{{ $cov }}</span>
                             </label>
                             @endforeach
@@ -191,7 +191,7 @@
 
                     <div class="pt-2">
                         <div class="p-5 bg-slate-900 rounded-[2rem] shadow-xl">
-                            <button type="submit" class="w-full bg-indigo-500 text-white py-4 rounded-2xl font-black text-sm hover:bg-indigo-400 transition-all">
+                            <button type="submit" class="w-full bg-gold-500 text-white py-4 rounded-2xl font-black text-sm hover:bg-gold-400 transition-all">
                                 حفظ التعديلات
                             </button>
                             <a href="{{ route('admin.scholarships.index') }}" class="w-full block mt-3 text-center text-slate-400 font-bold text-[10px] hover:text-white transition-colors">

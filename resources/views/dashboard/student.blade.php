@@ -1,4 +1,4 @@
-@extends('layouts.dashboard')
+﻿@extends('layouts.dashboard')
 @section('title', 'الرئيسية')
 
 @section('content')
@@ -38,7 +38,7 @@
                 </div>
                 
                 <div class="w-full h-2.5 bg-slate-100 rounded-full overflow-hidden">
-                    <div class="h-full bg-gradient-to-r from-indigo-500 to-purple-500 rounded-full transition-all duration-500" 
+                    <div class="h-full bg-gradient-to-r from-gold-500 to-gold-500 rounded-full transition-all duration-500" 
                          style="width: {{ $progressPercentage }}%"></div>
                 </div>
                 
@@ -54,11 +54,11 @@
             <div class="flex flex-col md:flex-row justify-between items-center gap-6">
                 <div class="flex-1">
                     <div class="flex items-center gap-4 mb-4">
-                        <span class="text-3xl font-black text-indigo-600">{{ $profileCompletion }}%</span>
+                        <span class="text-3xl font-black text-gold-600">{{ $profileCompletion }}%</span>
                         <h2 class="font-black text-slate-800 text-xl">أكمل ملفك الشخصي</h2>
                     </div>
                     <div class="w-full bg-slate-100 h-3 rounded-full">
-                        <div class="bg-indigo-600 h-full rounded-full transition-all duration-1000" style="width: {{ $profileCompletion }}%"></div>
+                        <div class="bg-gold-600 h-full rounded-full transition-all duration-1000" style="width: {{ $profileCompletion }}%"></div>
                     </div>
                 </div>
                 <a href="{{ route('dashboard.profile') }}" class="bg-slate-900 text-white px-8 py-4 rounded-2xl font-black hover:bg-slate-800 transition shadow-lg">إكمال الملف الشخصي</a>
@@ -75,7 +75,7 @@
                 ];
                 $colors = [
                     'favorites' => 'bg-blue-50 text-blue-600',
-                    'applications' => 'bg-purple-50 text-purple-600',
+                    'applications' => 'bg-gold-100 text-gold-600',
                     'completed' => 'bg-green-50 text-green-600',
                     'review' => 'bg-orange-50 text-orange-600'
                 ];
@@ -95,12 +95,12 @@
             <div class="lg:col-span-2">
                 <div class="flex justify-between items-center mb-6">
                     <h3 class="text-xl font-black text-slate-800">منح موصى بها لك</h3>
-                    <a href="{{ route('dashboard.scholarships') }}" class="text-indigo-600 font-bold text-sm">عرض الكل ←</a>
+                    <a href="{{ route('dashboard.scholarships') }}" class="text-gold-600 font-bold text-sm">عرض الكل ←</a>
                 </div>
 
                 <div class="space-y-6">
                     @forelse($recommended_scholarships as $scholarship)
-                    <div class="bg-white p-6 rounded-[2.5rem] border border-slate-50 shadow-sm flex flex-col md:flex-row items-center gap-6 hover:border-indigo-100 transition">
+                    <div class="bg-white p-6 rounded-[2.5rem] border border-slate-50 shadow-sm flex flex-col md:flex-row items-center gap-6 hover:border-gold-100 transition">
                         
                         <div class="w-16 h-16 flex-shrink-0 rounded-full overflow-hidden bg-slate-100 border border-slate-200/60 shadow-sm flex items-center justify-center">
                             @if($scholarship->logo_image)
@@ -121,11 +121,11 @@
                             <p class="text-xs text-slate-400 font-bold mb-3">{{ $scholarship->country }}</p>
                             <div class="flex flex-wrap justify-center md:justify-start gap-2">
                                 <span class="bg-green-50 text-green-600 px-3 py-1 rounded-lg text-[10px] font-black">{{ $scholarship->value ?? '₪50,000' }}</span>
-                                <span class="bg-indigo-50 text-indigo-600 px-3 py-1 rounded-lg text-[10px] font-black">{{ $scholarship->tags[0] ?? 'ممولة بالكامل' }}</span>
+                                <span class="bg-gold-100 text-gold-600 px-3 py-1 rounded-lg text-[10px] font-black">{{ $scholarship->tags[0] ?? 'ممولة بالكامل' }}</span>
                             </div>
                         </div>
                         
-                        <a href="{{ route('dashboard.scholarships.show', $scholarship->id) }}" class="bg-indigo-600 text-white px-6 py-3 rounded-xl font-bold text-sm hover:bg-indigo-700 transition w-full md:w-auto text-center block">عرض التفاصيل</a>
+                        <a href="{{ route('dashboard.scholarships.show', $scholarship->id) }}" class="bg-gold-600 text-white px-6 py-3 rounded-xl font-bold text-sm hover:bg-gold-700 transition w-full md:w-auto text-center block">عرض التفاصيل</a>
                     </div>
                     @empty
                     <div class="bg-white p-8 rounded-[2.5rem] border border-slate-50 shadow-sm text-center">
@@ -163,12 +163,12 @@
                     <div class="space-y-4">
                         @forelse($tasks as $task)
                             <a href="{{ $task['completed'] ? '#' : $task['link'] }}" class="flex items-center gap-4 group select-none {{ $task['completed'] ? 'cursor-default' : 'cursor-pointer' }}">
-                                <span class="w-6 h-6 rounded-lg border-2 flex items-center justify-center flex-shrink-0 {{ $task['completed'] ? 'bg-indigo-600 border-indigo-600 text-white' : 'border-slate-200' }}">
+                                <span class="w-6 h-6 rounded-lg border-2 flex items-center justify-center flex-shrink-0 {{ $task['completed'] ? 'bg-gold-600 border-gold-600 text-white' : 'border-slate-200' }}">
                                     @if($task['completed'])
                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
                                     @endif
                                 </span>
-                                <span class="text-sm font-bold transition-all duration-300 {{ $task['completed'] ? 'text-slate-300 line-through' : 'text-slate-600 group-hover:text-indigo-600' }}">{{ $task['title'] }}</span>
+                                <span class="text-sm font-bold transition-all duration-300 {{ $task['completed'] ? 'text-slate-300 line-through' : 'text-slate-600 group-hover:text-gold-600' }}">{{ $task['title'] }}</span>
                             </a>
                         @empty
                             <div class="text-slate-400 text-xs font-bold text-center py-4">
@@ -180,7 +180,7 @@
 
                 <div class="bg-white p-8 rounded-[2.5rem] shadow-sm border border-slate-50">
                     <h3 class="font-black text-slate-800 mb-6">الإنجازات المكتسبة</h3>
-                    <div class="grid grid-cols-3 gap-4 text-center">
+                    <div class="grid grid-cols-2 sm:grid-cols-3 gap-4 text-center">
                         @foreach($badges as $badge)
                             <div class="w-full aspect-square bg-slate-50 rounded-2xl flex flex-col items-center justify-center p-2 cursor-help transition-all duration-300 transform hover:scale-105 border border-transparent {{ $badge['unlocked'] ? 'border-amber-100 bg-amber-50/20' : 'grayscale opacity-40' }}"
                                  title="{{ ($badge['unlocked'] ? 'إنجاز مكتمل: ' : 'لم يتم فتح الإنجاز بعد: ') . $badge['description'] }}">
@@ -193,12 +193,12 @@
 
                 <div class="bg-white p-6 rounded-[2.5rem] shadow-sm border border-slate-100" x-data="{ copied: false, shareUrl: '{{ url('/register?ref=' . auth()->id()) }}' }">
                     <div class="flex items-center gap-3 mb-3">
-                        <div class="w-10 h-10 bg-indigo-50 rounded-xl flex items-center justify-center text-xl">
+                        <div class="w-10 h-10 bg-gold-100 rounded-xl flex items-center justify-center text-xl">
                             🎁
                         </div>
                         <div>
                             <h4 class="font-black text-slate-800 text-sm">ادعُ أصدقاءك للمنصة</h4>
-                            <p class="text-[11px] text-slate-400 font-bold mt-0.5">واكسب <span class="text-indigo-600 font-black">+250 XP</span> عن كل تسجيل!</p>
+                            <p class="text-[11px] text-slate-400 font-bold mt-0.5">واكسب <span class="text-gold-600 font-black">+250 XP</span> عن كل تسجيل!</p>
                         </div>
                     </div>
                     
@@ -212,7 +212,7 @@
                     </div>
                 </div>
 
-                <div class="bg-gradient-to-br from-indigo-500 to-purple-600 p-8 rounded-[2.5rem] text-white text-center shadow-lg shadow-indigo-100">
+                <div class="bg-gradient-to-br from-gold-500 to-gold-600 p-8 rounded-[2.5rem] text-white text-center shadow-lg shadow-gold-100">
                     <h4 class="font-black mb-4">تحتاج مساعدة؟</h4>
                     <p class="text-xs opacity-80 mb-6 leading-relaxed">المساعد الذكي 🤖 متاح دائماً أسفل الشاشة للإجابة على استفساراتك فوراً</p>
                 </div>

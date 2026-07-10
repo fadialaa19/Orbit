@@ -1,4 +1,4 @@
-@extends('layouts.dashboard')
+﻿@extends('layouts.dashboard')
 
 @section('title', 'طلبات الدفع')
 
@@ -43,14 +43,14 @@
                                 <div class="space-y-3">
                                     @foreach($list as $order)
                                         <div class="p-3 rounded-2xl bg-slate-50/60 border border-slate-100">
-                                            <p class="text-xs font-black text-indigo-600">
+                                            <p class="text-xs font-black text-gold-600">
                                                 {{ $order->scholarship->title_ar ?? '—' }}
                                             </p>
                                             <p class="text-[11px] font-bold text-slate-600">قيمة: ₪{{ number_format($order->amount, 2) }}</p>
                                             <p class="text-[10px] font-bold text-slate-400">{{ $order->created_at->format('Y-m-d') }}</p>
 
                                             @if($order->receipt_image)
-                                                <a href="{{ asset('storage/' . $order->receipt_image) }}" target="_blank" class="text-[10px] font-black text-indigo-600 hover:underline mt-2 inline-block">عرض الإيصال ↗</a>
+                                                <a href="{{ asset('storage/' . $order->receipt_image) }}" target="_blank" class="text-[10px] font-black text-gold-600 hover:underline mt-2 inline-block">عرض الإيصال ↗</a>
                                             @endif
 
                                             @if($order->status === 'paid')

@@ -1,10 +1,10 @@
-@extends('layouts.dashboard')
+﻿@extends('layouts.dashboard')
 
 @section('title', 'استكشف المنح')
 
 @section('header_search')
 {{-- حقل البحث العلوي تم ربطه بـ الـ Form عبر إضافة سمة form="filterForm" لتوحيد البيانات --}}
-<div class="hidden md:flex items-center bg-slate-50 px-4 py-2 rounded-xl gap-3 w-80 border border-transparent focus-within:border-indigo-200 transition">
+<div class="hidden md:flex items-center bg-slate-50 px-4 py-2 rounded-xl gap-3 w-80 border border-transparent focus-within:border-navy-100 transition">
     <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
     <input type="text" name="q" value="{{ request('q') }}" form="filterForm" oninput="debounceSubmit()" placeholder="ابحث عن منحة، جامعة أو تخصص..." class="bg-transparent outline-none text-sm w-full font-bold">
 </div>
@@ -24,7 +24,7 @@
             
             <div class="bg-white p-4 rounded-[2rem] shadow-sm mb-10 flex gap-4 border border-slate-100">
                 <input type="text" name="q" value="{{ request('q') }}" placeholder="ابحث عن منحة، جامعة أو تخصص..." class="flex-1 bg-transparent pr-4 outline-none font-medium text-right">
-                <button type="submit" class="bg-indigo-600 text-white px-8 py-3 rounded-2xl font-bold shadow-lg shadow-indigo-100 hover:bg-indigo-700 transition">بحث</button>
+                <button type="submit" class="bg-gold-600 text-white px-8 py-3 rounded-2xl font-bold shadow-lg shadow-gold-100 hover:bg-gold-700 transition">بحث</button>
             </div>
 
             <div class="grid grid-cols-1 lg:grid-cols-4 gap-10">
@@ -34,7 +34,7 @@
                     <div class="bg-white p-8 rounded-[2.5rem] shadow-sm border border-slate-50">
                         <div class="flex justify-between items-center mb-6">
                             <h3 class="font-black text-slate-800">الفلاتر</h3>
-                            <a href="{{ route('dashboard.scholarships') }}" class="text-xs text-indigo-600 font-bold hover:underline">إعادة تعيين</a>
+                            <a href="{{ route('dashboard.scholarships') }}" class="text-xs text-gold-600 font-bold hover:underline">إعادة تعيين</a>
                         </div>
 
                         {{-- فلتر مميزات التغطية والتمويل (Coverage الفعلي بقاعدة البيانات) --}}
@@ -44,7 +44,7 @@
                                 @foreach(['تمويل كامل' => 'ممولة بالكامل', 'إعفاء من الرسوم' => 'إعفاء من الرسوم', 'راتب شهري' => 'راتب شهري', 'سكن جامعي' => 'سكن جامعي'] as $value => $label)
                                 <label class="flex items-center justify-end gap-3 cursor-pointer group">
                                     <span class="text-sm font-bold text-slate-500 group-hover:text-slate-800">{{ $label }}</span>
-                                    <input type="checkbox" name="coverage[]" value="{{ $value }}" onchange="this.form.submit()" {{ in_array($value, (array)request('coverage')) ? 'checked' : '' }} class="w-5 h-5 rounded border-slate-200 text-indigo-600 focus:ring-indigo-500">
+                                    <input type="checkbox" name="coverage[]" value="{{ $value }}" onchange="this.form.submit()" {{ in_array($value, (array)request('coverage')) ? 'checked' : '' }} class="w-5 h-5 rounded border-slate-200 text-gold-600 focus:ring-gold-500">
                                 </label>
                                 @endforeach
                             </div>
@@ -57,7 +57,7 @@
                                 @foreach(['Bachelor' => 'بكالوريوس', 'Master' => 'ماجستير', 'PhD' => 'دكتوراه', 'Short Course' => 'كورسات قصيرة وزمالات'] as $key => $level)
                                 <label class="flex items-center justify-end gap-3 cursor-pointer group">
                                     <span class="text-sm font-bold text-slate-500 group-hover:text-slate-800">{{ $level }}</span>
-                                    <input type="checkbox" name="category[]" value="{{ $key }}" onchange="this.form.submit()" {{ in_array($key, (array)request('category')) ? 'checked' : '' }} class="w-5 h-5 rounded border-slate-200 text-indigo-600 focus:ring-indigo-500">
+                                    <input type="checkbox" name="category[]" value="{{ $key }}" onchange="this.form.submit()" {{ in_array($key, (array)request('category')) ? 'checked' : '' }} class="w-5 h-5 rounded border-slate-200 text-gold-600 focus:ring-gold-500">
                                 </label>
                                 @endforeach
                             </div>
@@ -68,7 +68,7 @@
                 {{-- قسم عرض المنح الرئيسي --}}
                 <div class="lg:col-span-3 space-y-6 order-1 lg:order-2">
                     @forelse($scholarships as $scholarship)
-                    <div class="bg-white p-8 rounded-[2.5rem] shadow-sm border border-slate-50 hover:border-indigo-100 transition duration-300 relative group">
+                    <div class="bg-white p-8 rounded-[2.5rem] shadow-sm border border-slate-50 hover:border-gold-100 transition duration-300 relative group">
                         <div class="flex flex-col md:flex-row gap-8 items-center">
                             
                             {{-- صندوق اللوجو المعتمد على logo_image الفعلي والـ Fallback له --}}
@@ -76,7 +76,7 @@
                                 @if($scholarship->logo_image)
                                     <img src="{{ $scholarship->logo_image }}" alt="{{ $scholarship->title_ar }}" class="w-full h-full object-contain">
                                 @else
-                                    <div class="w-full h-full bg-indigo-50 rounded-xl flex items-center justify-center text-indigo-600">
+                                    <div class="w-full h-full bg-gold-100 rounded-xl flex items-center justify-center text-gold-600">
                                         <svg class="w-10 h-10" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" d="M4.26 10.174L11.25 15.89c.445.365 1.055.365 1.5 0l6.99-5.717m-.003 4.31v4.454a2.25 2.25 0 01-2.247 2.247H6.75a2.25 2.25 0 01-2.247-2.247v-4.454m15.122-4.31L12 3l-8.12 6.634m16.24 0l-1.92 11.52H5.8l-1.92-11.52z"/>
                                         </svg>
@@ -97,7 +97,7 @@
                                         <span>💰</span> {{ $scholarship->financial_value ?? 'تمويل مرن' }}
                                     </div>
                                     {{-- ترجمة وعرض حقل الـ category المخزن بالإنجليزية --}}
-                                    <div class="flex items-center gap-2 bg-indigo-50 text-indigo-600 px-3 py-1.5 rounded-xl text-xs font-black">
+                                    <div class="flex items-center gap-2 bg-gold-100 text-gold-600 px-3 py-1.5 rounded-xl text-xs font-black">
                                         <span>🎓</span> 
                                         @switch($scholarship->category)
                                             @case('Bachelor') بكالوريوس @break
@@ -123,7 +123,7 @@
                                 </div>
                                 @endif
 
-                                <a href="{{ route('dashboard.scholarships.show', $scholarship->id) }}" class="bg-indigo-600 text-white px-8 py-3 rounded-2xl font-bold shadow-lg shadow-indigo-100 hover:bg-indigo-700 transition relative z-10 text-center block">
+                                <a href="{{ route('dashboard.scholarships.show', $scholarship->id) }}" class="bg-gold-600 text-white px-8 py-3 rounded-2xl font-bold shadow-lg shadow-gold-100 hover:bg-gold-700 transition relative z-10 text-center block">
                                     عرض التفاصيل
                                 </a>
 
@@ -139,7 +139,7 @@
                                         </svg>
                                     </button>
 
-                                    <button type="button" onclick="navigator.clipboard.writeText('{{ route('dashboard.scholarships.show', $scholarship->id) }}'); alert('تم نسخ رابط المنحة بنجاح!')" class="flex-1 bg-slate-50 hover:bg-indigo-50 hover:text-indigo-600 text-slate-400 p-3 rounded-xl transition flex items-center justify-center" title="مشاركة">
+                                    <button type="button" onclick="navigator.clipboard.writeText('{{ route('dashboard.scholarships.show', $scholarship->id) }}'); alert('تم نسخ رابط المنحة بنجاح!')" class="flex-1 bg-slate-50 hover:bg-gold-100 hover:text-gold-600 text-slate-400 p-3 rounded-xl transition flex items-center justify-center" title="مشاركة">
                                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367 2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"></path>
                                         </svg>

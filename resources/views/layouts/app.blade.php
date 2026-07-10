@@ -11,43 +11,69 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
 
+    @include('layouts.partials._brand-styles')
     <style>
         body { font-family: 'Cairo', sans-serif; }
-        .grad-text { background: linear-gradient(90deg, #6366f1, #a855f7); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .bg-main { background: #6366f1; }
+        .bg-main { background: #DB8A47; }
         [x-cloak] { display: none !important; }
     </style>
 </head>
 <body class="bg-gray-50 text-right">
 
-    <nav class="bg-white shadow-sm py-4 px-8 flex justify-between items-center sticky top-0 z-50">
+    <nav x-data="{ mobileNavOpen: false }" class="bg-white shadow-sm py-4 px-8 sticky top-0 z-50">
+        <div class="flex justify-between items-center">
         <div class="flex items-center gap-6">
         <a href="/" class="flex items-center gap-2">
             <img src="{{ asset('assets/images/logo.png') }}" alt="Orbit Logo" class="h-12 w-auto transition-transform duration-300 hover:scale-105">
             <span class="font-bold text-xl text-slate-800 hidden md:block">Orbit ☕️</span>
         </a>
-        
+
         <div class="hidden md:flex gap-6 text-gray-600 font-medium">
-            <a href="/" class="hover:text-indigo-600 transition">الرئيسية</a>
-            <a href="{{ route('guest.scholarships') }}" class="hover:text-indigo-600 transition">المنح الدراسية</a>
-            <a href="{{ route('guest.about') }}" class="hover:text-indigo-600 transition">عن المنصة</a>
-            <a href="{{ route('guest.services') }}" class="hover:text-indigo-600 transition">الخدمات</a>
+            <a href="/" class="hover:text-gold-600 transition">الرئيسية</a>
+            <a href="{{ route('guest.scholarships') }}" class="hover:text-gold-600 transition">المنح الدراسية</a>
+            <a href="{{ route('guest.about') }}" class="hover:text-gold-600 transition">عن المنصة</a>
+            <a href="{{ route('guest.services') }}" class="hover:text-gold-600 transition">الخدمات</a>
 
         </div>
     </div>
-        <div class="flex items-center gap-4">
+        <div class="hidden md:flex items-center gap-4">
 @auth
-                <a href="{{ route('dashboard.student') }}" class="flex items-center gap-2 font-bold hover:text-indigo-600 transition">
+                <a href="{{ route('dashboard.student') }}" class="flex items-center gap-2 font-bold hover:text-gold-600 transition">
                     لوحة التحكم <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543 .94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543 .826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
                 </a>
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
-                    <button type="submit" class="font-bold hover:text-indigo-600 transition">تسجيل الخروج</button>
+                    <button type="submit" class="font-bold hover:text-gold-600 transition">تسجيل الخروج</button>
                 </form>
             @else
                 <a href="{{ route('login') }}" class="text-gray-700">تسجيل الدخول</a>
-                <a href="{{ route('register') }}" class="bg-main text-white px-6 py-2 rounded-full hover:bg-indigo-700">إنشاء حساب</a>
+                <a href="{{ route('register') }}" class="bg-main text-white px-6 py-2 rounded-full hover:bg-gold-700">إنشاء حساب</a>
             @endauth
+        </div>
+
+        <button @click="mobileNavOpen = !mobileNavOpen" class="md:hidden p-2 text-slate-600" aria-label="فتح القائمة">
+            <svg x-show="!mobileNavOpen" class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+            <svg x-show="mobileNavOpen" x-cloak class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+        </button>
+        </div>
+
+        <div x-show="mobileNavOpen" x-cloak x-transition class="md:hidden mt-4 pb-2 space-y-3 text-gray-600 font-medium border-t border-slate-100 pt-4">
+            <a href="/" class="block hover:text-gold-600 transition">الرئيسية</a>
+            <a href="{{ route('guest.scholarships') }}" class="block hover:text-gold-600 transition">المنح الدراسية</a>
+            <a href="{{ route('guest.about') }}" class="block hover:text-gold-600 transition">عن المنصة</a>
+            <a href="{{ route('guest.services') }}" class="block hover:text-gold-600 transition">الخدمات</a>
+            <div class="border-t border-slate-100 pt-3 flex flex-col gap-3">
+@auth
+                <a href="{{ route('dashboard.student') }}" class="font-bold hover:text-gold-600 transition">لوحة التحكم</a>
+                <form method="POST" action="{{ route('logout') }}">
+                    @csrf
+                    <button type="submit" class="font-bold hover:text-gold-600 transition">تسجيل الخروج</button>
+                </form>
+            @else
+                <a href="{{ route('login') }}" class="text-gray-700">تسجيل الدخول</a>
+                <a href="{{ route('register') }}" class="inline-block bg-main text-white px-6 py-2 rounded-full hover:bg-gold-700 w-fit">إنشاء حساب</a>
+            @endauth
+            </div>
         </div>
     </nav>
 
@@ -55,7 +81,7 @@
         @yield('content')
     </main>
 
-    <footer class="bg-[#0f172a] text-white py-12 px-8 mt-20">
+    <footer class="bg-navy-950 text-white py-12 px-8 mt-20">
         <div class="grid grid-cols-1 md:grid-cols-4 gap-8 max-w-7xl mx-auto">
             <div>
                 <img src="{{ asset('assets/images/logo.png') }}" alt="Logo" class="h-12 w-auto mb-6"> 

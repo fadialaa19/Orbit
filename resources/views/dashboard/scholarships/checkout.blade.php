@@ -1,4 +1,4 @@
-@extends('layouts.dashboard')
+﻿@extends('layouts.dashboard')
 
 @section('title', 'الدفع للمنحة')
 
@@ -9,7 +9,7 @@
     <div class="max-w-6xl mx-auto">
 
         <div class="flex justify-end mb-6">
-            <a href="{{ route('dashboard.scholarships.show', $scholarship->id) }}" class="flex items-center gap-2 text-slate-500 hover:text-indigo-600 font-bold transition">
+            <a href="{{ route('dashboard.scholarships.show', $scholarship->id) }}" class="flex items-center gap-2 text-slate-500 hover:text-gold-600 font-bold transition">
                 <span>العودة لتفاصيل المنحة</span>
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
             </a>
@@ -22,7 +22,7 @@
             <p class="text-slate-400 font-bold text-sm">
                 المنحة: <span class="text-slate-700">{{ $scholarship->title_ar }}</span>
                 @unless(config('app.free_mode'))
-                    • القيمة: <span class="text-indigo-600">₪{{ number_format($scholarship->price, 2) }}</span>
+                    • القيمة: <span class="text-gold-600">₪{{ number_format($scholarship->price, 2) }}</span>
                 @endunless
             </p>
         </div>
@@ -57,7 +57,7 @@
                     <a href="{{ route('dashboard.scholarships.show', $scholarship->id) }}" class="bg-white border border-slate-200 text-slate-600 px-8 py-4 rounded-2xl font-black hover:bg-slate-50 transition text-center">
                         إلغاء
                     </a>
-                    <button type="submit" class="bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-10 py-4 rounded-2xl font-black shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all duration-200">
+                    <button type="submit" class="bg-gradient-to-r from-gold-600 to-gold-700 text-white px-10 py-4 rounded-2xl font-black shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all duration-200">
                         تفعيل الوصول المجاني
                     </button>
                 </form>
@@ -87,14 +87,14 @@
                     <div class="p-5 border border-slate-100 rounded-2xl bg-slate-50/50 flex items-center justify-between gap-4">
                         {{-- زر النسخ السريع لإراحة المستخدم --}}
                         <button type="button" onclick="navigator.clipboard.writeText('{{ $gateway['account_number'] }}'); alert('تم نسخ رقم الحساب بنجاح!')" 
-                                class="p-2 bg-white text-indigo-600 hover:bg-indigo-50 border border-slate-100 rounded-xl transition-all shadow-sm group">
+                                class="p-2 bg-white text-gold-600 hover:bg-gold-100 border border-slate-100 rounded-xl transition-all shadow-sm group">
                             <svg class="w-4 h-4 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"/>
                             </svg>
                         </button>
                         
                         <div class="text-right">
-                            <span class="text-[10px] font-black text-indigo-600 uppercase bg-indigo-50 px-2 py-0.5 rounded-md mb-1 inline-block">
+                            <span class="text-[10px] font-black text-gold-600 uppercase bg-gold-100 px-2 py-0.5 rounded-md mb-1 inline-block">
                                 {{ $gateway['name'] }}
                             </span>
                             <p class="text-base font-black text-slate-800 select-all font-mono tracking-wide">
@@ -124,7 +124,7 @@
                     <div class="space-y-4">
                         <div>
                             <label class="block text-slate-500 font-bold mb-2 text-sm">طريقة الدفع المستخدمة</label>
-                            <select name="payment_method" class="w-full bg-slate-50 border border-slate-100 focus:border-indigo-300 outline-none rounded-2xl p-3.5 font-bold text-slate-700 transition-all">
+                            <select name="payment_method" class="w-full bg-slate-50 border border-slate-100 focus:border-gold-300 outline-none rounded-2xl p-3.5 font-bold text-slate-700 transition-all">
                                 @foreach($activeGateways as $gateway)
                                     <option value="{{ Str::slug($gateway['name']) }}">{{ $gateway['name'] }}</option>
                                 @endforeach
@@ -138,7 +138,7 @@
 
                         <div>
                             <label class="block text-slate-500 font-bold mb-2 text-sm">رقم الإشعار / رقم العملية</label>
-                            <input type="text" name="transaction_id" value="{{ old('transaction_id') }}" placeholder="أدخل رقم التحويل المستلم" class="w-full bg-slate-50 border border-slate-100 focus:border-indigo-300 outline-none rounded-2xl p-3.5 font-bold text-slate-700 transition-all">
+                            <input type="text" name="transaction_id" value="{{ old('transaction_id') }}" placeholder="أدخل رقم التحويل المستلم" class="w-full bg-slate-50 border border-slate-100 focus:border-gold-300 outline-none rounded-2xl p-3.5 font-bold text-slate-700 transition-all">
                             @error('transaction_id')
                                 <p class="text-rose-600 text-xs font-bold mt-2">{{ $message }}</p>
                             @enderror
@@ -152,7 +152,7 @@
                     <div class="space-y-4">
                         <div>
                             <label class="block text-slate-500 font-bold mb-2 text-sm">اسم البنك / المحفظة</label>
-                            <input type="text" name="bank_name" value="{{ old('bank_name') }}" class="w-full bg-slate-50 border border-slate-100 focus:border-indigo-300 outline-none rounded-2xl p-3.5 font-bold text-slate-700 transition-all" placeholder="مثال: بنك فلسطين أو محفظة كاش">
+                            <input type="text" name="bank_name" value="{{ old('bank_name') }}" class="w-full bg-slate-50 border border-slate-100 focus:border-gold-300 outline-none rounded-2xl p-3.5 font-bold text-slate-700 transition-all" placeholder="مثال: بنك فلسطين أو محفظة كاش">
                             @error('bank_name')
                                 <p class="text-rose-600 text-xs font-bold mt-2">{{ $message }}</p>
                             @enderror
@@ -160,7 +160,7 @@
 
                         <div>
                             <label class="block text-slate-500 font-bold mb-2 text-sm">اسم المحوّل الكامل</label>
-                            <input type="text" name="transfer_from" value="{{ old('transfer_from') }}" class="w-full bg-slate-50 border border-slate-100 focus:border-indigo-300 outline-none rounded-2xl p-3.5 font-bold text-slate-700 transition-all" placeholder="الاسم الذي قمت بالتحويل من خلاله">
+                            <input type="text" name="transfer_from" value="{{ old('transfer_from') }}" class="w-full bg-slate-50 border border-slate-100 focus:border-gold-300 outline-none rounded-2xl p-3.5 font-bold text-slate-700 transition-all" placeholder="الاسم الذي قمت بالتحويل من خلاله">
                             @error('transfer_from')
                                 <p class="text-rose-600 text-xs font-bold mt-2">{{ $message }}</p>
                             @enderror
@@ -168,7 +168,7 @@
 
                         <div>
                             <label class="block text-slate-500 font-bold mb-2 text-sm">رفع صورة الإيصال</label>
-                            <input type="file" name="receipt_image" accept="image/*" class="w-full bg-slate-50 border border-slate-100 focus:border-indigo-300 outline-none rounded-2xl p-2.5 font-bold text-slate-500 transition-all">
+                            <input type="file" name="receipt_image" accept="image/*" class="w-full bg-slate-50 border border-slate-100 focus:border-gold-300 outline-none rounded-2xl p-2.5 font-bold text-slate-500 transition-all">
                             @error('receipt_image')
                                 <p class="text-rose-600 text-xs font-bold mt-2">{{ $message }}</p>
                             @enderror
@@ -180,14 +180,14 @@
 
             <div class="bg-white rounded-[2.5rem] p-6 border border-slate-100 shadow-sm text-right">
                 <h3 class="text-slate-800 font-black text-lg mb-4">ملاحظات إضافية (اختياري)</h3>
-                <textarea name="admin_notes" rows="4" class="w-full bg-slate-50 border border-slate-100 focus:border-indigo-300 outline-none rounded-2xl p-3.5 font-bold text-slate-700 transition-all" placeholder="أي تفاصيل أخرى تود إعلام الإدارة بها..."></textarea>
+                <textarea name="admin_notes" rows="4" class="w-full bg-slate-50 border border-slate-100 focus:border-gold-300 outline-none rounded-2xl p-3.5 font-bold text-slate-700 transition-all" placeholder="أي تفاصيل أخرى تود إعلام الإدارة بها..."></textarea>
             </div>
 
             <div class="flex flex-col sm:flex-row gap-3 justify-end">
                 <a href="{{ route('dashboard.scholarships.show', $scholarship->id) }}" class="bg-white border border-slate-200 text-slate-600 px-8 py-4 rounded-2xl font-black hover:bg-slate-50 transition text-center">
                     إلغاء
                 </a>
-                <button type="submit" class="bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-10 py-4 rounded-2xl font-black shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all duration-200">
+                <button type="submit" class="bg-gradient-to-r from-gold-600 to-gold-700 text-white px-10 py-4 rounded-2xl font-black shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all duration-200">
                     إرسال بيانات الدفع للأدمن
                 </button>
             </div>

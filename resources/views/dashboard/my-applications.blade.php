@@ -1,4 +1,4 @@
-@extends('layouts.dashboard')
+﻿@extends('layouts.dashboard')
 
 @section('title', 'طلباتي')
 
@@ -27,8 +27,8 @@
 
             <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10">
                 @foreach([
-                    ['إجمالي الطلبات', $applications->count(), '📄', 'text-indigo-600'],
-                    ['قيد المراجعة', $counts['pending'], '🕒', 'text-purple-600'],
+                    ['إجمالي الطلبات', $applications->count(), '📄', 'text-gold-600'],
+                    ['قيد المراجعة', $counts['pending'], '🕒', 'text-gold-600'],
                     ['مقبولة', $counts['paid'], '✅', 'text-green-600'],
                     ['مرفوضة', $counts['failed'], '❌', 'text-red-600'],
                 ] as $stat)
@@ -48,7 +48,7 @@
                                 <div class="flex items-center gap-2 mb-1">
                                     <h3 class="text-xl font-black text-slate-800">{{ $order->scholarship->title_ar ?? '—' }}</h3>
                                     @if($order->status === 'pending')
-                                        <span class="bg-purple-50 text-purple-700 px-3 py-1 rounded-lg text-[10px] font-black italic">قيد المراجعة</span>
+                                        <span class="bg-gold-100 text-gold-700 px-3 py-1 rounded-lg text-[10px] font-black italic">قيد المراجعة</span>
                                     @elseif($order->status === 'paid')
                                         <span class="bg-green-50 text-green-700 px-3 py-1 rounded-lg text-[10px] font-black italic">مقبولة</span>
                                     @else
@@ -89,7 +89,7 @@
 
                             @if($order->receipt_image)
                                 <div class="mt-4">
-                                    <a href="{{ asset('storage/' . $order->receipt_image) }}" target="_blank" class="text-[10px] font-black text-indigo-600 hover:underline">عرض الإيصال ↗</a>
+                                    <a href="{{ asset('storage/' . $order->receipt_image) }}" target="_blank" class="text-[10px] font-black text-gold-600 hover:underline">عرض الإيصال ↗</a>
                                 </div>
                             @endif
                         @endunless

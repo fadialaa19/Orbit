@@ -1,4 +1,4 @@
-@extends('layouts.dashboard')
+﻿@extends('layouts.dashboard')
 
 @section('title', 'محادثة الدعم')
 
@@ -8,7 +8,7 @@
     {{-- Header --}}
     <div class="bg-white rounded-3xl shadow-sm border border-slate-100 p-5 flex items-center justify-between sticky top-0 z-10 backdrop-blur-md bg-white/90">
         <div class="flex items-center gap-4">
-            <div class="w-12 h-12 bg-indigo-50 text-indigo-600 rounded-2xl flex items-center justify-center font-black border border-indigo-100">
+            <div class="w-12 h-12 bg-gold-100 text-gold-600 rounded-2xl flex items-center justify-center font-black border border-gold-100">
                 #{{ $ticket->id }}
             </div>
             <div>
@@ -34,17 +34,17 @@
         <template x-for="msg in messages" :key="msg.id">
             <div class="flex gap-3" :class="msg.sender_type === 'user' ? 'flex-row-reverse' : 'flex-row'">
                 <div class="w-9 h-9 rounded-2xl flex items-center justify-center text-white text-[10px] font-black shrink-0 shadow-sm"
-                     :class="msg.sender_type === 'admin' ? 'bg-emerald-500' : (msg.sender_type === 'ai' ? 'bg-purple-500' : 'bg-slate-800')"
+                     :class="msg.sender_type === 'admin' ? 'bg-emerald-500' : (msg.sender_type === 'ai' ? 'bg-gold-500' : 'bg-slate-800')"
                      x-text="msg.sender_type === 'admin' ? 'AD' : (msg.sender_type === 'ai' ? 'AI' : 'ME')">
                 </div>
 
                 <div class="max-w-[75%] space-y-1">
                     <div class="p-4 rounded-3xl text-xs font-bold leading-relaxed shadow-sm border"
                          :class="msg.sender_type === 'user' 
-                            ? 'bg-indigo-600 text-white rounded-tr-none border-indigo-500' 
+                            ? 'bg-gold-600 text-white rounded-tr-none border-gold-500' 
                             : (msg.sender_type === 'admin' 
                                 ? 'bg-white text-slate-700 rounded-tl-none border-slate-100' 
-                                : 'bg-purple-50 text-purple-900 rounded-tl-none border-purple-100')">
+                                : 'bg-gold-100 text-navy-900 rounded-tl-none border-gold-100')">
                         
                         <p x-text="msg.message_text" class="white-space-pre-wrap break-words"></p>
                         
@@ -52,7 +52,7 @@
                             <div class="mt-3 pt-3 border-t border-white/20">
                                 <a :href="'/storage/' + msg.file_path" target="_blank" 
                                    class="flex items-center gap-2 text-[10px] hover:underline"
-                                   :class="msg.sender_type === 'user' ? 'text-indigo-100' : 'text-indigo-600'">
+                                   :class="msg.sender_type === 'user' ? 'text-gold-100' : 'text-gold-600'">
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"/></svg>
                                     مرفق خارجي
                                 </a>
@@ -82,7 +82,7 @@
                 <input type="file" x-ref="fileInput" class="hidden" accept="image/*,.pdf" @change="replyFile = $event.target.files[0]">
                 
                 <button type="button" @click="$refs.fileInput.click()" 
-                        class="w-12 h-12 bg-slate-50 rounded-2xl flex items-center justify-center text-slate-500 hover:bg-indigo-50 hover:text-indigo-600 transition-all shrink-0">
+                        class="w-12 h-12 bg-slate-50 rounded-2xl flex items-center justify-center text-slate-500 hover:bg-gold-100 hover:text-gold-600 transition-all shrink-0">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2" d="M12 4v16m8-8H4"/></svg>
                 </button>
 
@@ -90,19 +90,19 @@
                           rows="1"
                           @input="$el.style.height = 'auto'; $el.style.height = $el.scrollHeight + 'px'"
                           placeholder="اكتب رسالتك هنا..."
-                          class="flex-1 bg-slate-50 border border-slate-200 rounded-2xl px-5 py-3 text-sm font-bold outline-none focus:border-indigo-500 focus:bg-white transition-all resize-none max-h-32"
+                          class="flex-1 bg-slate-50 border border-slate-200 rounded-2xl px-5 py-3 text-sm font-bold outline-none focus:border-gold-500 focus:bg-white transition-all resize-none max-h-32"
                           @keydown.enter.prevent="if(!loading && replyText.trim()) sendReply()"></textarea>
 
                 <button type="submit" 
-                        class="w-12 h-12 bg-indigo-600 text-white rounded-2xl flex items-center justify-center hover:bg-indigo-700 hover:shadow-lg hover:shadow-indigo-200 transition-all disabled:opacity-50 disabled:grayscale shrink-0"
+                        class="w-12 h-12 bg-gold-600 text-white rounded-2xl flex items-center justify-center hover:bg-gold-700 hover:shadow-lg hover:shadow-navy-100 transition-all disabled:opacity-50 disabled:grayscale shrink-0"
                         :disabled="loading || !replyText.trim()">
                     <svg class="w-5 h-5 transform rotate-90" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg>
                 </button>
             </div>
 
-            <div x-show="replyFile" class="flex items-center gap-2 bg-indigo-50 border border-indigo-100 p-2 rounded-xl w-fit">
-                <span class="text-[10px] font-black text-indigo-600 px-2" x-text="replyFile ? replyFile.name : ''"></span>
-                <button type="button" @click="replyFile = null" class="text-indigo-400 hover:text-rose-500 font-bold p-1">&times;</button>
+            <div x-show="replyFile" class="flex items-center gap-2 bg-gold-100 border border-gold-100 p-2 rounded-xl w-fit">
+                <span class="text-[10px] font-black text-gold-600 px-2" x-text="replyFile ? replyFile.name : ''"></span>
+                <button type="button" @click="replyFile = null" class="text-gold-400 hover:text-rose-500 font-bold p-1">&times;</button>
             </div>
         </form>
     </div>

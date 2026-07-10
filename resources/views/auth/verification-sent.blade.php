@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
@@ -6,9 +6,9 @@
     <title>تم إرسال رابط التفعيل - Orbit ☕️</title>
     @vite(['resources/css/app.css'])
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+    @include('layouts.partials._brand-styles')
     <style>
         body { font-family: 'Cairo', sans-serif; }
-        .grad-bg { background: linear-gradient(135deg, #4f46e5 0%, #9333ea 100%); }
         .floaty { animation: floaty 1.5s ease-in-out infinite; }
         @keyframes floaty { 0%,100% { transform: translateY(0);} 50% { transform: translateY(-6px);} }
     </style>
@@ -36,7 +36,7 @@
         <div class="bg-slate-50 rounded-2xl p-4 mb-6">
             <div class="flex items-start gap-3">
                 <div class="w-10 h-10 bg-white rounded-xl flex items-center justify-center shadow-sm">
-                    <svg class="w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                    <svg class="w-5 h-5 text-gold-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4m0 4h.01"></path>
                         <path stroke-linecap="round" stroke-linejoin="round" d="M9 12a3 3 0 1 1 6 0c0 1.5-1.5 2.2-2 3v1H11v-1c-.5-.8-2-1.5-2-3z"></path>
                     </svg>

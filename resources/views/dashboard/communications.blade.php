@@ -1,4 +1,4 @@
-@extends('layouts.dashboard')
+﻿@extends('layouts.dashboard')
 
 @section('title', 'مركز التواصل')
 
@@ -7,7 +7,7 @@
 <div class="max-w-7xl mx-auto h-screen flex bg-gradient-to-b from-slate-50 to-white">
     <div x-data="communicationHub()" x-init="init()" class="w-full h-[calc(100vh-80px)] flex overflow-hidden rounded-3xl shadow-2xl m-4 border border-slate-100/50 backdrop-blur-xl bg-white/80">
         
-        <div class="w-20 flex flex-col bg-gradient-to-b from-indigo-500 to-purple-600 text-white p-4 gap-4">
+        <div class="w-20 flex flex-col bg-gradient-to-b from-gold-500 to-gold-600 text-white p-4 gap-4">
             <button @click="switchPanel('ai')" :class="activePanel === 'ai' ? 'bg-white/20 rounded-2xl p-2 shadow-lg' : 'hover:bg-white/10 rounded-xl p-2'" title="الذكاء الاصطناعي">
                 <svg class="w-7 h-7 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
             </button>
@@ -21,7 +21,7 @@
             <div class="p-4 border-b border-slate-100/50 bg-white/70 flex justify-between items-center">
                 <h2 x-text="panelTitles[activePanel]" class="text-xl font-black text-slate-900"></h2>
                 
-                <button @click="createNew()" class="p-2 bg-indigo-600 text-white rounded-xl hover:bg-indigo-700 shadow-md transition-all">
+                <button @click="createNew()" class="p-2 bg-gold-600 text-white rounded-xl hover:bg-gold-700 shadow-md transition-all">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
                 </button>
             </div>
@@ -29,9 +29,9 @@
             <div class="overflow-y-auto flex-1">
                 <template x-for="chat in chatsByType[activePanel]" :key="chat.id">
                     <button @click="selectChat(chat)" 
-                            :class="selectedChat?.id === chat.id ? 'bg-white shadow-lg border-r-4 border-indigo-500' : 'hover:bg-white/50 border-r-4 border-transparent'"
+                            :class="selectedChat?.id === chat.id ? 'bg-white shadow-lg border-r-4 border-gold-500' : 'hover:bg-white/50 border-r-4 border-transparent'"
                             class="w-full group flex items-center gap-4 p-4 transition-all">
-                        <div class="w-12 h-12 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-2xl flex items-center justify-center text-white font-black shadow-lg">
+                        <div class="w-12 h-12 bg-gradient-to-r from-gold-500 to-gold-600 rounded-2xl flex items-center justify-center text-white font-black shadow-lg">
                             <span x-text="chat.avatar || (activePanel === 'ai' ? '🤖' : '🛠️')"></span>
                         </div>
                         <div class="flex-1 text-right">
@@ -46,7 +46,7 @@
 
                 <div x-show="!chatsByType[activePanel].length" class="text-center py-12 text-slate-400">
                     <p class="font-bold">لا توجد سجلات حالياً</p>
-                    <button @click="createNew()" class="mt-4 text-indigo-600 text-sm underline">ابدأ الآن</button>
+                    <button @click="createNew()" class="mt-4 text-gold-600 text-sm underline">ابدأ الآن</button>
                 </div>
             </div>
         </div>
@@ -56,7 +56,7 @@
                 <div class="h-full flex flex-col">
                     <div class="p-4 border-b border-slate-100/50 bg-white/70 backdrop-blur flex items-center justify-between">
                         <div class="flex items-center gap-3 text-right">
-                            <div class="w-10 h-10 bg-indigo-100 rounded-2xl flex items-center justify-center text-indigo-600 font-black" x-text="selectedChat.avatar || '💬'"></div>
+                            <div class="w-10 h-10 bg-gold-100 rounded-2xl flex items-center justify-center text-gold-600 font-black" x-text="selectedChat.avatar || '💬'"></div>
                             <div>
                                 <h3 class="font-black text-slate-900" x-text="selectedChat.name || selectedChat.subject"></h3>
                                 <p class="text-[10px] text-green-500 font-bold" x-text="activePanel === 'ai' ? 'متصل (Groq AI)' : 'فريق الدعم متاح'"></p>
@@ -70,7 +70,7 @@
                         </div>
                         <template x-for="msg in selectedMessages" :key="msg.id">
                             <div :class="msg.sender_type === 'user' ? 'flex justify-end' : 'flex justify-start'">
-                                <div class="max-w-[75%] p-4 rounded-3xl shadow-sm" :class="msg.sender_type === 'user' ? 'bg-indigo-600 text-white rounded-tr-none' : 'bg-white border border-slate-100 rounded-tl-none text-slate-800'">
+                                <div class="max-w-[75%] p-4 rounded-3xl shadow-sm" :class="msg.sender_type === 'user' ? 'bg-gold-600 text-white rounded-tr-none' : 'bg-white border border-slate-100 rounded-tl-none text-slate-800'">
                                     <p class="text-sm leading-relaxed whitespace-pre-wrap" x-text="msg.message_text"></p>
         <p class="text-[9px] opacity-60 mt-2 text-left" x-text="msg.created_at || new Date(msg.created_at * 1000)?.toLocaleTimeString('ar-EG') || 'الآن'"></p>
                                 </div>
@@ -81,9 +81,9 @@
                     <div class="p-6 bg-white/80 border-t border-slate-100/50">
                         <div class="flex items-end gap-3">
                             <textarea x-model="newMessage" @keydown.enter.exact.prevent="sendMessage"
-                                     rows="1" class="flex-1 resize-none bg-slate-50 border-0 rounded-2xl px-5 py-3 focus:ring-2 focus:ring-indigo-500 transition-all"
+                                     rows="1" class="flex-1 resize-none bg-slate-50 border-0 rounded-2xl px-5 py-3 focus:ring-2 focus:ring-gold-500 transition-all"
                                      placeholder="اكتب رسالتك هنا..."></textarea>
-                            <button @click="sendMessage" :disabled="!newMessage.trim() || isTyping" class="w-12 h-12 bg-indigo-600 text-white rounded-2xl flex items-center justify-center hover:shadow-lg disabled:opacity-50 transition-all">
+                            <button @click="sendMessage" :disabled="!newMessage.trim() || isTyping" class="w-12 h-12 bg-gold-600 text-white rounded-2xl flex items-center justify-center hover:shadow-lg disabled:opacity-50 transition-all">
                                 <svg class="w-6 h-6 rotate-90" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg>
                             </button>
                         </div>
@@ -238,7 +238,7 @@ function communicationHub() {
 
         statusColor(status) {
             const colors = { 'open': 'bg-green-100 text-green-700', 'pending': 'bg-yellow-100 text-yellow-700', 'closed': 'bg-slate-100 text-slate-700' };
-            return colors[status] || 'bg-indigo-100 text-indigo-700';
+            return colors[status] || 'bg-gold-100 text-gold-700';
         }
     }
 }

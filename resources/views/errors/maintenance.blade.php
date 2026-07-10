@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
@@ -13,14 +13,14 @@
             height: 100%; 
             margin: 0; 
             font-family: 'IBM Plex Sans Arabic', sans-serif;
-            background-color: #0f172a;
+            background-color: #0F1B3D;
             overflow: hidden;
         }
         .mesh-gradient {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1;
-            background-image: 
-                radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.15) 0px, transparent 50%),
-                radial-gradient(at 100% 100%, rgba(168, 85, 247, 0.15) 0px, transparent 50%);
+            background-image:
+                radial-gradient(at 0% 0%, rgba(219, 138, 71, 0.15) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(59, 74, 120, 0.25) 0px, transparent 50%);
             filter: blur(80px);
         }
         .glass-card {
@@ -44,10 +44,10 @@
         </div>
 
         <div class="mb-8">
-            <h3 class="text-indigo-400 font-bold tracking-[0.3em] text-[10px] md:text-xs uppercase mb-4">نظامنا يتطور الآن</h3>
+            <h3 class="text-gold-400 font-bold tracking-[0.3em] text-[10px] md:text-xs uppercase mb-4">نظامنا يتطور الآن</h3>
             <h1 class="text-3xl md:text-5xl font-black leading-tight">
                 نعمل على توفير <br>
-                <span class="text-transparent bg-clip-text bg-gradient-to-r from-indigo-300 to-purple-400">
+                <span class="text-transparent bg-clip-text bg-gradient-to-r from-gold-300 to-gold-400">
                     بيئة تعليمية أفضل
                 </span>
             </h1>
@@ -69,9 +69,9 @@
                     <span id="minutes" class="text-2xl md:text-3xl font-bold block">00</span>
                     <span class="text-[9px] uppercase text-slate-500 font-black mt-1 block">دقيقة</span>
                 </div>
-                <div class="bg-indigo-500/10 p-4 rounded-2xl min-w-[80px] border border-indigo-500/20">
-                    <span id="seconds" class="text-2xl md:text-3xl font-bold block text-indigo-400">00</span>
-                    <span class="text-[9px] uppercase text-indigo-500/50 font-black mt-1 block">ثانية</span>
+                <div class="bg-gold-500/10 p-4 rounded-2xl min-w-[80px] border border-gold-500/20">
+                    <span id="seconds" class="text-2xl md:text-3xl font-bold block text-gold-400">00</span>
+                    <span class="text-[9px] uppercase text-gold-500/50 font-black mt-1 block">ثانية</span>
                 </div>
             </div>
         </div>
@@ -96,7 +96,7 @@
                 document.getElementById('minutes').innerText = String(Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60))).padStart(2, '0');
                 document.getElementById('seconds').innerText = String(Math.floor((diff % (1000 * 60)) / 1000)).padStart(2, '0');
             } else {
-                el.innerHTML = "<span class='text-indigo-400 font-bold tracking-widest text-xs uppercase'>أوشكنا على الانتهاء</span>";
+                el.innerHTML = "<span class='text-gold-400 font-bold tracking-widest text-xs uppercase'>أوشكنا على الانتهاء</span>";
             }
         }
         setInterval(updateCountdown, 1000);

@@ -1,4 +1,4 @@
-@extends('layouts.dashboard')
+﻿@extends('layouts.dashboard')
 
 @section('title', 'تفاصيل المنحة')
 
@@ -11,7 +11,7 @@
         
         {{-- زر العودة للمنح السابقة --}}
         <div class="flex justify-end mb-6">
-            <a href="{{ route('dashboard.scholarships') }}" class="flex items-center gap-2 text-slate-500 hover:text-indigo-600 font-bold transition">
+            <a href="{{ route('dashboard.scholarships') }}" class="flex items-center gap-2 text-slate-500 hover:text-gold-600 font-bold transition">
                 <span>العودة للمنح</span>
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
             </a>
@@ -26,7 +26,7 @@
                     <img src="{{ $scholarship->main_image }}" alt="{{ $scholarship->title_ar }}" class="w-full h-full object-cover">
                 @else
                     {{-- fallback الافتراضي --}}
-                    <div class="w-full h-full bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500"></div>
+                    <div class="w-full h-full bg-gradient-to-r from-gold-500 via-gold-500 to-pink-500"></div>
                 @endif
                 <div class="absolute inset-0 bg-black/10"></div>
             </div>
@@ -43,7 +43,7 @@
                             @if($scholarship->logo_image)
                                 <img src="{{ $scholarship->logo_image }}" alt="لوجو {{ $scholarship->title_ar }}" class="w-full h-full object-contain">
                             @else
-                                <div class="w-full h-full bg-indigo-50 rounded-xl flex items-center justify-center text-indigo-600">
+                                <div class="w-full h-full bg-gold-100 rounded-xl flex items-center justify-center text-gold-600">
                                     <svg class="w-12 h-12" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" d="M4.26 10.174L11.25 15.89c.445.365 1.055.365 1.5 0l6.99-5.717m-.003 4.31v4.454a2.25 2.25 0 01-2.247 2.247H6.75a2.25 2.25 0 01-2.247-2.247v-4.454m15.122-4.31L12 3l-8.12 6.634m16.24 0l-1.92 11.52H5.8l-1.92-11.52z"/>
                                     </svg>
@@ -55,7 +55,7 @@
                         <div class="w-full space-y-3">
                             @if($scholarship->application_url)
                                 <a href="{{ $scholarship->application_url }}" target="_blank" rel="noopener noreferrer"
-                                   class="w-full block bg-indigo-600 text-white py-3.5 rounded-2xl font-black text-sm text-center shadow-lg shadow-indigo-100 hover:bg-indigo-700 hover:scale-[1.01] transition-all duration-200 flex items-center justify-center gap-2">
+                                   class="w-full block bg-gold-600 text-white py-3.5 rounded-2xl font-black text-sm text-center shadow-lg shadow-gold-100 hover:bg-gold-700 hover:scale-[1.01] transition-all duration-200 flex items-center justify-center gap-2">
                                     <span>قدم الآن مجاناً</span>
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
@@ -83,7 +83,7 @@
                     {{-- القسم الأساسي: المسميات والبيانات المفصلة للمنحة من الداتابيز --}}
                     <div class="flex-1 text-right w-full">
                         <div class="flex flex-col sm:flex-row sm:items-center justify-end gap-3 mb-2">
-                            <span class="bg-indigo-50 text-indigo-600 px-3 py-1 rounded-lg text-xs font-black self-start sm:self-auto order-2 sm:order-1">
+                            <span class="bg-gold-100 text-gold-600 px-3 py-1 rounded-lg text-xs font-black self-start sm:self-auto order-2 sm:order-1">
                                 @switch($scholarship->category)
                                     @case('Bachelor') بكالوريوس @break
                                     @case('Master') ماجستير @break
@@ -111,7 +111,7 @@
                                     <p class="text-[10px] text-slate-400 font-bold uppercase">آخر موعد للتقديم</p>
                                     <p class="text-sm font-black text-slate-700">{{ $scholarship->formatted_deadline ?? $scholarship->deadline }}</p>
                                 </div>
-                                <div class="w-10 h-10 bg-white rounded-xl flex items-center justify-center shadow-sm text-indigo-500">
+                                <div class="w-10 h-10 bg-white rounded-xl flex items-center justify-center shadow-sm text-gold-500">
                                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
                                 </div>
                             </div>
@@ -143,7 +143,7 @@
                                         @endswitch
                                     </p>
                                 </div>
-                                <div class="w-10 h-10 bg-white rounded-xl flex items-center justify-center shadow-sm text-purple-500">
+                                <div class="w-10 h-10 bg-white rounded-xl flex items-center justify-center shadow-sm text-gold-500">
                                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
                                 </div>
                             </div>
@@ -165,10 +165,10 @@
         <div x-data="{ activeTab: 'overview' }">
             {{-- أزرار التبويبات --}}
             <div class="flex justify-center gap-8 md:gap-12 border-b border-slate-200 mb-8 overflow-x-auto whitespace-nowrap">
-                <button @click="activeTab = 'overview'" :class="activeTab === 'overview' ? 'pb-4 border-b-2 border-indigo-600 text-indigo-600 font-black text-sm' : 'pb-4 text-slate-400 font-bold text-sm hover:text-slate-600 transition'" class="cursor-pointer">نظرة عامة</button>
-                <button @click="activeTab = 'conditions'" :class="activeTab === 'conditions' ? 'pb-4 border-b-2 border-indigo-600 text-indigo-600 font-black text-sm' : 'pb-4 text-slate-400 font-bold text-sm hover:text-slate-600 transition'" class="cursor-pointer">الشروط</button>
-                <button @click="activeTab = 'documents'" :class="activeTab === 'documents' ? 'pb-4 border-b-2 border-indigo-600 text-indigo-600 font-black text-sm' : 'pb-4 text-slate-400 font-bold text-sm hover:text-slate-600 transition'" class="cursor-pointer">المستندات</button>
-                <button @click="activeTab = 'features'" :class="activeTab === 'features' ? 'pb-4 border-b-2 border-indigo-600 text-indigo-600 font-black text-sm' : 'pb-4 text-slate-400 font-bold text-sm hover:text-slate-600 transition'" class="cursor-pointer">المميزات</button>
+                <button @click="activeTab = 'overview'" :class="activeTab === 'overview' ? 'pb-4 border-b-2 border-gold-600 text-gold-600 font-black text-sm' : 'pb-4 text-slate-400 font-bold text-sm hover:text-slate-600 transition'" class="cursor-pointer">نظرة عامة</button>
+                <button @click="activeTab = 'conditions'" :class="activeTab === 'conditions' ? 'pb-4 border-b-2 border-gold-600 text-gold-600 font-black text-sm' : 'pb-4 text-slate-400 font-bold text-sm hover:text-slate-600 transition'" class="cursor-pointer">الشروط</button>
+                <button @click="activeTab = 'documents'" :class="activeTab === 'documents' ? 'pb-4 border-b-2 border-gold-600 text-gold-600 font-black text-sm' : 'pb-4 text-slate-400 font-bold text-sm hover:text-slate-600 transition'" class="cursor-pointer">المستندات</button>
+                <button @click="activeTab = 'features'" :class="activeTab === 'features' ? 'pb-4 border-b-2 border-gold-600 text-gold-600 font-black text-sm' : 'pb-4 text-slate-400 font-bold text-sm hover:text-slate-600 transition'" class="cursor-pointer">المميزات</button>
             </div>
 
             {{-- حاوية محتويات التبويبات المشروطة --}}

@@ -1,4 +1,4 @@
-@extends('layouts.dashboard')
+﻿@extends('layouts.dashboard')
 @section('title', 'الإعدادات')
 
 @section('header_search', '')
@@ -8,7 +8,7 @@
     <div class="max-w-6xl mx-auto">
         
         <div class="bg-white rounded-[2.5rem] p-8 shadow-sm border border-slate-50 mb-8">
-            <h1 class="text-2xl font-black text-indigo-600 mb-2">الإعدادات</h1>
+            <h1 class="text-2xl font-black text-gold-600 mb-2">الإعدادات</h1>
             <p class="text-slate-400 text-sm font-bold">إدارة حسابك والتفضيلات الخاصة بك</p>
         </div>
 
@@ -25,7 +25,7 @@
                         ] as $item)
 
                         <button @click="tab = '{{ $item[0] }}'" 
-                            :class="tab === '{{ $item[0] }}' ? 'bg-indigo-50 text-indigo-600 border-r-4 border-indigo-500 font-black shadow-sm' : 'text-slate-500 hover:text-slate-700 hover:bg-slate-50'"
+                            :class="tab === '{{ $item[0] }}' ? 'bg-gold-100 text-gold-600 border-r-4 border-gold-500 font-black shadow-sm' : 'text-slate-500 hover:text-slate-700 hover:bg-slate-50'"
                             class="w-full text-right py-4 px-6 rounded-2xl font-bold text-sm transition-all duration-200">
                             {{ $item[1] }}
                         </button>
@@ -57,9 +57,9 @@
                                     @if($user->avatar)
                                         <img src="{{ asset('storage/' . $user->avatar) }}" class="w-full h-full rounded-full object-cover shadow-2xl">
                                     @else
-                                        <div class="w-full h-full rounded-full bg-gradient-to-tr from-indigo-600 to-purple-500 flex items-center justify-center text-white text-4xl font-black shadow-2xl">{{ mb_substr($user->name, 0, 1) }}</div>
+                                        <div class="w-full h-full rounded-full bg-gradient-to-tr from-gold-600 to-gold-400 flex items-center justify-center text-white text-4xl font-black shadow-2xl">{{ mb_substr($user->name, 0, 1) }}</div>
                                     @endif
-                                    <label class="absolute -bottom-2 -right-2 bg-indigo-600 text-white p-3 rounded-full shadow-lg cursor-pointer hover:bg-indigo-700 transition block w-12 h-12 flex items-center justify-center">
+                                    <label class="absolute -bottom-2 -right-2 bg-gold-600 text-white p-3 rounded-full shadow-lg cursor-pointer hover:bg-gold-700 transition block w-12 h-12 flex items-center justify-center">
                                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path></svg>
                                         <input type="file" name="avatar" accept="image/*" class="hidden" onchange="this.form.submit()">
                                     </label>
@@ -72,7 +72,7 @@
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
                                 <div>
                                     <label class="block text-slate-500 font-bold mb-3 text-sm">الاسم الكامل</label>
-                                    <input type="text" name="name" value="{{ old('name', $user->name) }}" class="w-full bg-slate-50 border-0 rounded-2xl p-5 text-slate-700 font-bold focus:ring-2 focus:ring-indigo-500 text-lg">
+                                    <input type="text" name="name" value="{{ old('name', $user->name) }}" class="w-full bg-slate-50 border-0 rounded-2xl p-5 text-slate-700 font-bold focus:ring-2 focus:ring-gold-500 text-lg">
                                     @error('name')
                                         <p class="text-rose-600 text-xs font-bold mt-2">{{ $message }}</p>
                                     @enderror
@@ -84,25 +84,25 @@
                                 </div>
                                 <div>
                                     <label class="block text-slate-500 font-bold mb-3 text-sm">كلمة المرور الحالية</label>
-                                    <input type="password" name="current_password" placeholder="مطلوبة فقط عند تغيير كلمة المرور" class="w-full bg-slate-50 border-0 rounded-2xl p-5 text-slate-700 font-bold focus:ring-2 focus:ring-indigo-500">
+                                    <input type="password" name="current_password" placeholder="مطلوبة فقط عند تغيير كلمة المرور" class="w-full bg-slate-50 border-0 rounded-2xl p-5 text-slate-700 font-bold focus:ring-2 focus:ring-gold-500">
                                     @error('current_password')
                                         <p class="text-rose-600 text-xs font-bold mt-2">{{ $message }}</p>
                                     @enderror
                                 </div>
                                 <div>
                                     <label class="block text-slate-500 font-bold mb-3 text-sm">كلمة المرور الجديدة</label>
-                                    <input type="password" name="new_password" placeholder="اترك فارغاً لعدم التغيير" class="w-full bg-slate-50 border-0 rounded-2xl p-5 text-slate-700 font-bold focus:ring-2 focus:ring-indigo-500">
+                                    <input type="password" name="new_password" placeholder="اترك فارغاً لعدم التغيير" class="w-full bg-slate-50 border-0 rounded-2xl p-5 text-slate-700 font-bold focus:ring-2 focus:ring-gold-500">
                                     @error('new_password')
                                         <p class="text-rose-600 text-xs font-bold mt-2">{{ $message }}</p>
                                     @enderror
                                 </div>
                                 <div class="md:col-span-2">
                                     <label class="block text-slate-500 font-bold mb-3 text-sm">تأكيد كلمة المرور الجديدة</label>
-                                    <input type="password" name="new_password_confirmation" placeholder="أعد كتابة كلمة المرور الجديدة" class="w-full bg-slate-50 border-0 rounded-2xl p-5 text-slate-700 font-bold focus:ring-2 focus:ring-indigo-500">
+                                    <input type="password" name="new_password_confirmation" placeholder="أعد كتابة كلمة المرور الجديدة" class="w-full bg-slate-50 border-0 rounded-2xl p-5 text-slate-700 font-bold focus:ring-2 focus:ring-gold-500">
                                 </div>
                             </div>
 
-                            <button type="submit" class="bg-indigo-600 text-white px-12 py-4 rounded-2xl font-black shadow-lg hover:bg-indigo-700 transition w-full md:w-auto">حفظ التغييرات</button>
+                            <button type="submit" class="bg-gold-600 text-white px-12 py-4 rounded-2xl font-black shadow-lg hover:bg-gold-700 transition w-full md:w-auto">حفظ التغييرات</button>
                         </form>
                     </div>
 
@@ -123,7 +123,7 @@
                                         <span class="font-black text-slate-800">جعل ملفي مرئياً للمنح</span>
                                         <label class="relative inline-flex items-center cursor-pointer">
                                             <input type="checkbox" name="profile_visible_to_scholarships" value="1" {{ ($user->preferences['profile_visible_to_scholarships'] ?? true) ? 'checked' : '' }} class="sr-only peer">
-                                            <div class="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-600"></div>
+                                            <div class="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-gold-600"></div>
                                         </label>
                                     </div>
                                 </div>
@@ -132,7 +132,7 @@
                                         <span class="font-black text-slate-800">تلقي رسائل من الجامعات</span>
                                         <label class="relative inline-flex items-center cursor-pointer">
                                             <input type="checkbox" name="receive_university_messages" value="1" {{ ($user->preferences['receive_university_messages'] ?? false) ? 'checked' : '' }} class="sr-only peer">
-                                            <div class="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-600"></div>
+                                            <div class="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-gold-600"></div>
                                         </label>
                                     </div>
                                 </div>
@@ -155,11 +155,11 @@
                             <h3 class="font-black text-slate-800 mb-6 text-lg">تفضيلات الإشعارات</h3>
                             <div class="space-y-4 mb-8">
                                 <label class="flex items-center gap-4 p-4 bg-slate-50 rounded-2xl cursor-pointer hover:bg-slate-100 transition">
-                                    <input type="checkbox" name="notify_new_scholarships" value="1" {{ ($user->preferences['notify_new_scholarships'] ?? true) ? 'checked' : '' }} class="w-5 h-5 rounded-sm border-2 border-slate-200 text-indigo-600 focus:ring-indigo-500">
+                                    <input type="checkbox" name="notify_new_scholarships" value="1" {{ ($user->preferences['notify_new_scholarships'] ?? true) ? 'checked' : '' }} class="w-5 h-5 rounded-sm border-2 border-slate-200 text-gold-600 focus:ring-gold-500">
                                     <span class="font-bold text-slate-700">إشعارات المنح الجديدة</span>
                                 </label>
                             </div>
-                            <button type="submit" class="bg-indigo-600 text-white px-12 py-4 rounded-2xl font-black shadow-lg hover:bg-indigo-700">حفظ</button>
+                            <button type="submit" class="bg-gold-600 text-white px-12 py-4 rounded-2xl font-black shadow-lg hover:bg-gold-700">حفظ</button>
                         </form>
                     </div>
 

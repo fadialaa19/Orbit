@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+﻿@extends('layouts.admin')
 
 @section('title', 'إدارة المنح')
 @section('breadcrumb', 'المنح الدراسية')
@@ -20,16 +20,16 @@
     <div class="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4 bg-white p-6 rounded-[2rem] shadow-sm border border-slate-50">
         <div>
             <h1 class="text-xl font-black text-slate-800 tracking-tight flex items-center gap-2">
-                <span class="text-indigo-500">🎓</span>  إدارة المنح الدراسية
+                <span class="text-gold-500">🎓</span>  إدارة المنح الدراسية
             </h1>
             <p class="text-xs font-bold text-slate-400 mt-1">قم بنشر منح جديدة وتعديلها أو توليد الأقسام بالذكاء الاصطناعي</p>
         </div>
 
         <div class="flex items-center gap-2 bg-slate-50 p-1.5 rounded-2xl border border-slate-100 w-full lg:w-auto">
-            <button @click="activeTab = 'list'" :class="activeTab === 'list' ? 'bg-white text-indigo-600 shadow-sm font-black' : 'text-slate-400 font-bold hover:text-slate-600'" class="flex-1 lg:flex-none px-6 py-2.5 rounded-xl text-xs transition-all flex items-center justify-center gap-2">
+            <button @click="activeTab = 'list'" :class="activeTab === 'list' ? 'bg-white text-gold-600 shadow-sm font-black' : 'text-slate-400 font-bold hover:text-slate-600'" class="flex-1 lg:flex-none px-6 py-2.5 rounded-xl text-xs transition-all flex items-center justify-center gap-2">
                 📋 قائمة المنح الحالية
             </button>
-            <button @click="activeTab = 'builder'" :class="activeTab === 'builder' ? 'bg-white text-indigo-600 shadow-sm font-black' : 'text-slate-400 font-bold hover:text-slate-600'" class="flex-1 lg:flex-none px-6 py-2.5 rounded-xl text-xs transition-all flex items-center justify-center gap-2">
+            <button @click="activeTab = 'builder'" :class="activeTab === 'builder' ? 'bg-white text-gold-600 shadow-sm font-black' : 'text-slate-400 font-bold hover:text-slate-600'" class="flex-1 lg:flex-none px-6 py-2.5 rounded-xl text-xs transition-all flex items-center justify-center gap-2">
                 ✨ منشئ المنح الذكي
             </button>
         </div>
@@ -61,7 +61,7 @@
                                 @if($item->logo_image)
                                     <img src="{{ $item->logo_image }}" class="w-10 h-10 rounded-xl object-contain border bg-white p-1">
                                 @else
-                                    <div class="w-10 h-10 rounded-xl bg-indigo-50 text-indigo-500 font-black flex items-center justify-center text-xs">🎓</div>
+                                    <div class="w-10 h-10 rounded-xl bg-gold-100 text-gold-500 font-black flex items-center justify-center text-xs">🎓</div>
                                 @endif
                                 <div>
                                     <div class="font-black text-slate-800 text-sm">{{ $item->title_ar }}</div>
@@ -73,7 +73,7 @@
                         <td class="p-5">
                             <span class="px-3 py-1 bg-slate-100 rounded-lg text-[11px] font-black text-slate-600">{{ $item->category }}</span>
                         </td>
-                        <td class="p-5 text-xs font-black text-indigo-600">{{ $item->financial_value ?? 'غير محدد' }}</td>
+                        <td class="p-5 text-xs font-black text-gold-600">{{ $item->financial_value ?? 'غير محدد' }}</td>
                         <td class="p-5 text-xs text-slate-500">{{ $item->deadline }}</td>
                         <td class="p-5">
                             @if(($item->status ?? 'active') == 'active')
@@ -84,7 +84,7 @@
                         </td>
                         <td class="p-5 text-left">
                             <div class="flex items-center justify-end gap-2">
-                                <a href="{{ route('admin.scholarships.edit', $item) }}" class="p-2 bg-slate-50 hover:bg-indigo-50 hover:text-indigo-600 text-slate-400 rounded-xl border transition-all">✏️</a>
+                                <a href="{{ route('admin.scholarships.edit', $item) }}" class="p-2 bg-slate-50 hover:bg-gold-100 hover:text-gold-600 text-slate-400 rounded-xl border transition-all">✏️</a>
                                 <form action="{{ route('admin.scholarships.destroy', $item) }}" method="POST" onsubmit="return confirm('هل أنت متأكد من حذف هذه المنحة نهائياً؟')">
                                     @csrf @method('DELETE')
                                     <button type="submit" class="p-2 bg-slate-50 hover:bg-rose-50 hover:text-rose-600 text-slate-400 rounded-xl border transition-all">🗑️</button>
@@ -116,14 +116,14 @@
                     
                     <div class="bg-white rounded-[1.5rem] border border-slate-100 p-6 shadow-sm space-y-6">
                         <h3 class="text-sm font-black text-slate-800 pb-3 border-b border-slate-50 flex items-center gap-2">
-                            <span class="text-indigo-500">📝</span> البيانات الأساسية للمنحة
+                            <span class="text-gold-500">📝</span> البيانات الأساسية للمنحة
                         </h3>
 
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div class="md:col-span-2">
                                 <label class="text-[11px] font-black text-slate-400 uppercase mb-2 block tracking-widest">عنوان المنحة (بالعربية)</label>
                                 <div class="relative flex gap-2">
-                                    <input type="text" name="title_ar" id="title_ar" required placeholder="مثال: منحة جامعة اكسفورد للتميز الدراسي والبحث العلمي" class="flex-1 bg-slate-50 border border-slate-100 rounded-xl px-5 py-3 text-sm font-bold focus:border-indigo-300 outline-none transition-all">
+                                    <input type="text" name="title_ar" id="title_ar" required placeholder="مثال: منحة جامعة اكسفورد للتميز الدراسي والبحث العلمي" class="flex-1 bg-slate-50 border border-slate-100 rounded-xl px-5 py-3 text-sm font-bold focus:border-gold-300 outline-none transition-all">
                                     <button type="button" onclick="generateAllSections()" id="aiGenerateBtn" class="bg-amber-100 text-amber-700 px-4 py-2 rounded-xl font-black text-[10px] uppercase flex items-center gap-2 hover:bg-amber-200 transition-all border border-amber-200 shrink-0">
                                         <svg id="aiIcon" class="w-4 h-4 text-amber-600 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
                                         <span id="aiText">توليد الأقسام ذكياً</span>
@@ -133,43 +133,43 @@
 
                             <div class="md:col-span-2">
                                 <label class="text-[11px] font-black text-slate-400 uppercase mb-2 block tracking-widest">Scholarship Title (English)</label>
-                                <input type="text" name="title_en" required placeholder="Example: Oxford University Excellence Scholarship for International Students" class="w-full bg-slate-50 border border-slate-100 rounded-xl px-5 py-3 text-sm font-bold focus:border-indigo-300 outline-none transition-all text-left">
+                                <input type="text" name="title_en" required placeholder="Example: Oxford University Excellence Scholarship for International Students" class="w-full bg-slate-50 border border-slate-100 rounded-xl px-5 py-3 text-sm font-bold focus:border-gold-300 outline-none transition-all text-left">
                             </div>
 
                             <div class="md:col-span-2">
                                 <label class="text-[11px] font-black text-slate-400 uppercase mb-2 block tracking-widest">القيمة المالية والتمويل (للإظهار في الكارد)</label>
-                                <input type="text" name="financial_value" placeholder="مثال: تمويل كامل يشمل الرسوم، السكن، وراتب شهري 1200$" class="w-full bg-slate-50 border border-slate-100 rounded-xl px-5 py-3 text-sm font-bold focus:border-indigo-300 outline-none transition-all">
+                                <input type="text" name="financial_value" placeholder="مثال: تمويل كامل يشمل الرسوم، السكن، وراتب شهري 1200$" class="w-full bg-slate-50 border border-slate-100 rounded-xl px-5 py-3 text-sm font-bold focus:border-gold-300 outline-none transition-all">
                             </div>
 
                             <div>
                                 <label class="text-[11px] font-black text-slate-400 uppercase mb-2 block tracking-widest">عدد المتقدمين الافتراضي</label>
-                                <input type="number" name="applicants_count" value="0" min="0" class="w-full bg-slate-50 border border-slate-100 rounded-xl px-5 py-3 text-sm font-bold focus:border-indigo-300 outline-none transition-all">
+                                <input type="number" name="applicants_count" value="0" min="0" class="w-full bg-slate-50 border border-slate-100 rounded-xl px-5 py-3 text-sm font-bold focus:border-gold-300 outline-none transition-all">
                             </div>
 
                             <div>
                                 <label class="text-[11px] font-black text-slate-400 uppercase mb-2 block tracking-widest">الكلمات المفتاحية الموصى بها لكارد المنحة</label>
-                                <input type="text" name="recommended_tags" placeholder="ممولة كاملاً, هندسة, بدون آيلتس" class="w-full bg-slate-50 border border-slate-100 rounded-xl px-5 py-3 text-sm font-bold focus:border-indigo-300 outline-none transition-all">
+                                <input type="text" name="recommended_tags" placeholder="ممولة كاملاً, هندسة, بدون آيلتس" class="w-full bg-slate-50 border border-slate-100 rounded-xl px-5 py-3 text-sm font-bold focus:border-gold-300 outline-none transition-all">
                                 <p class="text-[10px] text-slate-400 mt-1">افصل بين الكلمات بفاصلة لسهولة القراءة</p>
                             </div>
 
                             <div>
                                 <label class="text-[11px] font-black text-slate-400 uppercase mb-2 block tracking-widest">الدولة</label>
-                                <input type="text" name="country" id="country" required placeholder="المملكة المتحدة" class="w-full bg-slate-50 border border-slate-100 rounded-xl px-5 py-3 text-sm font-bold focus:border-indigo-300 outline-none transition-all">
+                                <input type="text" name="country" id="country" required placeholder="المملكة المتحدة" class="w-full bg-slate-50 border border-slate-100 rounded-xl px-5 py-3 text-sm font-bold focus:border-gold-300 outline-none transition-all">
                             </div>
                             <div>
                                 <label class="text-[11px] font-black text-slate-400 uppercase mb-2 block tracking-widest">الجامعة المانحة</label>
-                                <input type="text" name="university" id="university" required placeholder="جامعة أكسفورد - Oxford" class="w-full bg-slate-50 border border-slate-100 rounded-xl px-5 py-3 text-sm font-bold focus:border-indigo-300 outline-none transition-all">
+                                <input type="text" name="university" id="university" required placeholder="جامعة أكسفورد - Oxford" class="w-full bg-slate-50 border border-slate-100 rounded-xl px-5 py-3 text-sm font-bold focus:border-gold-300 outline-none transition-all">
                             </div>
                         </div>
 
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>
                                 <label class="text-[11px] font-black text-slate-400 uppercase mb-2 block tracking-widest">الموعد النهائي للتقديم</label>
-                                <input type="date" name="deadline" required class="w-full bg-slate-50 border border-slate-100 rounded-xl px-5 py-3 text-sm font-bold focus:border-indigo-300 outline-none transition-all">
+                                <input type="date" name="deadline" required class="w-full bg-slate-50 border border-slate-100 rounded-xl px-5 py-3 text-sm font-bold focus:border-gold-300 outline-none transition-all">
                             </div>
                             <div>
                                 <label class="text-[11px] font-black text-slate-400 uppercase mb-2 block tracking-widest">التصنيف والمرحلة الدراسية</label>
-                                <select name="category" id="category" class="w-full bg-slate-50 border border-slate-100 rounded-xl px-5 py-3 text-sm font-bold focus:border-indigo-300 outline-none transition-all">
+                                <select name="category" id="category" class="w-full bg-slate-50 border border-slate-100 rounded-xl px-5 py-3 text-sm font-bold focus:border-gold-300 outline-none transition-all">
                                     <option value="Bachelor">بكالوريوس (Undergraduate)</option>
                                     <option value="Master">ماجستير (Postgraduate Master)</option>
                                     <option value="PhD">دكتوراه (PhD / Doctoral)</option>
@@ -180,7 +180,7 @@
 
                         <div>
                             <label class="text-[11px] font-black text-slate-400 uppercase mb-2 block tracking-widest">رابط التقديم المباشر (خارجي)</label>
-                            <input type="url" name="application_url" placeholder="https://www.ox.ac.uk/admissions/apply" class="w-full bg-slate-50 border border-slate-100 rounded-xl px-5 py-3 text-sm font-bold focus:border-indigo-300 outline-none transition-all text-left">
+                            <input type="url" name="application_url" placeholder="https://www.ox.ac.uk/admissions/apply" class="w-full bg-slate-50 border border-slate-100 rounded-xl px-5 py-3 text-sm font-bold focus:border-gold-300 outline-none transition-all text-left">
                         </div>
                     </div>
 
@@ -188,7 +188,7 @@
                         
                         <div class="word-editor-card space-y-2">
                             <label class="text-xs font-black text-slate-700 flex items-center gap-2">
-                                <span class="p-1.5 bg-indigo-50 text-indigo-500 rounded-lg text-xs">📝</span> الوصف العام والمقدمة للمنحة
+                                <span class="p-1.5 bg-gold-100 text-gold-500 rounded-lg text-xs">📝</span> الوصف العام والمقدمة للمنحة
                             </label>
                             <input type="hidden" name="description" id="description_input">
                             <div class="editor-container"><div id="description_editor" class="quill-editor"></div></div>
@@ -231,11 +231,11 @@
                 <div class="lg:col-span-4 p-8 space-y-8 bg-slate-50/40">
                     
                     <div class="p-6 bg-slate-900 rounded-[2rem] shadow-xl text-white space-y-4">
-                        <div class="flex items-center gap-2 text-xs font-black text-indigo-300 uppercase tracking-widest">
+                        <div class="flex items-center gap-2 text-xs font-black text-gold-300 uppercase tracking-widest">
                             ⚡ لوحة التحكم بالمنحة
                         </div>
                         <p class="text-xs text-slate-400 font-bold">تأكد من مراجعة وتوليد الحقول والأقسام قبل الضغط على نشر وتعميم المنحة في الموقع.</p>
-                        <button type="submit" class="w-full bg-indigo-500 text-white font-black py-4 rounded-2xl text-xs hover:bg-indigo-400 transition-all shadow-lg shadow-indigo-500/20">
+                        <button type="submit" class="w-full bg-gold-500 text-white font-black py-4 rounded-2xl text-xs hover:bg-gold-400 transition-all shadow-lg shadow-gold-500/20">
                             🚀 نشر المنحة بالموقع الآن
                         </button>
                     </div>
@@ -260,7 +260,7 @@
                             @foreach(['هندسة', 'طب', 'تقنية', 'إدارة', 'علوم', 'فن'] as $tag)
                             <label class="group cursor-pointer">
                                 <input type="checkbox" name="tags[]" value="{{ $tag }}" class="hidden peer">
-                                <span class="px-4 py-2 bg-slate-50 text-slate-500 rounded-xl text-[10px] font-black peer-checked:bg-indigo-600 peer-checked:text-white transition-all border border-slate-100 inline-block">
+                                <span class="px-4 py-2 bg-slate-50 text-slate-500 rounded-xl text-[10px] font-black peer-checked:bg-gold-600 peer-checked:text-white transition-all border border-slate-100 inline-block">
                                     {{ $tag }}
                                 </span>
                             </label>
@@ -273,7 +273,7 @@
                         <div class="space-y-3">
                             @foreach(['تمويل كامل', 'إعفاء من الرسوم', 'راتب شهري', 'تأمين صحي', 'تذاكر طيران', 'سكن جامعي'] as $coverage)
                             <label class="flex items-center gap-3 group cursor-pointer">
-                                <input type="checkbox" name="coverage[]" value="{{ $coverage }}" class="w-5 h-5 rounded-lg border-slate-200 text-indigo-600 focus:ring-indigo-500 transition-all">
+                                <input type="checkbox" name="coverage[]" value="{{ $coverage }}" class="w-5 h-5 rounded-lg border-slate-200 text-gold-600 focus:ring-gold-500 transition-all">
                                 <span class="text-xs font-bold text-slate-600 group-hover:text-slate-800 transition-colors">{{ $coverage }}</span>
                             </label>
                             @endforeach

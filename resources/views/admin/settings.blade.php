@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+﻿@extends('layouts.admin')
 @section('title', 'إعدادات المنصة')
 @section('content')
 <div class="max-w-5xl mx-auto space-y-6">
@@ -7,7 +7,7 @@
             <h1 class="text-3xl font-black text-slate-900">إعدادات المنصة</h1>
             <p class="text-sm font-bold text-slate-400 mt-1">إدارة المساعد الذكي وحالة الموقع</p>
         </div>
-        <button onclick="document.getElementById('settings-form').submit()" class="bg-indigo-600 text-white px-8 py-3 rounded-xl font-black shadow-lg hover:bg-indigo-700 transition-all flex items-center gap-2">
+        <button onclick="document.getElementById('settings-form').submit()" class="bg-gold-600 text-white px-8 py-3 rounded-xl font-black shadow-lg hover:bg-gold-700 transition-all flex items-center gap-2">
             حفظ جميع التغييرات
         </button>
     </div>
@@ -39,7 +39,7 @@
             <input type="hidden" name="payment_gateways[{{ $index }}][active]" value="0">
             
             <input type="checkbox" name="payment_gateways[{{ $index }}][active]" value="1" {{ ($gateway['active'] ?? false) ? 'checked' : '' }} class="sr-only peer">
-            <div class="w-9 h-5 bg-slate-200 rounded-full peer peer-checked:bg-indigo-600 after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:after:translate-x-4"></div>
+            <div class="w-9 h-5 bg-slate-200 rounded-full peer peer-checked:bg-gold-600 after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:after:translate-x-4"></div>
         </label>
     </div>
     <input type="text" name="payment_gateways[{{ $index }}][account_number]" value="{{ $gateway['account_number'] }}" placeholder="رقم الحساب أو المحفظة" class="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm font-mono tracking-wide text-right">

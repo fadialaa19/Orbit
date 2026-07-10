@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+﻿@extends('layouts.admin')
 
 @section('title', 'طلبات الدفع')
 @section('breadcrumb', 'طلبات الدفع والتحقق')
@@ -21,9 +21,9 @@
     </div>
 
     <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <div class="bg-white p-5 rounded-[1.5rem] border border-slate-100 shadow-sm border-r-4 border-r-indigo-500">
+        <div class="bg-white p-5 rounded-[1.5rem] border border-slate-100 shadow-sm border-r-4 border-r-gold-500">
             <p class="text-[10px] font-black text-slate-400 uppercase mb-1">الإيرادات الكلية</p>
-            <span class="text-2xl font-black text-indigo-600">₪{{ number_format($stats['total_revenue'] ?? 0, 2) }}</span>
+            <span class="text-2xl font-black text-gold-600">₪{{ number_format($stats['total_revenue'] ?? 0, 2) }}</span>
         </div>
         <div class="bg-white p-5 rounded-[1.5rem] border border-slate-100 shadow-sm border-r-4 border-r-amber-500">
             <p class="text-[10px] font-black text-slate-400 uppercase mb-1">قيد المراجعة</p>
@@ -57,7 +57,7 @@
                     <tr class="hover:bg-slate-50/50 transition-all group">
                         <td class="px-6 py-4">
                             <p class="font-bold text-slate-800 text-sm">{{ $order->user->name ?? '—' }}</p>
-                            <p class="text-[10px] font-bold text-indigo-600 uppercase tracking-tight">{{ $order->scholarship->title_ar ?? '—' }}</p>
+                            <p class="text-[10px] font-bold text-gold-600 uppercase tracking-tight">{{ $order->scholarship->title_ar ?? '—' }}</p>
                         </td>
                         <td class="px-6 py-4">
                             <span class="text-lg font-black text-slate-800">₪{{ number_format($order->amount, 2) }}</span>
@@ -66,7 +66,7 @@
                             <p class="text-xs font-bold text-slate-600">{{ $order->bank_name ?? '—' }}</p>
                             <p class="text-[10px] font-bold text-slate-400">{{ $order->transfer_from ?? '—' }}</p>
                             @if($order->receipt_image)
-                                <a href="{{ asset('storage/' . $order->receipt_image) }}" target="_blank" class="text-[10px] font-black text-indigo-600 hover:underline mt-1 inline-block">عرض الإيصال ↗</a>
+                                <a href="{{ asset('storage/' . $order->receipt_image) }}" target="_blank" class="text-[10px] font-black text-gold-600 hover:underline mt-1 inline-block">عرض الإيصال ↗</a>
                             @else
                                 <span class="text-[10px] font-bold text-slate-300">لا يوجد إيصال</span>
                             @endif

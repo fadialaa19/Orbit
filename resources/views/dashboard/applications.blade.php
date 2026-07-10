@@ -1,4 +1,4 @@
-@extends('layouts.dashboard')
+﻿@extends('layouts.dashboard')
 
 @section('title', 'طلباتِي')
 
@@ -22,8 +22,8 @@
             @endphp
 
             @foreach([
-                ['إجمالي الطلبات', $total, '📄', 'text-indigo-600'],
-                ['قيد الانتظار', $pending, '🕒', 'text-purple-600'],
+                ['إجمالي الطلبات', $total, '📄', 'text-gold-600'],
+                ['قيد الانتظار', $pending, '🕒', 'text-gold-600'],
                 ['مقبولة', $approved, '✅', 'text-green-600'],
                 ['مرفوضة', $rejected, '❌', 'text-red-600'],
             ] as $stat)
@@ -49,7 +49,7 @@
                     // Progress
                     $progress = [
                         'percent' => 0,
-                        'barClass' => 'bg-indigo-600',
+                        'barClass' => 'bg-gold-600',
                     ];
 
                     // Steps
@@ -68,8 +68,8 @@
                         $progress = ['percent' => 20, 'barClass' => 'bg-yellow-500'];
                         $stepsText = ['تم', 'في الطريق', 'بداية المراجعة', 'قريبا', '—'];
                     } elseif ($status === 'processing') {
-                        $badge = ['class' => 'bg-purple-50 text-purple-700', 'label' => 'قيد المراجعة'];
-                        $progress = ['percent' => 60, 'barClass' => 'bg-purple-600'];
+                        $badge = ['class' => 'bg-gold-100 text-gold-700', 'label' => 'قيد المراجعة'];
+                        $progress = ['percent' => 60, 'barClass' => 'bg-gold-600'];
                         $stepsText = ['تم', 'يتم فحص', 'جارٍ التقييم', 'قريبا', '—'];
                     } elseif ($status === 'approved') {
                         $badge = ['class' => 'bg-green-50 text-green-700', 'label' => 'مقبول'];
@@ -160,7 +160,7 @@
                     <div class="mt-6">
                         <a
                             href="{{ route('dashboard.scholarships') }}"
-                            class="bg-indigo-600 text-white px-8 py-3 rounded-2xl font-black shadow-lg shadow-indigo-100 hover:bg-indigo-700 transition inline-flex items-center gap-2"
+                            class="bg-gold-600 text-white px-8 py-3 rounded-2xl font-black shadow-lg shadow-gold-100 hover:bg-gold-700 transition inline-flex items-center gap-2"
                         >
                             استعرض المنح المتاحة
                         </a>
