@@ -20,7 +20,9 @@
 </head>
 <body class="bg-gray-50 text-right">
 
-    <nav x-data="{ mobileNavOpen: false }" class="bg-white shadow-sm py-4 px-8 sticky top-0 z-50">
+    <nav x-data="{ mobileNavOpen: false, scrolled: false }" x-init="window.addEventListener('scroll', () => scrolled = window.scrollY > 20)"
+         :class="scrolled ? 'bg-white shadow-md' : 'bg-white/80 backdrop-blur-md shadow-sm'"
+         class="py-4 px-8 sticky top-0 z-50 transition-all duration-300">
         <div class="flex justify-between items-center">
         <div class="flex items-center gap-6">
         <a href="/" class="flex items-center gap-2">
@@ -110,8 +112,9 @@
                 <p class="text-gray-400" dir="ltr">+970 59 270 4945</p>
             </div>
         </div>
-        <div class="border-t border-gray-700 mt-10 pt-6 text-center text-gray-500">
-            © 2026 Orbit ☕️. جميع الحقوق محفوظة.
+        <div class="border-t border-gray-700 mt-10 pt-6 text-center text-gray-500 text-xs space-y-1">
+            <p>© 2026 Orbit ☕️. جميع الحقوق محفوظة.</p>
+            <p>Illustration by <a href="https://storyset.com" target="_blank" rel="noopener" class="hover:text-white transition">Storyset</a></p>
         </div>
     </footer>
 

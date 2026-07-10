@@ -2,7 +2,7 @@
 
 @section('content')
 <section class="py-20 px-4 md:px-8 max-w-7xl mx-auto overflow-hidden">
-    <div class="text-center mb-24 bg-gradient-to-br from-slate-50 to-gold-100 rounded-[3rem] p-12 md:p-24 relative overflow-hidden" data-aos="fade-down">
+    <div class="text-center mb-24 bg-gradient-to-br from-slate-50 to-gold-100 rounded-[2.5rem] p-12 md:p-24 relative overflow-hidden" data-aos="fade-down">
         <div class="relative z-10">
             <h1 class="text-5xl md:text-7xl font-black text-slate-900 mb-8 leading-tight">
                 خدماتنا <span class="text-transparent bg-clip-text bg-gradient-to-r from-gold-600 to-emerald-500">المميزة</span>
@@ -79,7 +79,7 @@
         @endforelse
     </div>
 
-    <div class="text-center py-20 bg-gradient-to-r from-emerald-600 to-green-500 rounded-[4rem] text-white shadow-2xl px-8 relative overflow-hidden" data-aos="zoom-in">
+    <div class="text-center py-20 bg-gradient-to-r from-navy-900 to-navy-800 rounded-[2.5rem] text-white shadow-2xl px-8 relative overflow-hidden" data-aos="zoom-in">
         <div class="relative z-10">
             <h2 class="text-4xl md:text-6xl font-black mb-6 leading-tight text-white">خطوتك الأولى نحو النجاح</h2>
             <p class="text-xl opacity-90 mb-12 max-w-2xl mx-auto">انضم لآلاف الطلاب الناجحين وابدأ رحلة الابتعاث اليوم</p>

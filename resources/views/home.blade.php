@@ -34,9 +34,10 @@
     </div>
     
     <div class="relative" data-aos="zoom-in-right" data-aos-duration="1500">
-        <div class="relative z-10 p-3 bg-white rounded-[3rem] shadow-2xl transition-transform duration-700 hover:rotate-2 group">
-            <img src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&q=80&w=800" 
-                 alt="Students" class="rounded-[2.5rem] transition-all duration-500 group-hover:scale-[1.02]">
+        <div class="relative z-10 p-6 bg-gradient-to-br from-navy-100 to-white rounded-[2.5rem] shadow-2xl transition-transform duration-700 hover:rotate-2 group">
+            <div role="img" aria-label="طالبة تكتب أطروحتها بين الكتب" class="transition-all duration-500 group-hover:scale-[1.02]">
+                @include('layouts.partials._hero-illustration')
+            </div>
         </div>
         
         <div data-aos="fade-down" data-aos-delay="800" class="absolute -top-8 -left-8 bg-white p-5 rounded-3xl shadow-2xl border border-gold-100 flex items-center gap-4 z-20">
@@ -191,7 +192,7 @@
 </section>
 
 <section class="px-8 pb-24">
-    <div data-aos="zoom-in-up" class="max-w-6xl mx-auto bg-gold-600 rounded-[4rem] p-16 text-center text-white relative overflow-hidden shadow-[0_20px_50px_rgba(219,138,71,0.3)]">
+    <div data-aos="zoom-in-up" class="max-w-6xl mx-auto bg-gradient-to-br from-navy-900 to-navy-800 rounded-[2.5rem] p-16 text-center text-white relative overflow-hidden shadow-[0_20px_50px_rgba(15,27,61,0.3)]">
         <div class="relative z-10">
             <h2 class="text-5xl font-black mb-6">جاهز لبدء رحلتك؟</h2>
             <p class="opacity-80 mb-12 text-xl max-w-lg mx-auto">انضم إلى آلاف الطلاب الذين حققوا أحلامهم معنا اليوم مجاناً</p>

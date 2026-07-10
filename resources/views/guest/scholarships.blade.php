@@ -128,12 +128,11 @@
     @endif
 
     <!-- CTA Section -->
-    <div class="text-center py-20 bg-gradient-to-b from-gold-600 to-gold-400 rounded-[4rem] text-white shadow-2xl max-w-4xl mx-auto px-8" data-aos="zoom-in-up">
+    <div class="text-center py-20 bg-gradient-to-b from-navy-900 to-navy-800 rounded-[2.5rem] text-white shadow-2xl max-w-4xl mx-auto px-8" data-aos="zoom-in-up">
         <h2 class="text-4xl font-black mb-6">وجدت منحتك؟</h2>
         <p class="text-xl opacity-90 mb-12 max-w-2xl mx-auto">سجل مجاناً لمتابعة التقديم واحصل على تحليل مخصص لملفك الشخصي</p>
-        <div class="flex flex-col md:flex-row gap-6 justify-center items-center">
-            <input type="email" placeholder="بريدك الإلكتروني" class="flex-1 max-w-md px-8 py-5 rounded-[2.5rem] text-slate-800 font-bold text-lg shadow-inner focus:outline-none focus:ring-4 focus:ring-white/30">
-            <a href="{{ route('register') }}" class="bg-white text-gold-600 px-12 py-5 rounded-[2.5rem] font-black text-xl shadow-2xl hover:shadow-3xl hover:scale-105 transition-all whitespace-nowrap">ابدأ مجاناً ←</a>
+        <div class="flex justify-center">
+            <a href="{{ route('register') }}" class="bg-gold-600 text-white px-12 py-5 rounded-[2.5rem] font-black text-xl shadow-2xl hover:bg-gold-700 hover:scale-105 transition-all whitespace-nowrap">ابدأ مجاناً ←</a>
         </div>
     </div>
 </section>
