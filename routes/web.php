@@ -16,6 +16,18 @@ use App\Http\Controllers\Admin\AdminSettingsController;
 use App\Http\Controllers\Admin\AdminTestimonialController;
 use App\Http\Controllers\Admin\ScholarshipRichTextUploadController;
 
+Route::get('/sitemap.xml', function () {
+    $urls = [
+        ['loc' => url('/'), 'priority' => '1.0'],
+        ['loc' => route('guest.scholarships'), 'priority' => '0.9'],
+        ['loc' => route('guest.about'), 'priority' => '0.7'],
+        ['loc' => route('guest.services'), 'priority' => '0.7'],
+    ];
+
+    return response()->view('sitemap', ['urls' => $urls])
+        ->header('Content-Type', 'text/xml');
+})->name('sitemap');
+
 Route::get('/', function () {
     $testimonials = \App\Models\Testimonial::active()->latest()->take(3)->get();
     $teamMembers = \App\Models\User::admins()->where('status', 'active')->get();

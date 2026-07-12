@@ -3,8 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="{{ asset('assets/images/logo.png') }}" type="image/png">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>Orbit</title>
+    <title>@yield('title', 'Orbit - منصتك للحصول على منح دراسية حول العالم')</title>
+
+    <meta name="description" content="@yield('meta_description', 'Orbit منصة عربية تساعد الطلاب على اكتشاف المنح الدراسية حول العالم والتقديم عليها بسهولة، بدعم من الذكاء الاصطناعي.')">
+    <link rel="canonical" href="{{ url()->current() }}">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Orbit">
+    <meta property="og:title" content="@yield('title', 'Orbit - منصتك للحصول على منح دراسية حول العالم')">
+    <meta property="og:description" content="@yield('meta_description', 'Orbit منصة عربية تساعد الطلاب على اكتشاف المنح الدراسية حول العالم والتقديم عليها بسهولة، بدعم من الذكاء الاصطناعي.')">
+    <meta property="og:image" content="{{ asset('assets/images/logo.png') }}">
+    <meta property="og:url" content="{{ url()->current() }}">
 
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2130498782125345" crossorigin="anonymous"></script>
 
