@@ -58,7 +58,7 @@ PROMPT;
 
     public function __construct()
     {
-        $this->apiKey = env('GROQ_API_KEY');
+        $this->apiKey = config('services.groq.key');
     }
 
     public function chat(array $messages): array

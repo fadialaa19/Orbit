@@ -32,7 +32,7 @@ PROMPT;
 
     public function __construct()
     {
-        $this->apiKey = env('GROQ_API_KEY');
+        $this->apiKey = config('services.groq.key');
     }
 
     public function generateScholarshipDescription(string $title): string
