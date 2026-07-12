@@ -304,6 +304,11 @@ class StudentDashboardController extends Controller
         $user->optional_documents = $optDocs;
         $user->documents = array_merge($legacyDocs, $reqDocs, $optDocs);
 
+        // avatar/docs/required_documents/optional_documents are handled above from
+        // the raw uploaded files; fill()'ing the raw validated request values for
+        // these would overwrite the stored paths with UploadedFile objects/raw input.
+        unset($validated['avatar'], $validated['docs'], $validated['required_documents'], $validated['optional_documents']);
+
         $user->fill($validated);
         $user->profile_completion = $user->calculateProfileCompletion();
         $user->save();

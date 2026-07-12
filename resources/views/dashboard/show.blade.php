@@ -63,6 +63,16 @@
                                 </a>
                             @endif
 
+                            @if($scholarship->apply_via_us_link)
+                                <a href="{{ $scholarship->apply_via_us_link }}" target="_blank" rel="noopener noreferrer"
+                                   class="w-full block bg-navy-900 text-white py-3.5 rounded-2xl font-black text-sm text-center shadow-lg hover:bg-navy-800 hover:scale-[1.01] transition-all duration-200 flex items-center justify-center gap-2">
+                                    <span>التقديم عن طريقنا</span>
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h8m0 0l-3-3m3 3l-3 3M3 12a9 9 0 1018 0 9 9 0 00-18 0z"/>
+                                    </svg>
+                                </a>
+                            @endif
+
                             {{-- زر حفظ المنحة في المفضلة --}}
                             @php
                                 $isFavorited = auth()->check() && $scholarship->favoritedBy()->where('user_id', auth()->id())->exists();

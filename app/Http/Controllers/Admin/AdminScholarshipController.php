@@ -60,6 +60,7 @@ class AdminScholarshipController extends Controller
         'coverage' => 'nullable|array',
         'tags' => 'nullable|array',
         'application_url' => 'nullable|url|max:500',
+        'apply_via_us_link' => 'nullable|url|max:500',
         'main_image' => 'nullable|image|max:2048',
         'logo_image' => 'nullable|image|max:1048',
     ]);
@@ -131,6 +132,7 @@ public function update(Request $request, Scholarship $scholarship)
         'coverage' => 'nullable|array',
         'tags' => 'nullable|array',
         'application_url' => 'nullable|url|max:500',
+        'apply_via_us_link' => 'nullable|url|max:500',
         'status' => 'required|in:active,closed',
         'main_image' => 'nullable|image|max:2048',
         'logo_image' => 'nullable|image|max:1048',

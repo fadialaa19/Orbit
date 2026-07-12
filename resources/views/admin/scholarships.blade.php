@@ -182,6 +182,11 @@
                             <label class="text-[11px] font-black text-slate-400 uppercase mb-2 block tracking-widest">رابط التقديم المباشر (خارجي)</label>
                             <input type="url" name="application_url" placeholder="https://www.ox.ac.uk/admissions/apply" class="w-full bg-slate-50 border border-slate-100 rounded-xl px-5 py-3 text-sm font-bold focus:border-gold-300 outline-none transition-all text-left">
                         </div>
+
+                        <div>
+                            <label class="text-[11px] font-black text-slate-400 uppercase mb-2 block tracking-widest">رابط "التقديم عن طريقنا" (واتساب / تيليجرام)</label>
+                            <input type="url" name="apply_via_us_link" placeholder="https://wa.me/9705xxxxxxx" class="w-full bg-slate-50 border border-slate-100 rounded-xl px-5 py-3 text-sm font-bold focus:border-gold-300 outline-none transition-all text-left">
+                        </div>
                     </div>
 
                     <div class="space-y-6">

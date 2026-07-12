@@ -113,17 +113,15 @@
                                 </div>
                             </div>
 
-                            <div class="flex flex-col gap-3 w-full md:w-auto relative pt-4">
+                            <div class="flex flex-col gap-3 w-full md:w-auto items-center md:items-end">
                                 {{-- جلب أول وسم موصى به من مصفوفة الـ recommended_tags --}}
                                 @if(is_array($scholarship->recommended_tags) && count($scholarship->recommended_tags) > 0)
-                                <div class="absolute -top-3 right-0 left-0 flex justify-center md:justify-end pr-2">
-                                    <span class="text-[10px] font-black py-1 px-3 rounded-lg shadow-sm border bg-amber-50 text-amber-700 border-amber-100">
-                                        🔥 {{ $scholarship->recommended_tags[0] }}
-                                    </span>
-                                </div>
+                                <span class="text-[10px] font-black py-1 px-3 rounded-lg shadow-sm border bg-amber-50 text-amber-700 border-amber-100">
+                                    🔥 {{ $scholarship->recommended_tags[0] }}
+                                </span>
                                 @endif
 
-                                <a href="{{ route('dashboard.scholarships.show', $scholarship->id) }}" class="bg-gold-600 text-white px-8 py-3 rounded-2xl font-bold shadow-lg shadow-gold-100 hover:bg-gold-700 transition relative z-10 text-center block">
+                                <a href="{{ route('dashboard.scholarships.show', $scholarship->id) }}" class="bg-gold-600 text-white px-8 py-3 rounded-2xl font-bold shadow-lg shadow-gold-100 hover:bg-gold-700 transition text-center block w-full md:w-auto">
                                     عرض التفاصيل
                                 </a>
 

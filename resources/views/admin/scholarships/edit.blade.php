@@ -81,6 +81,11 @@
                             <label class="text-[11px] font-black text-slate-400 uppercase mb-2 block tracking-widest">رابط التقديم المجاني</label>
                             <input type="url" name="application_url" value="{{ old('application_url', $scholarship->application_url) }}" class="w-full bg-slate-50 border border-slate-100 rounded-xl px-5 py-3 text-sm font-bold outline-none text-left">
                         </div>
+
+                        <div>
+                            <label class="text-[11px] font-black text-slate-400 uppercase mb-2 block tracking-widest">رابط "التقديم عن طريقنا" (واتساب / تيليجرام)</label>
+                            <input type="url" name="apply_via_us_link" value="{{ old('apply_via_us_link', $scholarship->apply_via_us_link) }}" placeholder="https://wa.me/9705xxxxxxx" class="w-full bg-slate-50 border border-slate-100 rounded-xl px-5 py-3 text-sm font-bold outline-none text-left">
+                        </div>
                     </div>
 
                     {{-- قسم رفع ملفات وصور المنحة --}}

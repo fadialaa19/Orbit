@@ -31,6 +31,7 @@ class Scholarship extends Model
         'status',
         'price',
         'application_url',
+        'apply_via_us_link',
     ];
 
     protected $casts = [
@@ -49,10 +50,11 @@ public function getFormattedDeadlineAttribute()
     }
 
     /**
-     * Resolve a stored image value to a usable URL, whether it's an older
-     * fully pre-baked absolute URL (breaks if the domain/scheme changes
-     * after upload) or a relative storage path (resolved fresh against the
-     * current request every time, so it never goes stale).
+     * Resolve a stored image value to a usable URL. Older rows may have a
+     * fully pre-baked absolute URL from a previous host/scheme (e.g. a local
+     * dev URL baked in before deployment) — extract the relative storage
+     * path out of it and rebuild against the current host so it never goes
+     * stale, instead of trusting the stored domain as-is.
      */
     protected function resolveImageUrl(?string $value): ?string
     {
@@ -60,7 +62,14 @@ public function getFormattedDeadlineAttribute()
             return null;
         }
 
-        return filter_var($value, FILTER_VALIDATE_URL) ? $value : asset('storage/' . $value);
+        if (filter_var($value, FILTER_VALIDATE_URL)) {
+            $path = parse_url($value, PHP_URL_PATH) ?? '';
+            $relative = preg_replace('#^.*/storage/#', '', $path);
+
+            return $relative !== '' ? asset('storage/' . ltrim($relative, '/')) : $value;
+        }
+
+        return asset('storage/' . $value);
     }
 
     public function getLogoImageAttribute($value)
