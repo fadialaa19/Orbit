@@ -21,21 +21,12 @@ return Application::configure(basePath: dirname(__DIR__))
             \App\Http\Middleware\CheckAccountStatus::class,
             \App\Http\Middleware\CheckMaintenanceMode::class,
         ]);
-    })
-    ->withMiddleware(function (Middleware $middleware): void {
+
         $middleware->alias([
             'verified.ensure' => \App\Http\Middleware\EnsureEmailVerified::class,
-        ]);
-        $middleware->web(append: [
-            \App\Http\Middleware\CheckAccountStatus::class,
-            \App\Http\Middleware\CheckMaintenanceMode::class,
+            'check.permission' => \App\Http\Middleware\CheckPermission::class,
         ]);
     })
-    ->withMiddleware(function (Middleware $middleware) {
-    $middleware->alias([
-        'check.permission' => \App\Http\Middleware\CheckPermission::class,
-    ]);
-})
     ->withExceptions(function (Exceptions $exceptions): void {
         //
     })->create();
