@@ -6,6 +6,8 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Orbit ☕️</title>
 
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2130498782125345" crossorigin="anonymous"></script>
+
     <script defer crossorigin="anonymous" src="https://unpkg.com/alpinejs@3.14.1/dist/cdn.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
