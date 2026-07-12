@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>تعيين كلمة مرور جديدة - Orbit ☕️</title>
+    <title>تعيين كلمة مرور جديدة - Orbit</title>
     @vite(['resources/css/app.css'])
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
     @include('layouts.partials._brand-styles')

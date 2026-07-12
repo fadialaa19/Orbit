@@ -39,7 +39,7 @@
         <div class="mb-10">
             
                 <img src="{{ asset('assets/images/logo.png') }}" class="h-12 md:h-14 mx-auto" alt="Logo">
-                <h2 class="text-2xl font-black tracking-tighter italic">Orbit ☕️</h2>
+                <h2 class="text-2xl font-black tracking-tighter italic">Orbit</h2>
             
         </div>
 

@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>Orbit ☕️</title>
+    <title>Orbit</title>
 
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2130498782125345" crossorigin="anonymous"></script>
 
@@ -29,7 +29,7 @@
         <div class="flex items-center gap-6">
         <a href="/" class="flex items-center gap-2">
             <img src="{{ asset('assets/images/logo.png') }}" alt="Orbit Logo" class="h-12 w-auto transition-transform duration-300 hover:scale-105">
-            <span class="font-bold text-xl text-slate-800 hidden md:block">Orbit ☕️</span>
+            <span class="font-bold text-xl text-slate-800 hidden md:block">Orbit</span>
         </a>
 
         <div class="hidden md:flex gap-6 text-gray-600 font-medium">
@@ -115,7 +115,7 @@
             </div>
         </div>
         <div class="border-t border-gray-700 mt-10 pt-6 text-center text-gray-500 text-xs space-y-1">
-            <p>© 2026 Orbit ☕️. جميع الحقوق محفوظة.</p>
+            <p>© 2026 Orbit. جميع الحقوق محفوظة.</p>
             <p>Illustration by <a href="https://storyset.com" target="_blank" rel="noopener" class="hover:text-white transition">Storyset</a></p>
         </div>
     </footer>

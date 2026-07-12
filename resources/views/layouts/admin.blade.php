@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="csrf-token" content="{{ csrf_token() }}">
 <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
-    <title>@yield('title', 'لوحة الإدارة') - Orbit ☕️</title>
+    <title>@yield('title', 'لوحة الإدارة') - Orbit</title>
 
     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
@@ -26,7 +26,7 @@
         <div class="p-7 flex items-center gap-3">
             <div class="w-11 h-11 bg-gradient-to-br from-gold-600 to-gold-400 rounded-2xl flex items-center justify-center text-white font-black shadow-lg text-lg italic">O</div>
             <div>
-                <h2 class="font-black text-xl text-slate-900 leading-tight">Orbit ☕️</h2>
+                <h2 class="font-black text-xl text-slate-900 leading-tight">Orbit</h2>
                 <p class="text-[11px] text-gold-500 font-bold uppercase tracking-wider">لوحة الإدارة الذكية</p>
             </div>
         </div>

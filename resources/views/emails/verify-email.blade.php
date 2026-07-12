@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>تأكيد البريد الإلكتروني - Orbit ☕️</title>
+    <title>تأكيد البريد الإلكتروني - Orbit</title>
     <style>
         body { font-family: 'Cairo', sans-serif; margin: 0; padding: 0; background: #f8fafc; }
         .container { max-width: 680px; margin: 0 auto; padding: 24px; }
@@ -45,7 +45,7 @@
             </div>
 
             <div class="box">
-                <p style="margin:0;">إذا لم تكن أنت من قام بالتسجيل في Orbit ☕️، يمكنك تجاهل هذه الرسالة بأمان.</p>
+                <p style="margin:0;">إذا لم تكن أنت من قام بالتسجيل في Orbit، يمكنك تجاهل هذه الرسالة بأمان.</p>
             </div>
 
             <p class="fine" style="margin-top:14px;">
@@ -54,7 +54,7 @@
         </div>
 
         <div class="footer">
-            © {{ date('Y') }} Orbit ☕️. جميع الحقوق محفوظة.
+            © {{ date('Y') }} Orbit. جميع الحقوق محفوظة.
         </div>
     </div>
 </div>
