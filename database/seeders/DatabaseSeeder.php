@@ -12,14 +12,14 @@ class DatabaseSeeder extends Seeder
         // Only seed an initial super_admin when explicit credentials are
         // provided via the environment - never hardcode a real password
         // here, since this seeder runs against the production database.
-        $email = env('ADMIN_EMAIL');
-        $password = env('ADMIN_PASSWORD');
+        $email = config('app.admin.email');
+        $password = config('app.admin.password');
 
         if ($email && $password) {
             User::firstOrCreate(
                 ['email' => $email],
                 [
-                    'name' => env('ADMIN_NAME', 'Admin'),
+                    'name' => config('app.admin.name'),
                     'password' => bcrypt($password),
                     'role' => 'super_admin',
                     'email_verified_at' => now(),

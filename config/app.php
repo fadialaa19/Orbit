@@ -5,6 +5,12 @@ return [
 
     'free_mode' => env('FREE_MODE', false),
 
+    'admin' => [
+        'name' => env('ADMIN_NAME', 'Admin'),
+        'email' => env('ADMIN_EMAIL'),
+        'password' => env('ADMIN_PASSWORD'),
+    ],
+
 
     /*
     |--------------------------------------------------------------------------
