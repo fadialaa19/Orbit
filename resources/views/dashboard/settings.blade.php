@@ -55,7 +55,7 @@
                             <div class="text-center mb-10 lg:mb-0 lg:text-right">
                                 <div class="relative w-28 h-28 mx-auto lg:mx-0 mb-6">
                                     @if($user->avatar)
-                                        <img src="{{ asset('storage/' . $user->avatar) }}" class="w-full h-full rounded-full object-cover shadow-2xl">
+                                        <img src="{{ $user->avatar }}" class="w-full h-full rounded-full object-cover shadow-2xl">
                                     @else
                                         <div class="w-full h-full rounded-full bg-gradient-to-tr from-gold-600 to-gold-400 flex items-center justify-center text-white text-4xl font-black shadow-2xl">{{ mb_substr($user->name, 0, 1) }}</div>
                                     @endif

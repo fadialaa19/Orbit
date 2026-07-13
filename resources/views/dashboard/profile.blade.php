@@ -394,7 +394,7 @@
                         <div class="relative w-32 h-32 mx-auto mb-6 group">
                             <div id="avatarDisplay">
                             @if($user->avatar)
-                            <img src="{{ asset('storage/'.$user->avatar) }}" alt="Avatar" class="w-full h-full rounded-full object-cover border-4 border-white shadow-lg">
+                            <img src="{{ $user->avatar }}" alt="Avatar" class="w-full h-full rounded-full object-cover border-4 border-white shadow-lg">
                             @else
                             <div class="w-full h-full rounded-full bg-gradient-to-tr from-gold-600 to-gold-400 flex items-center justify-center text-white text-4xl font-black shadow-xl border-4 border-white">
                                 {{ Str::substr($user->name, 0, 1) }}

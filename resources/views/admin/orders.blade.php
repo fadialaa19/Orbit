@@ -66,7 +66,7 @@
                             <p class="text-xs font-bold text-slate-600">{{ $order->bank_name ?? '—' }}</p>
                             <p class="text-[10px] font-bold text-slate-400">{{ $order->transfer_from ?? '—' }}</p>
                             @if($order->receipt_image)
-                                <a href="{{ asset('storage/' . $order->receipt_image) }}" target="_blank" class="text-[10px] font-black text-gold-600 hover:underline mt-1 inline-block">عرض الإيصال ↗</a>
+                                <a href="{{ \Storage::disk('public')->url($order->receipt_image) }}" target="_blank" class="text-[10px] font-black text-gold-600 hover:underline mt-1 inline-block">عرض الإيصال ↗</a>
                             @else
                                 <span class="text-[10px] font-bold text-slate-300">لا يوجد إيصال</span>
                             @endif

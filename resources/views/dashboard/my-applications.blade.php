@@ -89,7 +89,7 @@
 
                             @if($order->receipt_image)
                                 <div class="mt-4">
-                                    <a href="{{ asset('storage/' . $order->receipt_image) }}" target="_blank" class="text-[10px] font-black text-gold-600 hover:underline">عرض الإيصال ↗</a>
+                                    <a href="{{ \Storage::disk('public')->url($order->receipt_image) }}" target="_blank" class="text-[10px] font-black text-gold-600 hover:underline">عرض الإيصال ↗</a>
                                 </div>
                             @endif
                         @endunless

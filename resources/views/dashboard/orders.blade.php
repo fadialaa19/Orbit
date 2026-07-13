@@ -50,7 +50,7 @@
                                             <p class="text-[10px] font-bold text-slate-400">{{ $order->created_at->format('Y-m-d') }}</p>
 
                                             @if($order->receipt_image)
-                                                <a href="{{ asset('storage/' . $order->receipt_image) }}" target="_blank" class="text-[10px] font-black text-gold-600 hover:underline mt-2 inline-block">عرض الإيصال ↗</a>
+                                                <a href="{{ \Storage::disk('public')->url($order->receipt_image) }}" target="_blank" class="text-[10px] font-black text-gold-600 hover:underline mt-2 inline-block">عرض الإيصال ↗</a>
                                             @endif
 
                                             @if($order->status === 'paid')
