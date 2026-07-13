@@ -35,6 +35,13 @@ class AdminStudentController extends Controller
         return view('admin.students', $this->getStudentsData());
     }
 
+    public function show($id)
+    {
+        $student = User::where('role', 'student')->findOrFail($id);
+
+        return view('admin.students.show', compact('student'));
+    }
+
     // ⭐ إضافة هذه الدالة لحل مشكلة الـ Error 500
     public function create()
     {
