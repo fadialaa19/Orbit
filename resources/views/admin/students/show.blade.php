@@ -190,7 +190,7 @@
             <div class="flex flex-wrap gap-3">
                 @foreach($student->languages as $lang)
                     <span class="bg-slate-50 border border-slate-100 rounded-xl px-4 py-2 text-xs font-bold text-slate-600">
-                        {{ $lang['name'] ?? '' }} @if(!empty($lang['cert'])) ({{ $lang['cert'] }}) @endif
+                        {{ $lang['name'] ?? '' }} @if(!empty($lang['level'] ?? $lang['cert'] ?? null)) ({{ $lang['level'] ?? $lang['cert'] }}) @endif
                     </span>
                 @endforeach
             </div>

@@ -234,26 +234,26 @@ class StudentDashboardController extends Controller
             'high_school_name' => 'nullable|string|max:200',
             'high_school_country' => 'nullable|string|max:100',
             'high_school_year' => 'nullable|integer|min:1950|max:2030',
-            'high_school_gpa' => 'nullable|numeric|min:0|max:4',
+            'high_school_gpa' => 'nullable|numeric|min:0|max:100',
             'high_school_branch' => 'nullable|string|max:100',
             'diploma_institute' => 'nullable|string|max:200',
             'diploma_country' => 'nullable|string|max:100',
             'diploma_year' => 'nullable|integer|min:1950|max:2030',
             'diploma_degree' => 'nullable|string|max:200',
-            'diploma_gpa' => 'nullable|numeric|min:0|max:4',
+            'diploma_gpa' => 'nullable|numeric|min:0|max:100',
             'bachelor_university' => 'nullable|string|max:200',
             'bachelor_country' => 'nullable|string|max:100',
             'bachelor_year' => 'nullable|integer|min:1950|max:2030',
             'bachelor_degree' => 'nullable|string|max:200',
-            'bachelor_gpa' => 'nullable|numeric|min:0|max:4',
+            'bachelor_gpa' => 'nullable|numeric|min:0|max:100',
             'master_university' => 'nullable|string|max:200',
             'master_country' => 'nullable|string|max:100',
             'master_year' => 'nullable|integer|min:1950|max:2030',
             'master_degree' => 'nullable|string|max:200',
-            'master_gpa' => 'nullable|numeric|min:0|max:4',
+            'master_gpa' => 'nullable|numeric|min:0|max:100',
             'languages' => 'nullable|array',
-            'languages.*.name' => 'string|max:50',
-            'languages.*.cert' => 'string|max:100',
+            'languages.*.name' => 'nullable|string|max:50',
+            'languages.*.level' => 'nullable|string|max:100',
             'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
             'required_documents' => 'nullable|array',
             'optional_documents' => 'nullable|array',
@@ -318,6 +318,13 @@ class StudentDashboardController extends Controller
         // the raw uploaded files; fill()'ing the raw validated request values for
         // these would overwrite the stored paths with UploadedFile objects/raw input.
         unset($validated['avatar'], $validated['docs'], $validated['required_documents'], $validated['optional_documents']);
+
+        if (isset($validated['languages'])) {
+            $validated['languages'] = array_values(array_filter(
+                $validated['languages'],
+                fn ($lang) => !empty($lang['name']) || !empty($lang['level'])
+            ));
+        }
 
         $user->fill($validated);
         $user->profile_completion = $user->calculateProfileCompletion();

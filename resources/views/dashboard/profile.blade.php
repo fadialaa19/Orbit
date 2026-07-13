@@ -24,6 +24,17 @@
             </div>
         </div>
 
+        @if($errors->any())
+            <div class="bg-rose-50 border border-rose-200 text-rose-700 rounded-2xl p-5 mb-6 font-bold text-sm">
+                <p class="font-black mb-2">تعذّر حفظ التعديلات:</p>
+                <ul class="list-disc pr-5 space-y-1">
+                    @foreach($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+
         <form action="{{ route('dashboard.profile.update') }}" method="POST" enctype="multipart/form-data">
             @csrf
             @method('PUT')
@@ -244,16 +255,28 @@
                             <!-- Tab: Languages -->
                             <div x-show="tab === 'languages'" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 transform scale-95" x-transition:enter-end="opacity-100 transform scale-100" x-transition:leave="transition ease-in duration-200" x-transition:leave-start="opacity-100 transform scale-100" x-transition:leave-end="opacity-0 transform scale-95">
                                 <div class="space-y-4">
-                                    @php
-                                    $langs = $user->languages ?? [['name' => 'العربية', 'cert' => 'لغة الأم']];
-                                    @endphp
-                                    
-                                    @foreach($langs as $index => $lang)
-                                    <div class="flex items-center justify-between p-5 bg-slate-50 rounded-3xl">
-                                        <input type="text" name="languages[{{ $index }}][name]" value="{{ $lang['name'] ?? '' }}" placeholder="اللغة" class="bg-transparent border-0 p-2 text-slate-700 font-bold w-1/3">
-                                        <input type="text" name="languages[{{ $index }}][cert]" value="{{ $lang['cert'] ?? '' }}" placeholder="الشهادة" class="bg-transparent border-0 p-2 text-slate-500 font-bold text-right w-1/3">
-                                    </div>
-                                    @endforeach
+                                    <template x-for="(lang, index) in languages" :key="index">
+                                        <div class="flex items-center gap-3 p-5 bg-slate-50 rounded-3xl">
+                                            <input type="text" :name="'languages[' + index + '][name]'" x-model="lang.name" placeholder="اللغة" class="bg-white border border-slate-100 rounded-2xl p-3 text-slate-700 font-bold flex-1 focus:ring-2 focus:ring-gold-500 outline-none">
+                                            <select :name="'languages[' + index + '][level]'" x-model="lang.level" class="bg-white border border-slate-100 rounded-2xl p-3 text-slate-700 font-bold flex-1 focus:ring-2 focus:ring-gold-500 outline-none">
+                                                <option value="">المستوى</option>
+                                                <option value="لغة الأم">لغة الأم</option>
+                                                <option value="ممتاز">ممتاز</option>
+                                                <option value="جيد جداً">جيد جداً</option>
+                                                <option value="جيد">جيد</option>
+                                                <option value="متوسط">متوسط</option>
+                                                <option value="مبتدئ">مبتدئ</option>
+                                            </select>
+                                            <button type="button" @click="removeLanguage(index)" class="p-2 text-slate-400 hover:text-rose-600 transition flex-shrink-0" title="حذف">
+                                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                                            </button>
+                                        </div>
+                                    </template>
+
+                                    <button type="button" @click="addLanguage()" class="w-full flex items-center justify-center gap-2 border-2 border-dashed border-slate-200 text-slate-500 hover:border-gold-400 hover:text-gold-600 py-3 rounded-2xl font-black text-sm transition">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                                        <span>إضافة لغة</span>
+                                    </button>
                                 </div>
                             </div>
 
@@ -459,6 +482,19 @@ function profileData() {
         avatarCropper: null,
         avatarFile: null,
         avatarPreview: null,
+        languages: {!! json_encode(
+            collect($user->languages ?? [['name' => 'العربية', 'level' => 'لغة الأم']])
+                ->map(fn($lang) => ['name' => $lang['name'] ?? '', 'level' => $lang['level'] ?? ($lang['cert'] ?? '')])
+                ->values()
+        ) !!},
+
+        addLanguage() {
+            this.languages.push({ name: '', level: '' });
+        },
+
+        removeLanguage(index) {
+            this.languages.splice(index, 1);
+        },
 
         initProfile() {
             this.tab = localStorage.getItem('profileTab') || 'personal';
