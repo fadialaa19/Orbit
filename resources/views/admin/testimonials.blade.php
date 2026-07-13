@@ -183,7 +183,7 @@
                     </div>
 
                     <div class="flex items-center gap-3 pt-2">
-                        <input type="checkbox" name="is_active" id="is_active" x-model="currentTestimonial.is_active" class="w-5 h-5 text-gold-600 rounded border-slate-300 focus:ring-gold-500">
+                        <input type="checkbox" name="is_active" id="is_active" value="1" x-model="currentTestimonial.is_active" class="w-5 h-5 text-gold-600 rounded border-slate-300 focus:ring-gold-500">
                         <label for="is_active" class="text-sm font-bold text-slate-700">نشط ومعروض في الموقع</label>
                     </div>
 
