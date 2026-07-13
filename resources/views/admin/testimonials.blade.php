@@ -1,4 +1,4 @@
-﻿@extends('layouts.admin')
+@extends('layouts.admin')
 
 @section('title', 'إدارة التجارب')
 @section('breadcrumb', 'تجارب الطلاب')
@@ -19,6 +19,17 @@
              class="fixed top-5 left-1/2 -translate-x-1/2 z-[100] min-w-[300px] p-4 bg-emerald-500 text-white rounded-2xl font-black text-sm shadow-2xl flex items-center justify-center gap-3">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
             {{ session('success') }}
+        </div>
+    @endif
+
+    @if($errors->any())
+        <div x-data="{ show: true }" x-show="show" x-init="showModal = true; editMode = {{ old('_method') === 'PATCH' ? 'true' : 'false' }}"
+             class="fixed top-5 left-1/2 -translate-x-1/2 z-[100] min-w-[300px] max-w-lg p-4 bg-rose-500 text-white rounded-2xl font-black text-sm shadow-2xl">
+            <ul class="list-disc pr-5 space-y-1">
+                @foreach($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
         </div>
     @endif
 
