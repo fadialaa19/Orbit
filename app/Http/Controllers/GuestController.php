@@ -34,6 +34,11 @@ class GuestController extends Controller
         return view('guest.scholarships', compact('scholarships', 'search', 'category', 'activeCount'));
     }
 
+    public function scholarshipShow(Scholarship $scholarship)
+    {
+        return view('guest.scholarship-show', compact('scholarship'));
+    }
+
     public function about()
     {
         $studentsCount = User::students()->count();

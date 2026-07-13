@@ -77,6 +77,7 @@ require __DIR__ . '/google.php';
 
 // Guest pages (Pre-login)
 Route::get('/scholarships', [App\Http\Controllers\GuestController::class, 'scholarships'])->name('guest.scholarships');
+Route::get('/scholarships/{scholarship}', [App\Http\Controllers\GuestController::class, 'scholarshipShow'])->name('guest.scholarships.show');
 Route::get('/about', [App\Http\Controllers\GuestController::class, 'about'])->name('guest.about');
 Route::get('/services', [App\Http\Controllers\GuestController::class, 'services'])->name('guest.services');
 

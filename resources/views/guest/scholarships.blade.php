@@ -107,7 +107,7 @@
 
                 <!-- CTAs -->
                 <div class="flex flex-col sm:flex-row gap-3 pt-6 border-t border-slate-100">
-                    <a href="{{ route('login') }}" class="flex-1 bg-gradient-to-r from-gold-600 to-gold-700 text-white py-4 px-8 rounded-3xl font-black shadow-xl hover:shadow-2xl hover:scale-[1.02] transition-all text-lg group-hover:bg-gold-700 text-center block">عرض التفاصيل</a>
+                    <a href="{{ route('guest.scholarships.show', $scholarship->id) }}" class="flex-1 bg-gradient-to-r from-gold-600 to-gold-700 text-white py-4 px-8 rounded-3xl font-black shadow-xl hover:shadow-2xl hover:scale-[1.02] transition-all text-lg group-hover:bg-gold-700 text-center block">عرض التفاصيل</a>
                     <a href="{{ route('login') }}" class="flex-1 border-2 border-slate-200 text-slate-700 py-4 px-6 rounded-3xl font-black hover:bg-slate-50 hover:border-slate-300 transition-all flex items-center justify-center gap-2">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
                         حفظ
