@@ -86,7 +86,13 @@
                     <tr class="hover:bg-slate-50/50 transition-all group">
                         <td class="px-6 py-4">
                             <div class="flex items-center gap-3">
-                                <img src="https://ui-avatars.com/api/?name={{ urlencode($student->name) }}&background=6366f1&color=fff" class="w-10 h-10 rounded-xl shadow-sm">
+                                @if($student->avatar)
+                                    <img src="{{ $student->avatar }}" alt="{{ $student->name }}" class="w-10 h-10 rounded-xl object-cover shadow-sm">
+                                @else
+                                    <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-gold-600 to-gold-400 flex items-center justify-center text-white font-black shadow-sm">
+                                        {{ mb_substr($student->name, 0, 1) }}
+                                    </div>
+                                @endif
                                 <p class="font-bold text-slate-800 text-sm">{{ $student->name }}</p>
                             </div>
                         </td>

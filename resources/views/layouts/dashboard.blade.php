@@ -66,9 +66,13 @@
                         <p class="text-xs font-black text-slate-800 leading-none">{{ Auth::user()->name }}</p>
                         <p class="text-[10px] text-slate-400 font-bold mt-1 text-right italic">طالب</p>
                     </div>
-                    <div class="w-10 h-10 bg-gradient-to-tr from-gold-600 to-gold-400 rounded-2xl flex items-center justify-center text-white font-black shadow-lg">
-                        {{ mb_substr(Auth::user()->name, 0, 1) }}
-                    </div>
+                    @if(Auth::user()->avatar)
+                        <img src="{{ Auth::user()->avatar }}" alt="{{ Auth::user()->name }}" class="w-10 h-10 rounded-2xl object-cover shadow-lg">
+                    @else
+                        <div class="w-10 h-10 bg-gradient-to-tr from-gold-600 to-gold-400 rounded-2xl flex items-center justify-center text-white font-black shadow-lg">
+                            {{ mb_substr(Auth::user()->name, 0, 1) }}
+                        </div>
+                    @endif
                 </div>
 
                 <div x-show="open" @click.away="open = false" x-cloak x-transition

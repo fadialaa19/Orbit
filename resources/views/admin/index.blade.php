@@ -87,9 +87,13 @@
                     <tr class="hover:bg-slate-50/80 transition-all group">
                         <td class="px-6 py-4">
                             <div class="flex items-center gap-3">
-                                <div class="w-10 h-10 bg-gold-100 rounded-xl flex items-center justify-center font-black text-gold-600 text-xs">
-                                    {{ mb_substr($app->user->name, 0, 1) }}
-                                </div>
+                                @if($app->user->avatar)
+                                    <img src="{{ $app->user->avatar }}" alt="{{ $app->user->name }}" class="w-10 h-10 rounded-xl object-cover">
+                                @else
+                                    <div class="w-10 h-10 bg-gold-100 rounded-xl flex items-center justify-center font-black text-gold-600 text-xs">
+                                        {{ mb_substr($app->user->name, 0, 1) }}
+                                    </div>
+                                @endif
                                 <div>
                                     <p class="font-bold text-slate-800 text-sm">{{ $app->user->name }}</p>
                                     <p class="text-[10px] text-slate-400 font-bold">#APP-{{ $app->id }}</p>

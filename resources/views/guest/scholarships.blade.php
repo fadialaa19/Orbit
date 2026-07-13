@@ -76,8 +76,12 @@
             </div>
 
             <!-- University Logo -->
-            <div class="w-20 h-20 bg-gradient-to-br from-gold-100 to-cream-50 rounded-[1.5rem] flex items-center justify-center mb-6 relative z-10 shadow-inner border-4 border-white">
-                <span class="text-2xl font-black text-gold-600 drop-shadow-lg">{{ $countryCode }}</span>
+            <div class="w-20 h-20 bg-gradient-to-br from-gold-100 to-cream-50 rounded-[1.5rem] flex items-center justify-center mb-6 relative z-10 shadow-inner border-4 border-white overflow-hidden">
+                @if($scholarship->logo_image)
+                    <img src="{{ $scholarship->logo_image }}" alt="{{ $scholarship->title_ar }}" class="w-full h-full object-contain p-2">
+                @else
+                    <span class="text-2xl font-black text-gold-600 drop-shadow-lg">{{ $countryCode }}</span>
+                @endif
             </div>
 
             <!-- Content -->
