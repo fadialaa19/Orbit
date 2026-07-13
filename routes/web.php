@@ -183,7 +183,7 @@ Route::prefix('dashboard')->middleware(['auth', 'verified.ensure'])->name('dashb
 | Communications & Chat API Routes
 |--------------------------------------------------------------------------
 */
-Route::middleware('auth')->prefix('api/communications')->name('communications.')->group(function () {
+Route::middleware(['auth', 'verified.ensure'])->prefix('api/communications')->name('communications.')->group(function () {
     Route::get('/chats', [App\Http\Controllers\CommunicationsController::class, 'chats']);
     Route::get('/{id}/{type}/messages', [App\Http\Controllers\CommunicationsController::class, 'getMessages']);
     Route::post('/{id}/{type}/send', [App\Http\Controllers\CommunicationsController::class, 'sendMessage']);
@@ -191,7 +191,7 @@ Route::middleware('auth')->prefix('api/communications')->name('communications.')
     Route::post('/tickets/create', [App\Http\Controllers\CommunicationsController::class, 'createNewTicket']);
 });
 
-Route::middleware('auth')->group(function () {
+Route::middleware(['auth', 'verified.ensure'])->group(function () {
     // Admin ticket actions
     Route::post('admin/tickets/{ticket}/reply', [ChatController::class, 'adminReply'])->name('admin.tickets.reply');
     Route::post('admin/tickets/{ticket}/resolve', [ChatController::class, 'resolveTicket'])->name('admin.tickets.resolve');

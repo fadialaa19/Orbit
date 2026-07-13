@@ -51,6 +51,10 @@ class AdminAdminController extends Controller
             'role' => $request->role,
             'permissions' => $permissions,
             'status' => 'active',
+            // Admin-created accounts are trusted immediately (no self-registration
+            // email-ownership check needed) — otherwise the verified.ensure
+            // middleware on ticket-reply routes would lock new managers out.
+            'email_verified_at' => now(),
         ]);
 
         return redirect()->back()->with('success', 'تم إضافة المدير وتخصيص صلاحياته بنجاح');
