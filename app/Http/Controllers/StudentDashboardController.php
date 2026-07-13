@@ -264,8 +264,15 @@ class StudentDashboardController extends Controller
         $validated = $request->validate($rules);
 
         if ($request->hasFile('avatar')) {
-            if ($user->getRawOriginal('avatar') && Storage::disk('public')->exists($user->getRawOriginal('avatar'))) {
-                Storage::disk('public')->delete($user->getRawOriginal('avatar'));
+            // Best-effort cleanup: some S3-compatible backends (e.g. Cloudflare R2)
+            // return 403 instead of 404 for a HeadObject on a missing key, which
+            // makes exists() throw rather than return false. Just attempt the
+            // delete directly and ignore failures.
+            if ($user->getRawOriginal('avatar')) {
+                try {
+                    Storage::disk('public')->delete($user->getRawOriginal('avatar'));
+                } catch (\Throwable $e) {
+                }
             }
             $user->avatar = $request->file('avatar')->store('avatars', 'public');
         }
@@ -286,8 +293,11 @@ class StudentDashboardController extends Controller
                     $docArray = $isOptional ? $optDocs : $reqDocs;
 
                     $oldPath = $docArray[$key] ?? $legacyDocs[$key] ?? null;
-                    if ($oldPath && Storage::disk('public')->exists($oldPath)) {
-                        Storage::disk('public')->delete($oldPath);
+                    if ($oldPath) {
+                        try {
+                            Storage::disk('public')->delete($oldPath);
+                        } catch (\Throwable $e) {
+                        }
                     }
 
                     $storedPath = $file->store('documents', 'public');
@@ -345,8 +355,11 @@ class StudentDashboardController extends Controller
             $user->name = $request->name;
 
             if ($request->hasFile('avatar')) {
-                if ($user->getRawOriginal('avatar') && Storage::disk('public')->exists($user->getRawOriginal('avatar'))) {
-                    Storage::disk('public')->delete($user->getRawOriginal('avatar'));
+                if ($user->getRawOriginal('avatar')) {
+                    try {
+                        Storage::disk('public')->delete($user->getRawOriginal('avatar'));
+                    } catch (\Throwable $e) {
+                    }
                 }
                 $user->avatar = $request->file('avatar')->store('avatars', 'public');
             }

@@ -64,8 +64,13 @@ class AdminSettingsController extends Controller
         // 5. رفع الصور والشعارات (Logos)
         if ($request->hasFile('logo')) {
             $logoName = 'logo.png';
-            if (\Storage::disk('public')->exists('logos/'.$logoName)) {
+            // Best-effort cleanup: some S3-compatible backends (e.g. Cloudflare R2)
+            // return 403 instead of 404 for a HeadObject on a missing key, which
+            // makes exists() throw rather than return false. Just attempt the
+            // delete directly and ignore failures.
+            try {
                 \Storage::disk('public')->delete('logos/'.$logoName);
+            } catch (\Throwable $e) {
             }
             $request->file('logo')->storeAs('logos', $logoName, 'public');
             $setting->logo_path = 'logos/' . $logoName;
@@ -73,8 +78,9 @@ class AdminSettingsController extends Controller
 
         if ($request->hasFile('favicon')) {
             $favName = 'favicon.png';
-            if (\Storage::disk('public')->exists('favicons/'.$favName)) {
+            try {
                 \Storage::disk('public')->delete('favicons/'.$favName);
+            } catch (\Throwable $e) {
             }
             $request->file('favicon')->storeAs('favicons', $favName, 'public');
             $setting->favicon_path = 'favicons/' . $favName;
