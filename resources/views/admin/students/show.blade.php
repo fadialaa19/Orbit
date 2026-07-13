@@ -3,24 +3,6 @@
 @section('title', 'ملف الطالب')
 @section('breadcrumb', $student->name)
 
-@php
-    $requiredDocLabels = [
-        'passport' => 'جواز السفر',
-        'national_id' => 'الهوية الوطنية',
-        'high_school_cert' => 'شهادة الثانوية',
-        'birth_cert' => 'شهادة الميلاد',
-        'cv' => 'السيرة الذاتية',
-    ];
-    $optionalDocLabels = [
-        'language_cert' => 'شهادة لغة',
-        'courses_cert' => 'شهادة دورات',
-        'recommendation' => 'خطاب توصية',
-        'intent_letter' => 'خطاب النوايا',
-    ];
-    $requiredDocs = $student->required_documents ?? [];
-    $optionalDocs = $student->optional_documents ?? [];
-@endphp
-
 @section('content')
 <div class="max-w-6xl mx-auto space-y-8">
 
@@ -201,28 +183,53 @@
     {{-- المستندات --}}
     <div class="bg-white rounded-[2rem] border border-slate-100 shadow-sm p-8">
         <h2 class="text-lg font-black text-slate-900 mb-6">المستندات المرفوعة</h2>
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            @foreach($requiredDocLabels as $key => $label)
-                <div class="flex items-center justify-between bg-slate-50 rounded-xl p-4 border border-slate-100/50">
-                    <span class="text-sm font-bold text-slate-600">{{ $label }}</span>
-                    @if(!empty($requiredDocs[$key]))
-                        <a href="{{ \Storage::disk('public')->url($requiredDocs[$key]) }}" target="_blank" class="text-xs font-black text-gold-600 hover:underline">عرض ↗</a>
-                    @else
-                        <span class="text-xs font-bold text-slate-300">لم يُرفع</span>
+
+        @if($student->documents->isEmpty())
+            <p class="text-sm font-bold text-slate-400">لم يرفع الطالب أي مستندات بعد.</p>
+        @else
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+            @php
+                $statusMap = [
+                    'pending' => ['bg-amber-100 text-amber-700', 'قيد المراجعة'],
+                    'approved' => ['bg-emerald-100 text-emerald-700', 'مقبول'],
+                    'rejected' => ['bg-rose-100 text-rose-700', 'مرفوض'],
+                ];
+            @endphp
+            @foreach($student->documents as $document)
+                @php $docStatus = $statusMap[$document->status] ?? $statusMap['pending']; @endphp
+                <div class="bg-slate-50 rounded-2xl p-4 border border-slate-100/50 space-y-3">
+                    <div class="flex items-center justify-between gap-3">
+                        <div>
+                            <p class="text-sm font-black text-slate-700">{{ $document->label }}</p>
+                            <span class="text-[10px] font-black px-2 py-0.5 rounded-full {{ $docStatus[0] }}">{{ $docStatus[1] }}</span>
+                        </div>
+                        <a href="{{ $document->url }}" target="_blank" class="text-xs font-black text-gold-600 hover:underline flex-shrink-0">عرض ↗</a>
+                    </div>
+
+                    @if($document->status === 'rejected' && $document->admin_note)
+                        <p class="text-xs font-bold text-rose-500">سبب الرفض: {{ $document->admin_note }}</p>
                     @endif
-                </div>
-            @endforeach
-            @foreach($optionalDocLabels as $key => $label)
-                <div class="flex items-center justify-between bg-slate-50 rounded-xl p-4 border border-slate-100/50">
-                    <span class="text-sm font-bold text-slate-600">{{ $label }}</span>
-                    @if(!empty($optionalDocs[$key]))
-                        <a href="{{ \Storage::disk('public')->url($optionalDocs[$key]) }}" target="_blank" class="text-xs font-black text-gold-600 hover:underline">عرض ↗</a>
-                    @else
-                        <span class="text-xs font-bold text-slate-300">لم يُرفع</span>
-                    @endif
+
+                    <form action="{{ route('admin.students.documents.status', [$student->id, $document->id]) }}" method="POST" class="flex items-center gap-2">
+                        @csrf
+                        @method('PATCH')
+                        <button type="submit" name="status" value="approved" class="flex-1 bg-emerald-50 text-emerald-600 hover:bg-emerald-100 rounded-xl py-2 text-xs font-black transition">قبول</button>
+                        <button type="button" onclick="document.getElementById('reject-note-{{ $document->id }}').classList.toggle('hidden')" class="flex-1 bg-rose-50 text-rose-600 hover:bg-rose-100 rounded-xl py-2 text-xs font-black transition">رفض</button>
+                    </form>
+
+                    <div id="reject-note-{{ $document->id }}" class="hidden">
+                        <form action="{{ route('admin.students.documents.status', [$student->id, $document->id]) }}" method="POST" class="flex items-center gap-2">
+                            @csrf
+                            @method('PATCH')
+                            <input type="hidden" name="status" value="rejected">
+                            <input type="text" name="admin_note" placeholder="سبب الرفض (اختياري)" class="flex-1 bg-white border border-slate-200 rounded-xl px-3 py-2 text-xs font-bold">
+                            <button type="submit" class="bg-rose-600 text-white rounded-xl px-4 py-2 text-xs font-black hover:bg-rose-700 transition">تأكيد الرفض</button>
+                        </form>
+                    </div>
                 </div>
             @endforeach
         </div>
+        @endif
     </div>
 
 </div>

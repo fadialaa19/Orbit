@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Scholarship;
+use App\Models\StudentDocument;
 use App\Models\SupportTicket;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -61,9 +62,9 @@ class StudentDashboardController extends Controller
             });
 
         // قائمة المهام: محسوبة من بيانات حقيقية موجودة على حساب الطالب
-        $requiredDocs = $student->required_documents ?? [];
+        $uploadedDocCategories = $student->documents()->pluck('category');
         $requiredDocsComplete = collect(['passport', 'national_id', 'high_school_cert', 'birth_cert', 'cv'])
-            ->every(fn ($key) => !empty($requiredDocs[$key] ?? null));
+            ->every(fn ($key) => $uploadedDocCategories->contains($key));
         $hasApplication = ($applicationsCount + $completedCount) > 0;
 
         $tasks = [
@@ -73,9 +74,8 @@ class StudentDashboardController extends Controller
             ['title' => 'تقديم أول طلب منحة', 'completed' => $hasApplication, 'link' => route('dashboard.scholarships')],
         ];
 
-        // الإنجازات: محسوبة من نفس البيانات الحقيقية بدون أي جدول جديد
-        $optionalDocs = $student->optional_documents ?? [];
-        $hasLanguageCert = !empty($optionalDocs['language_cert'] ?? null);
+        // الإنجازات: محسوبة من نفس البيانات الحقيقية
+        $hasLanguageCert = $uploadedDocCategories->contains('language_cert');
         $currentLevel = (int) floor(($student->xp ?? 0) / 1000) + 1;
 
         $badges = [
@@ -212,7 +212,75 @@ class StudentDashboardController extends Controller
     {
         $user = Auth::user();
         $profileCompletion = $user->calculateProfileCompletion();
-        return view('dashboard.profile', compact('user', 'profileCompletion'));
+        $documents = $user->documents()->latest()->get();
+        return view('dashboard.profile', compact('user', 'profileCompletion', 'documents'));
+    }
+
+    public function storeDocument(Request $request)
+    {
+        $validated = $request->validate([
+            'label' => 'required|string|max:100',
+            'category' => 'nullable|string|max:50',
+            'file' => 'required|file|mimes:pdf,jpg,jpeg,png,doc,docx|max:5120',
+        ]);
+
+        $path = $request->file('file')->store('documents', 'public');
+
+        if (!empty($validated['category'])) {
+            $existing = StudentDocument::where('user_id', Auth::id())
+                ->where('category', $validated['category'])
+                ->first();
+
+            if ($existing) {
+                try {
+                    Storage::disk('public')->delete($existing->file_path);
+                } catch (\Throwable $e) {
+                }
+                $existing->update([
+                    'label' => $validated['label'],
+                    'file_path' => $path,
+                    'status' => 'pending',
+                    'admin_note' => null,
+                ]);
+
+                return redirect()->route('dashboard.profile')->with('success', 'تم تحديث المستند بنجاح');
+            }
+        }
+
+        StudentDocument::create([
+            'user_id' => Auth::id(),
+            'category' => $validated['category'] ?? null,
+            'label' => $validated['label'],
+            'file_path' => $path,
+        ]);
+
+        return redirect()->route('dashboard.profile')->with('success', 'تم رفع المستند بنجاح');
+    }
+
+    public function renameDocument(Request $request, StudentDocument $document)
+    {
+        abort_unless($document->user_id === Auth::id(), 403);
+
+        $validated = $request->validate([
+            'label' => 'required|string|max:100',
+        ]);
+
+        $document->update(['label' => $validated['label']]);
+
+        return redirect()->route('dashboard.profile')->with('success', 'تم إعادة تسمية المستند بنجاح');
+    }
+
+    public function destroyDocument(StudentDocument $document)
+    {
+        abort_unless($document->user_id === Auth::id(), 403);
+
+        try {
+            Storage::disk('public')->delete($document->file_path);
+        } catch (\Throwable $e) {
+        }
+        $document->delete();
+
+        return redirect()->route('dashboard.profile')->with('success', 'تم حذف المستند بنجاح');
     }
 
     public function updateProfile(Request $request)
@@ -255,10 +323,6 @@ class StudentDashboardController extends Controller
             'languages.*.name' => 'nullable|string|max:50',
             'languages.*.level' => 'nullable|string|max:100',
             'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
-            'required_documents' => 'nullable|array',
-            'optional_documents' => 'nullable|array',
-            'docs' => 'nullable|array', 
-            'docs.*' => 'nullable|file|mimes:pdf,jpg,jpeg,png,doc,docx|max:5120',
         ];
 
         $validated = $request->validate($rules);
@@ -277,47 +341,11 @@ class StudentDashboardController extends Controller
             $user->avatar = $request->file('avatar')->store('avatars', 'public');
         }
 
-        $reqDocs = $user->required_documents ?? [];
-        $optDocs = $user->optional_documents ?? [];
-        $legacyDocs = $user->documents ?? [];
-
-        // نفس أسماء المفاتيح المستخدمة في resources/views/dashboard/profile.blade.php
-        // و User::calculateProfileCompletion() لتمييز أي حقل "docs[key]" إلزامي وأيها اختياري
-        $requiredDocKeys = ['passport', 'national_id', 'high_school_cert', 'birth_cert', 'cv'];
-        $optionalDocKeys = ['language_cert', 'courses_cert', 'recommendation', 'intent_letter'];
-
-        if ($request->hasFile('docs')) {
-            foreach ($request->file('docs') as $key => $file) {
-                if ($file && $file->isValid()) {
-                    $isOptional = in_array($key, $optionalDocKeys);
-                    $docArray = $isOptional ? $optDocs : $reqDocs;
-
-                    $oldPath = $docArray[$key] ?? $legacyDocs[$key] ?? null;
-                    if ($oldPath) {
-                        try {
-                            Storage::disk('public')->delete($oldPath);
-                        } catch (\Throwable $e) {
-                        }
-                    }
-
-                    $storedPath = $file->store('documents', 'public');
-                    if ($isOptional) {
-                        $optDocs[$key] = $storedPath;
-                    } else {
-                        $reqDocs[$key] = $storedPath;
-                    }
-                }
-            }
-        }
-
-        $user->required_documents = $reqDocs;
-        $user->optional_documents = $optDocs;
-        $user->documents = array_merge($legacyDocs, $reqDocs, $optDocs);
-
-        // avatar/docs/required_documents/optional_documents are handled above from
-        // the raw uploaded files; fill()'ing the raw validated request values for
-        // these would overwrite the stored paths with UploadedFile objects/raw input.
-        unset($validated['avatar'], $validated['docs'], $validated['required_documents'], $validated['optional_documents']);
+        // avatar is handled above from the raw uploaded file; fill()'ing the raw
+        // validated request value would overwrite the stored path with the
+        // UploadedFile object. Documents are managed separately via
+        // storeDocument()/renameDocument()/destroyDocument().
+        unset($validated['avatar']);
 
         if (isset($validated['languages'])) {
             $validated['languages'] = array_values(array_filter(

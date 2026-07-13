@@ -111,6 +111,7 @@ Route::prefix('admin')->middleware(['auth'])->name('admin.')->group(function () 
         Route::resource('students', AdminStudentController::class);
         Route::patch('students/{user}/toggle', [AdminStudentController::class, 'toggleStatus'])->name('students.toggle');
         Route::post('students/{id}/verify-email', [AdminStudentController::class, 'verifyEmail'])->name('students.verify-email');
+        Route::patch('students/{student}/documents/{document}', [AdminStudentController::class, 'updateDocumentStatus'])->name('students.documents.status');
     });
 
     // 4️⃣ طلبات التقديم (Orders)
@@ -161,6 +162,9 @@ Route::prefix('dashboard')->middleware(['auth', 'verified.ensure'])->name('dashb
     Route::get('/services', [StudentDashboardController::class, 'services'])->name('services');
     Route::get('/profile', [StudentDashboardController::class, 'profile'])->name('profile');
     Route::put('/profile', [StudentDashboardController::class, 'updateProfile'])->name('profile.update');
+    Route::post('/documents', [StudentDashboardController::class, 'storeDocument'])->name('documents.store');
+    Route::patch('/documents/{document}', [StudentDashboardController::class, 'renameDocument'])->name('documents.rename');
+    Route::delete('/documents/{document}', [StudentDashboardController::class, 'destroyDocument'])->name('documents.destroy');
     Route::get('/favorites', [StudentDashboardController::class, 'favorites'])->name('favorites');
     Route::get('/notifications', [StudentDashboardController::class, 'notifications'])->name('notifications');
     Route::get('/settings', [StudentDashboardController::class, 'settings'])->name('settings');

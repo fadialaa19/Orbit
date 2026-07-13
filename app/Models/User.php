@@ -205,6 +205,11 @@ protected $fillable = [
         return $this->hasMany(ScholarshipApplication::class);
     }
 
+    public function documents()
+    {
+        return $this->hasMany(StudentDocument::class);
+    }
+
 
     /**
      * Calculate profile completion percentage
@@ -233,23 +238,17 @@ protected $fillable = [
             if (!empty($this->$field)) $filled++;
         }
 
-        // Required documents (new JSON fields)
-        $requiredDocsFilled = 0;
-        $reqDocs = $this->required_documents ?? [];
+        // Required documents (student_documents table)
         $requiredDocKeys = ['passport', 'national_id', 'high_school_cert', 'birth_cert', 'cv'];
-        foreach ($requiredDocKeys as $key) {
-            if (!empty($reqDocs[$key] ?? null)) $requiredDocsFilled++;
-        }
+        $optionalDocKeys = ['language_cert', 'courses_cert', 'recommendation', 'intent_letter'];
+        $uploadedCategories = $this->documents()->pluck('category');
+
+        $requiredDocsFilled = $uploadedCategories->intersect($requiredDocKeys)->unique()->count();
         $filled += $requiredDocsFilled;
         $total += count($requiredDocKeys);
 
         // Bonus for optional docs (max 20%)
-        $optDocsFilled = 0;
-        $optDocs = $this->optional_documents ?? [];
-        $optionalDocKeys = ['language_cert', 'courses_cert', 'recommendation', 'intent_letter'];
-        foreach ($optionalDocKeys as $key) {
-            if (!empty($optDocs[$key] ?? null)) $optDocsFilled++;
-        }
+        $optDocsFilled = $uploadedCategories->intersect($optionalDocKeys)->unique()->count();
         $filled += min($optDocsFilled * 0.5, 4); // Half points, max 4
         $total += 8; // Max bonus
 

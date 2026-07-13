@@ -37,9 +37,26 @@ class AdminStudentController extends Controller
 
     public function show($id)
     {
-        $student = User::where('role', 'student')->findOrFail($id);
+        $student = User::where('role', 'student')->with('documents')->findOrFail($id);
 
         return view('admin.students.show', compact('student'));
+    }
+
+    public function updateDocumentStatus(Request $request, $studentId, \App\Models\StudentDocument $document)
+    {
+        abort_unless((int) $document->user_id === (int) $studentId, 404);
+
+        $validated = $request->validate([
+            'status' => 'required|in:approved,rejected',
+            'admin_note' => 'nullable|string|max:500',
+        ]);
+
+        $document->update([
+            'status' => $validated['status'],
+            'admin_note' => $validated['status'] === 'rejected' ? ($validated['admin_note'] ?? null) : null,
+        ]);
+
+        return redirect()->back()->with('success', 'تم تحديث حالة المستند بنجاح');
     }
 
     // ⭐ إضافة هذه الدالة لحل مشكلة الـ Error 500

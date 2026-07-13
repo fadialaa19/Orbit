@@ -280,12 +280,13 @@
                                 </div>
                             </div>
 
-<div x-show="tab === 'documents'" 
-     x-transition:enter="transition ease-out duration-300" 
-     x-transition:enter-start="opacity-0 transform scale-95" 
-     x-transition:enter-end="opacity-100 transform scale-100" 
+<div x-show="tab === 'documents'"
+     x-transition:enter="transition ease-out duration-300"
+     x-transition:enter-start="opacity-0 transform scale-95"
+     x-transition:enter-end="opacity-100 transform scale-100"
      class="space-y-8">
 
+    {{-- المستندات الإلزامية --}}
     <div class="bg-white rounded-[2rem] border border-slate-100 p-6 shadow-sm">
         <div class="flex items-center gap-3 mb-6">
             <div class="w-10 h-10 bg-red-50 rounded-xl flex items-center justify-center text-red-600">
@@ -298,52 +299,42 @@
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            @php
-                $reqDocs = [
-                    'passport' => ['label' => 'جواز السفر', 'icon' => '🌍', 'accept' => '.pdf,.jpg,.jpeg,.png'],
-                    'national_id' => ['label' => 'الهوية الشخصية', 'icon' => '🆔', 'accept' => '.pdf,.jpg,.jpeg,.png'],
-                    'high_school_cert' => ['label' => 'شهادة الثانوية', 'icon' => '🎓', 'accept' => '.pdf,.jpg,.jpeg,.png'],
-                    'birth_cert' => ['label' => 'شهادة الميلاد', 'icon' => '👶', 'accept' => '.pdf,.jpg,.jpeg,.png'],
-                    'cv' => ['label' => 'السيرة الذاتية (CV)', 'icon' => '📄', 'accept' => '.pdf,.doc,.docx', 'class' => 'col-span-1 md:col-span-2'],
-                ];
-            @endphp
-
-            @foreach($reqDocs as $key => $doc)
-            <div class="relative group {{ $doc['class'] ?? '' }}">
-                <label class="block cursor-pointer">
-                    <input type="file" name="docs[{{ $key }}]" @change="handleDocChange('required', '{{ $key }}', $event)" class="hidden" accept="{{ $doc['accept'] }}">
-                    
-                    <div :class="isDocUploaded('required', '{{ $key }}') ? 'border-green-500 bg-green-50/30' : 'border-slate-200 bg-slate-50/50'" 
-                         class="border-2 border-dashed rounded-2xl p-4 transition-all duration-300 group-hover:border-gold-400 group-hover:bg-white">
-                        
-                        <div class="flex items-center justify-between">
-                            <div class="flex items-center gap-3">
-                                <span class="text-2xl">{{ $doc['icon'] }}</span>
-                                <div>
-                                    <p class="text-slate-700 font-black text-xs">{{ $doc['label'] }}</p>
-                                    <p class="text-[9px] font-bold" :class="isDocUploaded('required', '{{ $key }}') ? 'text-green-600' : 'text-slate-400'" 
-                                       x-text="isDocUploaded('required', '{{ $key }}') ? '✓ جاهز للمراجعة' : 'اضغط للرفع'"></p>
-                                </div>
+            <template x-for="doc in requiredDocsList" :key="doc.key">
+                <div class="border-2 rounded-2xl p-4 transition-all duration-300" :class="doc.uploaded ? statusBorderClass(doc.status) : 'border-dashed border-slate-200 bg-slate-50/50'">
+                    <template x-if="!doc.uploaded">
+                        <label class="flex items-center justify-between cursor-pointer">
+                            <span class="flex items-center gap-3">
+                                <span class="text-2xl" x-text="doc.icon"></span>
+                                <span class="text-slate-700 font-black text-xs" x-text="doc.label"></span>
+                            </span>
+                            <span class="text-slate-300 text-lg">+</span>
+                            <input type="file" class="hidden" :accept="doc.accept" @change="uploadCategoryDocument(doc.key, doc.label, $event)">
+                        </label>
+                    </template>
+                    <template x-if="doc.uploaded">
+                        <div class="space-y-2">
+                            <div class="flex items-center justify-between">
+                                <span class="text-slate-700 font-black text-xs" x-text="doc.label"></span>
+                                <span class="text-[9px] font-black px-2 py-0.5 rounded-full" :class="statusBadgeClass(doc.status)" x-text="statusLabel(doc.status)"></span>
                             </div>
-                            
-                            <template x-if="isDocUploaded('required', '{{ $key }}')">
-                                <div class="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center text-white shadow-sm">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
-                                </div>
-                            </template>
+                            <p x-show="doc.status === 'rejected' && doc.admin_note" class="text-[10px] text-rose-500 font-bold" x-text="'سبب الرفض: ' + doc.admin_note"></p>
+                            <div class="flex items-center gap-2">
+                                <a :href="doc.url" target="_blank" class="flex-1 text-center bg-white border border-slate-200 rounded-xl py-1.5 text-[10px] font-black text-gold-600 hover:bg-gold-50 transition">عرض</a>
+                                <button type="button" @click="renameDocument(doc)" class="p-1.5 text-slate-400 hover:text-gold-600 transition" title="إعادة تسمية">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+                                </button>
+                                <button type="button" @click="deleteDocument(doc)" class="p-1.5 text-slate-400 hover:text-rose-600 transition" title="حذف">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                                </button>
+                            </div>
                         </div>
-
-                        <div x-show="temp_required_docs['{{ $key }}']" class="mt-3 flex items-center justify-between bg-white/80 p-2 rounded-xl border border-green-100">
-                            <span class="text-[10px] text-gold-600 font-bold truncate flex-1">📎 <span x-text="temp_required_docs['{{ $key }}']"></span></span>
-                            <button type="button" @click.prevent="removeTempDoc('required', '{{ $key }}')" class="text-red-500 hover:scale-110 px-2 font-black text-lg">×</button>
-                        </div>
-                    </div>
-                </label>
-            </div>
-            @endforeach
+                    </template>
+                </div>
+            </template>
         </div>
     </div>
 
+    {{-- المستندات الاختيارية --}}
     <div class="bg-white rounded-[2rem] border border-slate-100 p-6 shadow-sm">
         <div class="flex items-center gap-3 mb-6">
             <div class="w-10 h-10 bg-amber-50 rounded-xl flex items-center justify-center text-amber-600">
@@ -356,35 +347,75 @@
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            @php
-                $optDocs = [
-                    'language_cert' => ['label' => 'شهادة لغة', 'accept' => '.pdf,.jpg,.jpeg,.png'],
-                    'courses_cert' => ['label' => 'شهادة دورات', 'accept' => '.pdf,.jpg,.jpeg,.png'],
-                    'recommendation' => ['label' => 'خطاب توصية', 'accept' => '.pdf,.doc,.docx'],
-                    'intent_letter' => ['label' => 'خطاب نية', 'accept' => '.pdf,.doc,.docx'],
-                ];
-            @endphp
-            @foreach($optDocs as $key => $doc)
-            <div class="relative group">
-                <label class="block cursor-pointer">
-                    <input type="file" name="docs[{{ $key }}]" @change="handleDocChange('optional', '{{ $key }}', $event)" class="hidden" accept="{{ $doc['accept'] }}">
-                    <div :class="isDocUploaded('optional', '{{ $key }}') ? 'border-amber-400 bg-amber-50/30' : 'border-slate-200 bg-slate-50/50'" 
-                         class="border-2 border-dashed rounded-2xl p-4 transition-all duration-300 group-hover:border-gold-400 group-hover:bg-white">
-                        
-                        <div class="flex items-center justify-between">
-                            <span class="text-slate-700 font-black text-xs">{{ $doc['label'] }}</span>
-                            <span x-show="isDocUploaded('optional', '{{ $key }}')" class="text-amber-600 text-[10px] font-black">✓ مرفوع</span>
-                            <span x-show="!isDocUploaded('optional', '{{ $key }}')" class="text-slate-300 text-lg">+</span>
+            <template x-for="doc in optionalDocsList" :key="doc.key">
+                <div class="border-2 rounded-2xl p-4 transition-all duration-300" :class="doc.uploaded ? statusBorderClass(doc.status) : 'border-dashed border-slate-200 bg-slate-50/50'">
+                    <template x-if="!doc.uploaded">
+                        <label class="flex items-center justify-between cursor-pointer">
+                            <span class="text-slate-700 font-black text-xs" x-text="doc.label"></span>
+                            <span class="text-slate-300 text-lg">+</span>
+                            <input type="file" class="hidden" :accept="doc.accept" @change="uploadCategoryDocument(doc.key, doc.label, $event)">
+                        </label>
+                    </template>
+                    <template x-if="doc.uploaded">
+                        <div class="space-y-2">
+                            <div class="flex items-center justify-between">
+                                <span class="text-slate-700 font-black text-xs" x-text="doc.label"></span>
+                                <span class="text-[9px] font-black px-2 py-0.5 rounded-full" :class="statusBadgeClass(doc.status)" x-text="statusLabel(doc.status)"></span>
+                            </div>
+                            <p x-show="doc.status === 'rejected' && doc.admin_note" class="text-[10px] text-rose-500 font-bold" x-text="'سبب الرفض: ' + doc.admin_note"></p>
+                            <div class="flex items-center gap-2">
+                                <a :href="doc.url" target="_blank" class="flex-1 text-center bg-white border border-slate-200 rounded-xl py-1.5 text-[10px] font-black text-gold-600 hover:bg-gold-50 transition">عرض</a>
+                                <button type="button" @click="renameDocument(doc)" class="p-1.5 text-slate-400 hover:text-gold-600 transition" title="إعادة تسمية">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+                                </button>
+                                <button type="button" @click="deleteDocument(doc)" class="p-1.5 text-slate-400 hover:text-rose-600 transition" title="حذف">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                                </button>
+                            </div>
                         </div>
+                    </template>
+                </div>
+            </template>
+        </div>
+    </div>
 
-                        <div x-show="temp_optional_docs['{{ $key }}']" class="mt-2 flex items-center justify-between bg-white/80 p-1.5 rounded-lg border border-amber-100">
-                            <span class="text-[9px] text-amber-700 font-bold truncate max-w-[120px]" x-text="temp_optional_docs['{{ $key }}']"></span>
-                            <button type="button" @click.prevent="removeTempDoc('optional', '{{ $key }}')" class="text-red-500 font-black px-1">×</button>
-                        </div>
-                    </div>
-                </label>
+    {{-- مستندات إضافية (خارج القائمة) --}}
+    <div class="bg-white rounded-[2rem] border border-slate-100 p-6 shadow-sm">
+        <div class="flex items-center gap-3 mb-6">
+            <div class="w-10 h-10 bg-navy-100 rounded-xl flex items-center justify-center text-navy-700">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
             </div>
-            @endforeach
+            <div>
+                <h3 class="text-slate-800 font-black">مستندات إضافية</h3>
+                <p class="text-slate-400 text-[10px] font-bold">أضف أي مستند آخر بمسمى تختاره بنفسك</p>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+            <template x-for="doc in customDocs" :key="doc.id">
+                <div class="border-2 rounded-2xl p-4 space-y-2" :class="statusBorderClass(doc.status)">
+                    <div class="flex items-center justify-between">
+                        <span class="text-slate-700 font-black text-xs" x-text="doc.label"></span>
+                        <span class="text-[9px] font-black px-2 py-0.5 rounded-full" :class="statusBadgeClass(doc.status)" x-text="statusLabel(doc.status)"></span>
+                    </div>
+                    <p x-show="doc.status === 'rejected' && doc.admin_note" class="text-[10px] text-rose-500 font-bold" x-text="'سبب الرفض: ' + doc.admin_note"></p>
+                    <div class="flex items-center gap-2">
+                        <a :href="doc.url" target="_blank" class="flex-1 text-center bg-white border border-slate-200 rounded-xl py-1.5 text-[10px] font-black text-gold-600 hover:bg-gold-50 transition">عرض</a>
+                        <button type="button" @click="renameDocument(doc)" class="p-1.5 text-slate-400 hover:text-gold-600 transition" title="إعادة تسمية">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+                        </button>
+                        <button type="button" @click="deleteDocument(doc)" class="p-1.5 text-slate-400 hover:text-rose-600 transition" title="حذف">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                        </button>
+                    </div>
+                </div>
+            </template>
+        </div>
+
+        <div class="flex flex-col sm:flex-row items-stretch gap-3 border-t border-slate-100 pt-6">
+            <input type="text" x-model="newCustomLabel" placeholder="اسم المستند (مثال: شهادة عمل)" class="flex-1 bg-slate-50 border-0 rounded-2xl p-3 text-slate-700 font-bold focus:ring-2 focus:ring-gold-500">
+            <input type="file" x-ref="customDocInput" class="flex-1 bg-slate-50 border-0 rounded-2xl p-3 text-slate-700 font-bold text-xs" accept=".pdf,.jpg,.jpeg,.png,.doc,.docx">
+            <button type="button" @click="uploadCustomDocument()" class="bg-navy-900 text-white px-6 py-3 rounded-2xl font-black text-sm hover:bg-navy-800 transition flex-shrink-0">إضافة</button>
         </div>
     </div>
 </div>
@@ -475,10 +506,6 @@ function profileData() {
         saving: false,
         initialCompletion: {{ $profileCompletion }},
         completion: {{ $profileCompletion }},
-        server_required_docs: {!! json_encode(array_map(fn($path) => basename($path), array_filter((array)($user ?? new stdClass())->required_documents ?? []))) !!},
-        server_optional_docs: {!! json_encode(array_map(fn($path) => basename($path), array_filter((array)($user ?? new stdClass())->optional_documents ?? []))) !!},
-        temp_required_docs: {},
-        temp_optional_docs: {},
         avatarCropper: null,
         avatarFile: null,
         avatarPreview: null,
@@ -494,6 +521,118 @@ function profileData() {
 
         removeLanguage(index) {
             this.languages.splice(index, 1);
+        },
+
+        requiredCategories: [
+            { key: 'passport', label: 'جواز السفر', icon: '🌍', accept: '.pdf,.jpg,.jpeg,.png' },
+            { key: 'national_id', label: 'الهوية الشخصية', icon: '🆔', accept: '.pdf,.jpg,.jpeg,.png' },
+            { key: 'high_school_cert', label: 'شهادة الثانوية', icon: '🎓', accept: '.pdf,.jpg,.jpeg,.png' },
+            { key: 'birth_cert', label: 'شهادة الميلاد', icon: '👶', accept: '.pdf,.jpg,.jpeg,.png' },
+            { key: 'cv', label: 'السيرة الذاتية (CV)', icon: '📄', accept: '.pdf,.doc,.docx' },
+        ],
+        optionalCategories: [
+            { key: 'language_cert', label: 'شهادة لغة', accept: '.pdf,.jpg,.jpeg,.png' },
+            { key: 'courses_cert', label: 'شهادة دورات', accept: '.pdf,.jpg,.jpeg,.png' },
+            { key: 'recommendation', label: 'خطاب توصية', accept: '.pdf,.doc,.docx' },
+            { key: 'intent_letter', label: 'خطاب نية', accept: '.pdf,.doc,.docx' },
+        ],
+        documents: {!! json_encode($documents->map(fn($d) => [
+            'id' => $d->id,
+            'category' => $d->category,
+            'label' => $d->label,
+            'status' => $d->status,
+            'admin_note' => $d->admin_note,
+            'url' => $d->url,
+        ])) !!},
+        newCustomLabel: '',
+
+        get requiredDocsList() {
+            return this.requiredCategories.map(c => {
+                const match = this.documents.find(d => d.category === c.key);
+                return match ? { ...c, ...match, uploaded: true } : { ...c, uploaded: false };
+            });
+        },
+
+        get optionalDocsList() {
+            return this.optionalCategories.map(c => {
+                const match = this.documents.find(d => d.category === c.key);
+                return match ? { ...c, ...match, uploaded: true } : { ...c, uploaded: false };
+            });
+        },
+
+        get customDocs() {
+            return this.documents.filter(d => !d.category);
+        },
+
+        statusLabel(status) {
+            return { pending: 'قيد المراجعة', approved: 'مقبول', rejected: 'مرفوض' }[status] || 'قيد المراجعة';
+        },
+
+        statusBadgeClass(status) {
+            return {
+                pending: 'bg-amber-100 text-amber-700',
+                approved: 'bg-emerald-100 text-emerald-700',
+                rejected: 'bg-rose-100 text-rose-700',
+            }[status] || 'bg-amber-100 text-amber-700';
+        },
+
+        statusBorderClass(status) {
+            return {
+                pending: 'border-amber-300 bg-amber-50/30',
+                approved: 'border-emerald-400 bg-emerald-50/30',
+                rejected: 'border-rose-300 bg-rose-50/30',
+            }[status] || 'border-slate-200';
+        },
+
+        async uploadCategoryDocument(category, label, event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const formData = new FormData();
+            formData.append('label', label);
+            formData.append('category', category);
+            formData.append('file', file);
+            await this.submitDocumentForm('{{ route('dashboard.documents.store') }}', formData);
+        },
+
+        async uploadCustomDocument() {
+            const file = this.$refs.customDocInput.files[0];
+            if (!this.newCustomLabel || !file) {
+                this.showToast('error', 'الرجاء إدخال اسم المستند واختيار الملف');
+                return;
+            }
+            const formData = new FormData();
+            formData.append('label', this.newCustomLabel);
+            formData.append('file', file);
+            await this.submitDocumentForm('{{ route('dashboard.documents.store') }}', formData);
+        },
+
+        async renameDocument(doc) {
+            const newLabel = prompt('الاسم الجديد للمستند:', doc.label);
+            if (!newLabel || newLabel === doc.label) return;
+            const formData = new FormData();
+            formData.append('label', newLabel);
+            formData.append('_method', 'PATCH');
+            await this.submitDocumentForm('{{ url('/dashboard/documents') }}/' + doc.id, formData);
+        },
+
+        async deleteDocument(doc) {
+            if (!confirm('هل أنت متأكد من حذف هذا المستند؟')) return;
+            const formData = new FormData();
+            formData.append('_method', 'DELETE');
+            await this.submitDocumentForm('{{ url('/dashboard/documents') }}/' + doc.id, formData);
+        },
+
+        async submitDocumentForm(url, formData) {
+            try {
+                await fetch(url, {
+                    method: 'POST',
+                    headers: { 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content },
+                    body: formData,
+                });
+                window.location.reload();
+            } catch (e) {
+                this.showToast('error', 'حدث خطأ، حاول مرة أخرى');
+            }
         },
 
         initProfile() {
@@ -528,8 +667,8 @@ function profileData() {
             const filledFields = document.querySelectorAll('input:not([readonly])[value]:not([value=""])').length;
             boost += Math.min(filledFields * 2, 20);
             // Documents
-            boost += Object.keys(this.temp_required_docs).length * 5;
-            boost += Object.keys(this.server_required_docs).length * 3;
+            const requiredKeys = this.requiredCategories.map(c => c.key);
+            boost += this.documents.filter(d => requiredKeys.includes(d.category)).length * 3;
             return boost;
         },
 
@@ -587,35 +726,6 @@ function profileData() {
             this.showToast('success', 'تم الحفظ السريع بنجاح ✅');
         },
 
-        handleDocChange(docType, key, event) {
-            const input = event.target;
-            if (input.files.length > 0) {
-                const file = input.files[0];
-                if (file.size > 5 * 1024 * 1024) {
-                    this.showToast('error', 'حجم الملف كبير جداً (5MB max)');
-                    input.value = '';
-                    return;
-                }
-                this[`temp_${docType}_docs`][key] = file.name;
-                this.showToast('success', `تم رفع ${file.name}`);
-            } else {
-                delete this[`temp_${docType}_docs`][key];
-            }
-            this.$nextTick(() => this.updateCompletionOnInput());
-        },
-
-        removeTempDoc(docType, key) {
-            delete this[`temp_${docType}_docs`][key];
-            const input = document.querySelector(`input[name="docs[${key}]"]`);
-            if (input) input.value = '';
-            this.showToast('info', 'تم إزالة الملف');
-        },
-
-        isDocUploaded(docType, key) {
-            const server_docs = docType === 'required' ? this.server_required_docs : this.server_optional_docs;
-            const temp_docs = this[`temp_${docType}_docs`];
-            return !!server_docs[key] || !!temp_docs[key];
-        }
     }
 }
 </script>
