@@ -62,7 +62,6 @@
                 <span>المنح الدراسية</span>
             </a>
             @endif
-{{-- الدعم الفني (تذاكر البث المباشر) مخفي مؤقتاً لحين نشر الموقع
             @if(auth()->user()->role === 'super_admin' || in_array('support', auth()->user()->permissions ?? []))
             <a href="{{ url('/admin/tickets') }}"
                class="group flex items-center gap-4 px-4 py-3.5 rounded-[1.3rem] font-bold text-sm transition-all {{ request()->is('admin/tickets*') ? 'bg-gold-100 text-gold-600' : 'text-slate-600 hover:bg-slate-50' }}">
@@ -71,7 +70,6 @@
                 <span class="mr-auto px-2.5 py-1 bg-rose-100 text-rose-600 rounded-xl text-[10px] font-black">{{ \App\Models\SupportTicket::where('status', 'pending')->count() }}</span>
             </a>
             @endif
-            --}}
 
 <!-- <a href="{{ url('/admin/orders') }}"
                class="group flex items-center gap-4 px-4 py-3.5 rounded-[1.3rem] font-bold text-sm transition-all {{ request()->is('admin/orders*') ? 'bg-gold-100 text-gold-600' : 'text-slate-600 hover:bg-slate-50' }}">

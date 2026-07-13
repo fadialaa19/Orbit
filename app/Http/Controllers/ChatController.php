@@ -40,6 +40,12 @@ class ChatController extends Controller
         // بث الحدث (Real-time)
         broadcast(new \App\Events\ChatMessageSent($message->load('sender')))->toOthers();
 
+        $ticket->user->notify(new StudentAlertNotification(
+            'رد جديد من الدعم الفني',
+            Str::limit($request->message, 100),
+            route('dashboard.tickets.show', $ticket->id)
+        ));
+
         return response()->json([
             'success' => true,
             'message' => [
@@ -96,6 +102,12 @@ class ChatController extends Controller
 
         // ✅ بث الحدث للطالب نفسه وللأدمن (Real-time)
         broadcast(new \App\Events\ChatMessageSent($message->load('sender')))->toOthers();
+
+        \App\Models\User::admins()->get()->each->notify(new StudentAlertNotification(
+            'رد جديد على تذكرة #' . $ticket->id,
+            $ticket->subject . ': ' . Str::limit($request->message, 100),
+            route('admin.tickets.show', $ticket->id)
+        ));
 
         return response()->json([
             'success' => true,

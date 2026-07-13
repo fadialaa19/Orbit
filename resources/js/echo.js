@@ -13,13 +13,14 @@ try {
         // Already initialized by a layout (fallback). Do nothing.
         console.log('📡 Echo already initialized');
     } else if (broadcaster === 'reverb') {
+        const scheme = import.meta.env.VITE_REVERB_SCHEME || 'https';
         window.Echo = new Echo({
             broadcaster: 'reverb',
             key: import.meta.env.VITE_REVERB_APP_KEY,
             wsHost: import.meta.env.VITE_REVERB_HOST || 'localhost',
-            wsPort: import.meta.env.VITE_REVERB_PORT || 8080,
-            wssPort: import.meta.env.VITE_REVERB_PORT || 8080,
-            forceTLS: false,
+            wsPort: import.meta.env.VITE_REVERB_PORT || 80,
+            wssPort: import.meta.env.VITE_REVERB_PORT || 443,
+            forceTLS: scheme === 'https',
             enabledTransports: ['ws', 'wss'],
         });
         console.log('📡 Using Reverb for real-time updates');
