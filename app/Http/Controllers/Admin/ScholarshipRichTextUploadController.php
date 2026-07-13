@@ -22,9 +22,7 @@ class ScholarshipRichTextUploadController
 
         $path = $file->storeAs($dir, $filename, 'public');
 
-        // نبني الرابط عبر asset() وقت الطلب (وليس رابطاً كاملاً محفوظاً مسبقاً)
-        // حتى لا يتعطل إذا تغيّر النطاق أو البروتوكول لاحقاً.
-        $url = asset('storage/' . $path);
+        $url = \Storage::disk('public')->url($path);
 
         // Quill expects { url: "..." }
         return response()->json(['url' => $url], Response::HTTP_OK);

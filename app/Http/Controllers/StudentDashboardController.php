@@ -264,8 +264,8 @@ class StudentDashboardController extends Controller
         $validated = $request->validate($rules);
 
         if ($request->hasFile('avatar')) {
-            if ($user->avatar && Storage::disk('public')->exists($user->avatar)) {
-                Storage::disk('public')->delete($user->avatar);
+            if ($user->getRawOriginal('avatar') && Storage::disk('public')->exists($user->getRawOriginal('avatar'))) {
+                Storage::disk('public')->delete($user->getRawOriginal('avatar'));
             }
             $user->avatar = $request->file('avatar')->store('avatars', 'public');
         }
@@ -345,8 +345,8 @@ class StudentDashboardController extends Controller
             $user->name = $request->name;
 
             if ($request->hasFile('avatar')) {
-                if ($user->avatar && Storage::disk('public')->exists($user->avatar)) {
-                    Storage::disk('public')->delete($user->avatar);
+                if ($user->getRawOriginal('avatar') && Storage::disk('public')->exists($user->getRawOriginal('avatar'))) {
+                    Storage::disk('public')->delete($user->getRawOriginal('avatar'));
                 }
                 $user->avatar = $request->file('avatar')->store('avatars', 'public');
             }

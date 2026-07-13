@@ -66,10 +66,10 @@ public function getFormattedDeadlineAttribute()
             $path = parse_url($value, PHP_URL_PATH) ?? '';
             $relative = preg_replace('#^.*/storage/#', '', $path);
 
-            return $relative !== '' ? asset('storage/' . ltrim($relative, '/')) : $value;
+            return $relative !== '' ? \Storage::disk('public')->url(ltrim($relative, '/')) : $value;
         }
 
-        return asset('storage/' . $value);
+        return \Storage::disk('public')->url($value);
     }
 
     public function getLogoImageAttribute($value)

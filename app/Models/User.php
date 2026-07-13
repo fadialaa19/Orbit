@@ -30,6 +30,27 @@ class User extends Authenticatable
         $this->notify(new \App\Notifications\QueuedResetPasswordNotification($token));
     }
 
+    /**
+     * Resolve the stored avatar path to a usable URL, built fresh against the
+     * current storage disk every time (rather than trusting a pre-baked URL),
+     * same approach as Scholarship::resolveImageUrl().
+     */
+    public function getAvatarAttribute(?string $value): ?string
+    {
+        if (!$value) {
+            return null;
+        }
+
+        if (filter_var($value, FILTER_VALIDATE_URL)) {
+            $path = parse_url($value, PHP_URL_PATH) ?? '';
+            $relative = preg_replace('#^.*/storage/#', '', $path);
+
+            return $relative !== '' ? \Storage::disk('public')->url(ltrim($relative, '/')) : $value;
+        }
+
+        return \Storage::disk('public')->url($value);
+    }
+
     /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable;
 
