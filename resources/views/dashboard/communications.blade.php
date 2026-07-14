@@ -27,20 +27,28 @@
 
             <div class="overflow-y-auto flex-1">
                 <template x-for="chat in chatsByType[activePanel]" :key="chat.id">
-                    <button @click="selectChat(chat)" 
+                    <div @click="selectChat(chat)"
                             :class="selectedChat?.id === chat.id ? 'bg-white shadow-lg border-r-4 border-gold-500' : 'hover:bg-white/50 border-r-4 border-transparent'"
-                            class="w-full group flex items-center gap-4 p-4 transition-all">
-                        <div class="w-12 h-12 bg-gradient-to-r from-gold-500 to-gold-600 rounded-2xl flex items-center justify-center text-white font-black shadow-lg">
+                            class="w-full group flex items-center gap-4 p-4 transition-all cursor-pointer">
+                        <div class="w-12 h-12 bg-gradient-to-r from-gold-500 to-gold-600 rounded-2xl flex items-center justify-center text-white font-black shadow-lg shrink-0">
                             <span x-text="chat.avatar || (activePanel === 'ai' ? '🤖' : '🛠️')"></span>
                         </div>
-                        <div class="flex-1 text-right">
-                            <div class="flex justify-between items-start">
-                                <p class="font-black text-slate-900 text-sm" x-text="chat.name || chat.subject"></p>
-                                <span x-show="chat.status" :class="statusColor(chat.status)" class="text-[8px] px-2 py-0.5 rounded-full font-bold uppercase" x-text="chat.status"></span>
+                        <div class="flex-1 text-right min-w-0">
+                            <div class="flex justify-between items-start gap-2">
+                                <p class="font-black text-slate-900 text-sm truncate" x-text="chat.name || chat.subject"></p>
+                                <span x-show="chat.status" :class="statusColor(chat.status)" class="text-[8px] px-2 py-0.5 rounded-full font-bold uppercase shrink-0" x-text="chat.status"></span>
                             </div>
                             <p class="text-[10px] text-slate-400 truncate mt-1" x-text="chat.last_message || 'لا توجد رسائل بعد'"></p>
                         </div>
-                    </button>
+                        <div class="hidden group-hover:flex items-center gap-1 shrink-0">
+                            <button @click.stop="renameChat(chat)" title="إعادة تسمية" class="p-1.5 rounded-lg text-slate-400 hover:text-gold-600 hover:bg-gold-50">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+                            </button>
+                            <button @click.stop="deleteChat(chat)" title="حذف المحادثة" class="p-1.5 rounded-lg text-slate-400 hover:text-red-600 hover:bg-red-50">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                            </button>
+                        </div>
+                    </div>
                 </template>
 
                 <div x-show="!chatsByType[activePanel].length" class="text-center py-12 text-slate-400">
@@ -68,7 +76,11 @@
                             <div class="bg-slate-100 p-3 rounded-2xl rounded-tl-none animate-pulse text-xs font-bold text-slate-500">جاري الكتابة...</div>
                         </div>
                         <template x-for="msg in selectedMessages" :key="msg.id">
-                            <div :class="msg.sender_type === 'user' ? 'flex justify-end' : 'flex justify-start'">
+                            <div :class="msg.sender_type === 'user' ? 'flex justify-end' : 'flex justify-start'" class="group/msg flex items-end gap-2">
+                                <button x-show="activePanel === 'ai'" @click="deleteMessage(msg)" title="حذف الرسالة"
+                                        class="opacity-0 group-hover/msg:opacity-100 p-1 rounded-lg text-slate-300 hover:text-red-600 hover:bg-red-50 transition-all shrink-0">
+                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                                </button>
                                 <div class="max-w-[75%] p-4 rounded-3xl shadow-sm" :class="msg.sender_type === 'user' ? 'bg-gold-600 text-white rounded-tr-none' : 'bg-white border border-slate-100 rounded-tl-none text-slate-800'">
                                     <p class="text-sm leading-relaxed whitespace-pre-wrap" x-text="msg.message_text"></p>
         <p class="text-[9px] opacity-60 mt-2 text-left" x-text="msg.created_at || new Date(msg.created_at * 1000)?.toLocaleTimeString('ar-EG') || 'الآن'"></p>
@@ -173,21 +185,101 @@ async pollMessages() {
         },
 
         async createNew() {
+            const label = this.activePanel === 'ai' ? 'اسم المحادثة الجديدة' : 'اسم/موضوع التذكرة الجديدة';
+            const name = window.prompt(label, '');
+            if (name === null) return; // المستخدم ألغى العملية
+
             const token = document.querySelector('meta[name="csrf-token"]').content;
             const url = this.activePanel === 'ai' ? '/api/communications/ai/new-chat' : '/api/communications/tickets/create';
-            const res = await fetch(url, { 
-                method: 'POST', 
-                headers: { 
+            const res = await fetch(url, {
+                method: 'POST',
+                headers: {
                     'Content-Type': 'application/json',
                     'Accept': 'application/json',
                     'X-CSRF-TOKEN': token
-                }
+                },
+                body: JSON.stringify({ name: name.trim() || null })
             });
             if (!res.ok) throw new Error('Failed to create chat');
             const data = await res.json();
             await this.loadChats();
             this.selectChat(data.chat);
             this.selectedMessages = [];
+        },
+
+        async renameChat(chat) {
+            const currentName = chat.name || chat.subject || '';
+            const newName = window.prompt('الاسم الجديد:', currentName);
+            if (newName === null || !newName.trim() || newName.trim() === currentName) return;
+
+            const token = document.querySelector('meta[name="csrf-token"]').content;
+            try {
+                const res = await fetch(`/api/communications/${chat.id}/${chat.type}/rename`, {
+                    method: 'PATCH',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                        'X-CSRF-TOKEN': token
+                    },
+                    body: JSON.stringify({ name: newName.trim() })
+                });
+                const data = await res.json();
+                if (data.success) {
+                    await this.loadChats();
+                    if (this.selectedChat?.id === chat.id) this.selectedChat = data.chat;
+                } else {
+                    alert('تعذّر تغيير الاسم');
+                }
+            } catch (e) {
+                console.error('Rename error', e);
+                alert('تعذّر تغيير الاسم');
+            }
+        },
+
+        async deleteChat(chat) {
+            if (!confirm('هل أنت متأكد من حذف هذه المحادثة نهائياً؟ سيتم حذف كل رسائلها ولا يمكن التراجع.')) return;
+
+            const token = document.querySelector('meta[name="csrf-token"]').content;
+            try {
+                const res = await fetch(`/api/communications/${chat.id}/${chat.type}`, {
+                    method: 'DELETE',
+                    headers: { 'Accept': 'application/json', 'X-CSRF-TOKEN': token }
+                });
+                const data = await res.json();
+                if (data.success) {
+                    if (this.selectedChat?.id === chat.id) {
+                        this.selectedChat = null;
+                        this.selectedMessages = [];
+                    }
+                    await this.loadChats();
+                } else {
+                    alert('تعذّر حذف المحادثة');
+                }
+            } catch (e) {
+                console.error('Delete chat error', e);
+                alert('تعذّر حذف المحادثة');
+            }
+        },
+
+        async deleteMessage(msg) {
+            if (!this.selectedChat || !confirm('حذف هذه الرسالة؟')) return;
+
+            const token = document.querySelector('meta[name="csrf-token"]').content;
+            try {
+                const res = await fetch(`/api/communications/${this.selectedChat.id}/${this.selectedChat.type}/messages/${msg.id}`, {
+                    method: 'DELETE',
+                    headers: { 'Accept': 'application/json', 'X-CSRF-TOKEN': token }
+                });
+                const data = await res.json();
+                if (data.success) {
+                    this.selectedMessages = this.selectedMessages.filter(m => m.id !== msg.id);
+                } else {
+                    alert('تعذّر حذف الرسالة');
+                }
+            } catch (e) {
+                console.error('Delete message error', e);
+                alert('تعذّر حذف الرسالة');
+            }
         },
 
         async sendMessage() {

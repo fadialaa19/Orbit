@@ -176,9 +176,10 @@ class CommunicationsController extends Controller
         return $item;
     }
     public function createNewAiChat(Request $request) {
+        $request->validate(['name' => 'nullable|string|max:100']);
         $user = Auth::user();
         $chat = $user->rooms()->create([
-            'name' => 'محادثة ذكاء اصطناعي جديدة #' . rand(100, 999),
+            'name' => $request->filled('name') ? $request->name : 'محادثة ' . now()->format('Y-m-d H:i'),
             'type' => 'ai',
             'avatar' => '🤖',
             'status' => 'open'
@@ -187,24 +188,75 @@ class CommunicationsController extends Controller
     }
 
 public function createNewTicket(Request $request) {
+        $request->validate(['name' => 'nullable|string|max:100']);
         $user = Auth::user();
         $ticket = SupportTicket::create([
             'user_id' => $user->id,
-            'subject' => 'تذكرة دعم جديدة #' . rand(100, 999),
+            'subject' => $request->filled('name') ? $request->name : 'تذكرة دعم ' . now()->format('Y-m-d H:i'),
             'priority' => 'medium',
             'status' => 'pending',
         ]);
         // Notify admins via database notification
         \App\Models\User::admins()->get()->each->notify(new \App\Notifications\NewTicketNotification($ticket));
-        
+
         // ✅ Real-time: بث حدث إنشاء تذكرة جديدة للأدمن
         try {
             broadcast(new \App\Events\NewTicketCreatedEvent($ticket))->toOthers();
         } catch (\Exception $e) {
             \Log::warning("NewTicketCreatedEvent broadcast failed: " . $e->getMessage());
         }
-        
+
         return response()->json(['chat' => $this->formatTicket($ticket)]);
+    }
+
+    /**
+     * Rename an AI chat room or a support ticket's subject.
+     */
+    public function renameChat(Request $request, $id, $type)
+    {
+        $request->validate(['name' => 'required|string|max:100']);
+        $user = Auth::user();
+        $messageable = $this->resolveMessageable($id, $type, $user);
+
+        if ($messageable instanceof SupportTicket) {
+            $messageable->update(['subject' => $request->name]);
+            return response()->json(['success' => true, 'chat' => $this->formatTicket($messageable)]);
+        }
+
+        $messageable->update(['name' => $request->name]);
+        return response()->json(['success' => true, 'chat' => $this->formatChat($messageable)]);
+    }
+
+    /**
+     * Delete an entire AI chat room or support ticket, along with its messages.
+     */
+    public function deleteChat($id, $type)
+    {
+        $user = Auth::user();
+        $messageable = $this->resolveMessageable($id, $type, $user);
+
+        $messageable->messages()->delete();
+        $messageable->delete();
+
+        return response()->json(['success' => true]);
+    }
+
+    /**
+     * Delete a single message from an AI chat (support ticket messages stay put).
+     */
+    public function deleteMessage($id, $type, $messageId)
+    {
+        $user = Auth::user();
+        $messageable = $this->resolveMessageable($id, $type, $user);
+
+        if (!($messageable instanceof Room) || $messageable->type !== 'ai') {
+            abort(403, 'لا يمكن حذف رسائل هذه المحادثة');
+        }
+
+        $message = $messageable->messages()->where('id', $messageId)->firstOrFail();
+        $message->delete();
+
+        return response()->json(['success' => true]);
     }
 }
 

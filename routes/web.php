@@ -193,6 +193,9 @@ Route::middleware(['auth', 'verified.ensure'])->prefix('api/communications')->na
     Route::post('/{id}/{type}/send', [App\Http\Controllers\CommunicationsController::class, 'sendMessage']);
     Route::post('/ai/new-chat', [App\Http\Controllers\CommunicationsController::class, 'createNewAiChat']);
     Route::post('/tickets/create', [App\Http\Controllers\CommunicationsController::class, 'createNewTicket']);
+    Route::patch('/{id}/{type}/rename', [App\Http\Controllers\CommunicationsController::class, 'renameChat']);
+    Route::delete('/{id}/{type}/messages/{messageId}', [App\Http\Controllers\CommunicationsController::class, 'deleteMessage']);
+    Route::delete('/{id}/{type}', [App\Http\Controllers\CommunicationsController::class, 'deleteChat']);
 });
 
 Route::middleware(['auth', 'verified.ensure'])->group(function () {
