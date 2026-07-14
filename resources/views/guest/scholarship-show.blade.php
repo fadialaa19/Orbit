@@ -155,6 +155,7 @@
                 <button @click="activeTab = 'conditions'" :class="activeTab === 'conditions' ? 'pb-4 border-b-2 border-gold-600 text-gold-600 font-black text-sm' : 'pb-4 text-slate-400 font-bold text-sm hover:text-slate-600 transition'" class="cursor-pointer">الشروط</button>
                 <button @click="activeTab = 'documents'" :class="activeTab === 'documents' ? 'pb-4 border-b-2 border-gold-600 text-gold-600 font-black text-sm' : 'pb-4 text-slate-400 font-bold text-sm hover:text-slate-600 transition'" class="cursor-pointer">المستندات</button>
                 <button @click="activeTab = 'features'" :class="activeTab === 'features' ? 'pb-4 border-b-2 border-gold-600 text-gold-600 font-black text-sm' : 'pb-4 text-slate-400 font-bold text-sm hover:text-slate-600 transition'" class="cursor-pointer">المميزات</button>
+                <button @click="activeTab = 'application_process'" :class="activeTab === 'application_process' ? 'pb-4 border-b-2 border-gold-600 text-gold-600 font-black text-sm' : 'pb-4 text-slate-400 font-bold text-sm hover:text-slate-600 transition'" class="cursor-pointer">آلية التقديم</button>
             </div>
 
             <div class="space-y-8" x-cloak>
@@ -219,6 +220,22 @@
                                 {!! $scholarship->features !!}
                             @else
                                 <p class="text-slate-400 italic">المميزات ستُحدد قريباً من قبل الإدارة</p>
+                            @endif
+                        </div>
+                    </div>
+                </div>
+
+                <div x-show="activeTab === 'application_process'" x-transition>
+                    <div class="bg-white rounded-[2.5rem] p-8 md:p-10 shadow-sm border border-slate-50 text-right">
+                        <div class="flex items-center justify-end gap-3 mb-6">
+                            <h3 class="text-xl font-black text-slate-800">آلية التقديم</h3>
+                            <span class="text-xl">🧭</span>
+                        </div>
+                        <div class="prose prose-slate max-w-none text-slate-600 font-medium leading-relaxed">
+                            @if($scholarship->application_process)
+                                {!! $scholarship->application_process !!}
+                            @else
+                                <p class="text-slate-400 italic">آلية التقديم ستُحدد قريباً من قبل الإدارة</p>
                             @endif
                         </div>
                     </div>

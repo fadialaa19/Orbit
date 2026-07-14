@@ -138,10 +138,16 @@
         {{-- Header --}}
         <div class="bg-gold-600 p-4 text-white flex items-center justify-between shrink-0">
             <div class="flex items-center gap-3">
-                <div class="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center text-lg">🤖</div>
+                <div class="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center">
+                    <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 2l1.9 5.7L20 9.6l-5.7 1.9L12 17l-1.9-5.7L4 9.6l5.7-1.9L12 2z"/>
+                        <path d="M19 14l.8 2.4L22 17l-2.2.8L19 20l-.8-2.2L16 17l2.2-.6L19 14z" opacity=".7"/>
+                        <path d="M5 15l.6 1.8L7 17l-1.4.5L5 19l-.6-1.5L3 17l1.4-.2L5 15z" opacity=".7"/>
+                    </svg>
+                </div>
                 <div>
-                    <h4 class="font-black text-sm">مستشار منحي الذكي</h4>
-                    <p class="text-[10px] opacity-80 font-bold">مدعوم بـ Groq AI</p>
+                    <h4 class="font-black text-sm">مساعد أوربيت الذكي</h4>
+                    <p class="text-[10px] opacity-80 font-bold">مساعدك الشخصي لرحلة المنح</p>
                 </div>
             </div>
             <div class="flex items-center gap-2">
@@ -161,7 +167,7 @@
             <div x-show="!banned" class="flex gap-3 items-start">
                 <div class="w-8 h-8 bg-gold-600 rounded-xl flex items-center justify-center text-white text-sm shrink-0">AI</div>
                 <div class="bg-white p-3 rounded-2xl rounded-tr-sm shadow-sm border border-slate-100 text-sm font-bold text-slate-700 leading-relaxed max-w-[85%]">
-                    مرحباً! أنا مستشارك الذكي في شؤون المنح الدراسية. كيف يمكنني مساعدتك اليوم؟ 💡
+                    مرحباً! أنا مساعد أوربيت الذكي، هون لمساعدتك في رحلة المنح الدراسية. كيف بقدر أساعدك اليوم؟ 💡
                 </div>
             </div>
 
@@ -280,7 +286,7 @@
                     </svg>
                 </button>
             </form>
-            <p class="text-[9px] text-slate-300 text-center mt-2 font-bold">مدعوم بـ Groq AI · قد يحتوي على أخطاء</p>
+            <p class="text-[9px] text-slate-300 text-center mt-2 font-bold">مساعد أوربيت الذكي · قد يحتوي على أخطاء</p>
         </div>
     </div>
 </div>

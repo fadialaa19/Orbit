@@ -140,6 +140,12 @@
                             <input type="hidden" name="features" id="features_input" value="{{ old('features', $scholarship->features) }}">
                             <div class="editor-container"><div id="features_editor" class="quill-editor"></div></div>
                         </div>
+
+                        <div class="word-editor-card space-y-2">
+                            <label class="text-xs font-black text-slate-700 flex items-center gap-2">🧭 آلية التقديم</label>
+                            <input type="hidden" name="application_process" id="application_process_input" value="{{ old('application_process', $scholarship->application_process) }}">
+                            <div class="editor-container"><div id="application_process_editor" class="quill-editor"></div></div>
+                        </div>
                     </div>
                 </div>
 
@@ -225,7 +231,7 @@
 const editors = {};
 function initAllEditors() {
     // أضفنا الـ description هنا ليعمل المحرر الخامس بكفاءة في صفحة التعديل
-    const fields = ['description', 'overview', 'conditions', 'documents', 'features'];
+    const fields = ['description', 'overview', 'conditions', 'documents', 'features', 'application_process'];
     const toolbarOptions = [
         [{ 'header': [1, 2, 3, false] }],
         ['bold', 'italic', 'underline', 'strike'],

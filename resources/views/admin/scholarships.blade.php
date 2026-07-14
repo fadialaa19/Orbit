@@ -230,6 +230,14 @@
                             <input type="hidden" name="features" id="features_input">
                             <div class="editor-container"><div id="features_editor" class="quill-editor"></div></div>
                         </div>
+
+                        <div class="word-editor-card space-y-2">
+                            <label class="text-xs font-black text-slate-700 flex items-center gap-2">
+                                <span class="p-1.5 bg-emerald-50 text-emerald-500 rounded-lg text-xs">🧭</span> آلية التقديم على المنحة خطوة بخطوة
+                            </label>
+                            <input type="hidden" name="application_process" id="application_process_input">
+                            <div class="editor-container"><div id="application_process_editor" class="quill-editor"></div></div>
+                        </div>
                     </div>
                 </div>
 
@@ -306,7 +314,7 @@
 const editors = {};
 
 function initAllEditors() {
-    const fields = ['description', 'overview', 'conditions', 'documents', 'features'];
+    const fields = ['description', 'overview', 'conditions', 'documents', 'features', 'application_process'];
     
     const toolbarOptions = [
         [{ 'header': [1, 2, 3, false] }],
@@ -423,7 +431,8 @@ async function generateAllSections() {
             setQuillHtml('conditions', data.data.conditions || '');
             setQuillHtml('documents', data.data.documents || '');
             setQuillHtml('features', data.data.features || '');
-            
+            setQuillHtml('application_process', data.data.application_process || '');
+
             aiText.innerText = '✅ تم توليد الأقسام!';
             setTimeout(() => {
                 aiText.innerText = 'توليد الأقسام ذكياً';

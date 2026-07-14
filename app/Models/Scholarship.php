@@ -22,6 +22,7 @@ class Scholarship extends Model
         'conditions',
         'documents',
         'features',
+        'application_process',
         'financial_value',
         'applicants_count',
         'recommended_tags',

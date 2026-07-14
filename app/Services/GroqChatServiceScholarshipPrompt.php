@@ -93,7 +93,8 @@ PROMPT;
   "overview": "نظرة عامة عن المنحة والجامعة والبلد بأسلوب جذاب للطلاب الفلسطينيين (100-150 كلمة)",
   "conditions": "- الشرط الأول\\n- الشرط الثاني\\n- الشرط الثالث",
   "documents": "- المستند الأول\\n- المستند الثاني",
-  "features": "- الميزة الأولى\\n- الميزة الثانية"
+  "features": "- الميزة الأولى\\n- الميزة الثانية",
+  "application_process": "1. الخطوة الأولى\\n2. الخطوة الثانية\\n3. الخطوة الثالثة (اشرح آلية التقديم على المنحة خطوة بخطوة بشكل عملي وواضح)"
 }
 PROMPT;
 
@@ -136,7 +137,8 @@ PROMPT;
                 'overview'   => $parsedJson['overview'] ?? '',
                 'conditions' => $parsedJson['conditions'] ?? '',
                 'documents'  => $parsedJson['documents'] ?? '',
-                'features'   => $parsedJson['features'] ?? ''
+                'features'   => $parsedJson['features'] ?? '',
+                'application_process' => $parsedJson['application_process'] ?? '',
             ];
 
         } catch (\Exception $e) {

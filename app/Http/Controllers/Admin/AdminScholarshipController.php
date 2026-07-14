@@ -53,6 +53,7 @@ class AdminScholarshipController extends Controller
         'conditions' => 'nullable|string',
         'documents' => 'nullable|string',
         'features' => 'nullable|string',
+        'application_process' => 'nullable|string',
         'financial_value' => 'nullable|string|max:255',
         'applicants_count' => 'nullable|integer|min:0',
         'recommended_tags' => 'nullable|string|max:255', // نستقبله كنص أولاً
@@ -125,6 +126,7 @@ public function update(Request $request, Scholarship $scholarship)
         'conditions' => 'nullable|string',
         'documents' => 'nullable|string',
         'features' => 'nullable|string',
+        'application_process' => 'nullable|string',
         'financial_value' => 'nullable|string|max:255',
         'applicants_count' => 'nullable|integer|min:0',
         'recommended_tags' => 'nullable|string|max:255',
@@ -217,6 +219,7 @@ public function update(Request $request, Scholarship $scholarship)
                     'conditions' => $sections['conditions'] ?? '',
                     'documents'  => $sections['documents'] ?? '',
                     'features'   => $sections['features'] ?? '',
+                    'application_process' => $sections['application_process'] ?? '',
                 ]
             ]);
         } catch (\Exception $e) {
