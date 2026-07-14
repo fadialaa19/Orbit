@@ -38,7 +38,12 @@ class ChatController extends Controller
         ]);
 
         // بث الحدث (Real-time)
-        broadcast(new \App\Events\ChatMessageSent($message->load('sender')))->toOthers();
+        // فشل البث لا يجب أن يُسقط الطلب بالكامل، لأن الرسالة محفوظة أصلاً.
+        try {
+            broadcast(new \App\Events\ChatMessageSent($message->load('sender')))->toOthers();
+        } catch (\Exception $e) {
+            \Log::warning("ChatMessageSent broadcast failed (adminReply): " . $e->getMessage());
+        }
 
         $ticket->user->notify(new StudentAlertNotification(
             'رد جديد من الدعم الفني',
@@ -101,7 +106,13 @@ class ChatController extends Controller
         ]);
 
         // ✅ بث الحدث للطالب نفسه وللأدمن (Real-time)
-        broadcast(new \App\Events\ChatMessageSent($message->load('sender')))->toOthers();
+        // لا نسمح لفشل البث (مثلاً مشكلة اتصال بـ Reverb) بإسقاط الطلب بالكامل،
+        // لأن الرسالة أصلاً محفوظة في قاعدة البيانات بهذه المرحلة.
+        try {
+            broadcast(new \App\Events\ChatMessageSent($message->load('sender')))->toOthers();
+        } catch (\Exception $e) {
+            \Log::warning("ChatMessageSent broadcast failed (studentReply): " . $e->getMessage());
+        }
 
         \App\Models\User::admins()->get()->each->notify(new StudentAlertNotification(
             'رد جديد على تذكرة #' . $ticket->id,
@@ -239,7 +250,11 @@ class ChatController extends Controller
         ]);
 
         // ✅ Broadcast AI message for real-time updates
-        broadcast(new \App\Events\ChatMessageSent($message->load('sender')))->toOthers();
+        try {
+            broadcast(new \App\Events\ChatMessageSent($message->load('sender')))->toOthers();
+        } catch (\Exception $e) {
+            \Log::warning("ChatMessageSent broadcast failed (aiReply): " . $e->getMessage());
+        }
 
         return response()->json([
             'success' => true,

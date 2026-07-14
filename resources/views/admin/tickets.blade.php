@@ -165,6 +165,29 @@ init() {
     this.pollInterval = setInterval(() => {
         this.loadTickets();
     }, 5000);
+
+    // ✅ Polling احتياطي لرسائل المحادثة المفتوحة (في حال تأخر أو فشل اتصال الـ WebSocket)
+    this.messagePollInterval = setInterval(() => {
+        if (this.chatModal && this.activeTicket.id) this.pollMessages();
+    }, 3000);
+},
+
+async pollMessages() {
+    try {
+        const res = await fetch(`/admin/tickets/${this.activeTicket.id}`, { headers: { 'Accept': 'application/json' } });
+        const data = await res.json();
+        if (!data || data.error) return;
+
+        const existingIds = new Set(this.messages.map(m => m.id));
+        const newMessages = (data.messages || []).filter(m => !existingIds.has(m.id));
+        if (newMessages.length) {
+            this.messages.push(...newMessages);
+            this.scrollToBottom();
+        }
+        this.activeTicket.status = data.status;
+    } catch (e) {
+        console.error('Poll messages error', e);
+    }
 },
 
 loadTickets() {

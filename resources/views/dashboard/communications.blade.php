@@ -117,7 +117,7 @@ function communicationHub() {
             .listen('ChatMessageSent', (e) => {
                 console.log('New Message Received:', e.message); // للتحقق في الـ Console
                 const incomingMsg = e.message;
-                
+
                 // تحديث الرسائل إذا كانت المحادثة مفتوحة
                 if (this.selectedChat && incomingMsg.messageable_id == this.selectedChat.id) {
                     // نستخدم unshift لأنك تستخدم flex-col-reverse
@@ -126,6 +126,28 @@ function communicationHub() {
                 // تحديث القائمة الجانبية لظهور آخر رسالة
                 this.loadChats();
             });
+    }
+
+    // ✅ Polling احتياطي لردود الدعم الفني (في حال تأخر أو فشل اتصال الـ WebSocket)
+    this.pollInterval = setInterval(() => {
+        if (this.selectedChat && this.activePanel === 'support') this.pollMessages();
+    }, 3000);
+},
+
+async pollMessages() {
+    try {
+        const type = this.selectedChat.type || 'ticket';
+        const res = await fetch(`/api/communications/${this.selectedChat.id}/${type}/messages`);
+        const data = await res.json();
+        // /messages يعيد الرسائل الأحدث أولاً (نفس ترتيب selectedMessages الحالي)
+        const incoming = data.messages || [];
+        const existingIds = new Set(this.selectedMessages.map(m => m.id));
+        const newOnes = incoming.filter(m => !existingIds.has(m.id));
+        if (newOnes.length) {
+            this.selectedMessages.unshift(...newOnes);
+        }
+    } catch (e) {
+        console.error('Poll messages error', e);
     }
 },
 

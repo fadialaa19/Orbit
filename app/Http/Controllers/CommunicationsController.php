@@ -65,7 +65,13 @@ class CommunicationsController extends Controller
         'sender_type' => 'user',
         'message_text' => $request->message,
     ]);
-    broadcast(new \App\Events\ChatMessageSent($userMessage->load('sender:id,name')))->toOthers();
+    // فشل البث (مثلاً مشكلة اتصال بـ Reverb) لا يجب أن يُسقط الطلب بالكامل،
+    // لأن الرسالة محفوظة أصلاً في قاعدة البيانات.
+    try {
+        broadcast(new \App\Events\ChatMessageSent($userMessage->load('sender:id,name')))->toOthers();
+    } catch (\Exception $e) {
+        \Log::warning("ChatMessageSent broadcast failed (sendMessage/user): " . $e->getMessage());
+    }
 
     if ($type === 'ai' || (isset($messageable->type) && $messageable->type === 'ai')) {
         $groq = new \App\Services\GroqChatService();
@@ -112,7 +118,11 @@ class CommunicationsController extends Controller
             'message_text' => $result['content'],
         ]);
 
-        broadcast(new \App\Events\ChatMessageSent($responseMessage->load('sender:id,name')));
+        try {
+            broadcast(new \App\Events\ChatMessageSent($responseMessage->load('sender:id,name')));
+        } catch (\Exception $e) {
+            \Log::warning("ChatMessageSent broadcast failed (sendMessage/ai): " . $e->getMessage());
+        }
 
         return response()->json([
             'success' => true,
@@ -188,7 +198,11 @@ public function createNewTicket(Request $request) {
         \App\Models\User::admins()->get()->each->notify(new \App\Notifications\NewTicketNotification($ticket));
         
         // ✅ Real-time: بث حدث إنشاء تذكرة جديدة للأدمن
-        broadcast(new \App\Events\NewTicketCreatedEvent($ticket))->toOthers();
+        try {
+            broadcast(new \App\Events\NewTicketCreatedEvent($ticket))->toOthers();
+        } catch (\Exception $e) {
+            \Log::warning("NewTicketCreatedEvent broadcast failed: " . $e->getMessage());
+        }
         
         return response()->json(['chat' => $this->formatTicket($ticket)]);
     }
