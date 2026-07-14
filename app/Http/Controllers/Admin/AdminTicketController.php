@@ -83,8 +83,32 @@ public function index(Request $request)
 
     public function destroy(SupportTicket $ticket)
     {
+        $ticket->messages()->delete();
         $ticket->delete();
+
+        if (request()->wantsJson()) {
+            return response()->json(['success' => true]);
+        }
+
         return redirect()->route('admin.tickets.index')->with('success', 'تم حذف التذكرة.');
+    }
+
+    public function rename(Request $request, $id)
+    {
+        $request->validate(['subject' => 'required|string|max:150']);
+        $ticket = SupportTicket::findOrFail($id);
+        $ticket->update(['subject' => $request->subject]);
+
+        return response()->json(['success' => true, 'subject' => $ticket->subject]);
+    }
+
+    public function deleteMessage($id, $messageId)
+    {
+        $ticket = SupportTicket::findOrFail($id);
+        $message = $ticket->messages()->where('id', $messageId)->firstOrFail();
+        $message->delete();
+
+        return response()->json(['success' => true]);
     }
 
     public function reply(Request $request, $id)

@@ -66,6 +66,12 @@
                                 @if($ticket->status !== 'closed')
                                 <button @click="closeTicket({{ $ticket->id }})" class="px-4 py-1.5 bg-slate-500 text-white rounded-lg text-[10px] font-black hover:bg-slate-600 shadow-sm transition-all">إغلاق</button>
                                 @endif
+                                <button @click="renameTicket({{ $ticket->id }}, @js($ticket->subject))" title="إعادة تسمية" class="p-1.5 rounded-lg text-slate-400 hover:text-gold-600 hover:bg-gold-50 transition-all">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+                                </button>
+                                <button @click="deleteTicket({{ $ticket->id }})" title="حذف التذكرة" class="p-1.5 rounded-lg text-slate-400 hover:text-red-600 hover:bg-red-50 transition-all">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                                </button>
                             </div>
                         </td>
                     </tr>
@@ -92,6 +98,12 @@
                 <div class="flex items-center gap-2">
                     <button x-show="activeTicket.status !== 'resolved'" @click="resolveTicket(activeTicket.id)" class="px-3 py-1.5 bg-emerald-600 text-white rounded-lg text-[10px] font-black hover:bg-emerald-700 shadow-sm transition-all">حلّ</button>
                     <button x-show="activeTicket.status !== 'closed'" @click="closeTicket(activeTicket.id)" class="px-3 py-1.5 bg-slate-500 text-white rounded-lg text-[10px] font-black hover:bg-slate-600 shadow-sm transition-all">إغلاق</button>
+                    <button @click="renameTicket(activeTicket.id, activeTicket.subject)" title="إعادة تسمية" class="p-1.5 rounded-lg text-slate-400 hover:text-gold-600 hover:bg-gold-50 transition-all">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+                    </button>
+                    <button @click="deleteTicket(activeTicket.id)" title="حذف التذكرة" class="p-1.5 rounded-lg text-slate-400 hover:text-red-600 hover:bg-red-50 transition-all">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                    </button>
                     <button @click="chatModal = false" class="text-slate-400 hover:text-slate-600">✕</button>
                 </div>
             </div>
@@ -99,7 +111,7 @@
             {{-- Messages --}}
             <div id="admin-chat-messages" class="flex-1 overflow-y-auto p-6 space-y-4 bg-slate-50/30">
                 <template x-for="msg in messages" :key="msg.id">
-                    <div class="flex gap-3 items-start" :class="msg.sender_type === 'admin' ? 'flex-row-reverse' : ''">
+                    <div class="group/msg flex gap-3 items-start" :class="msg.sender_type === 'admin' ? 'flex-row-reverse' : ''">
                         <div class="w-8 h-8 rounded-xl flex items-center justify-center text-white text-[10px] font-black shrink-0"
                              :class="msg.sender_type === 'admin' ? 'bg-emerald-600' : (msg.sender_type === 'ai' ? 'bg-gold-500' : 'bg-slate-700')"
                              x-text="msg.sender_type === 'admin' ? 'A' : (msg.sender_type === 'ai' ? 'AI' : 'ط')"></div>
@@ -108,6 +120,10 @@
                             <p x-text="msg.message_text" class="whitespace-pre-line"></p>
                             <p class="text-[8px] opacity-60 mt-1" x-text="msg.created_at"></p>
                         </div>
+                        <button @click="deleteMessage(msg)" title="حذف الرسالة"
+                                class="opacity-0 group-hover/msg:opacity-100 p-1 rounded-lg text-slate-300 hover:text-red-600 hover:bg-red-50 transition-all shrink-0 self-center">
+                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                        </button>
                     </div>
                 </template>
             </div>
@@ -291,6 +307,73 @@ loadTickets() {
 
         closeTicket(ticketId) {
             this.updateTicketStatus(ticketId, 'close');
+        },
+
+        async renameTicket(ticketId, currentSubject) {
+            const newSubject = window.prompt('العنوان الجديد للتذكرة:', currentSubject || '');
+            if (newSubject === null || !newSubject.trim() || newSubject.trim() === currentSubject) return;
+
+            try {
+                const token = document.querySelector('meta[name="csrf-token"]').content;
+                const res = await fetch(`/admin/tickets/${ticketId}/rename`, {
+                    method: 'PATCH',
+                    headers: { 'X-CSRF-TOKEN': token, 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                    body: JSON.stringify({ subject: newSubject.trim() })
+                });
+                const data = await res.json();
+                if (data.success) {
+                    if (this.activeTicket.id === ticketId) this.activeTicket.subject = data.subject;
+                    this.loadTickets();
+                } else {
+                    alert('تعذّر تغيير العنوان');
+                }
+            } catch (e) {
+                console.error('Rename ticket error', e);
+                alert('تعذّر تغيير العنوان');
+            }
+        },
+
+        async deleteTicket(ticketId) {
+            if (!confirm('هل أنت متأكد من حذف هذه التذكرة نهائياً؟ سيتم حذف كل رسائلها ولا يمكن التراجع.')) return;
+
+            try {
+                const token = document.querySelector('meta[name="csrf-token"]').content;
+                const res = await fetch(`/admin/tickets/${ticketId}`, {
+                    method: 'DELETE',
+                    headers: { 'X-CSRF-TOKEN': token, 'Accept': 'application/json' }
+                });
+                const data = await res.json();
+                if (data.success) {
+                    if (this.activeTicket.id === ticketId) this.chatModal = false;
+                    this.loadTickets();
+                } else {
+                    alert('تعذّر حذف التذكرة');
+                }
+            } catch (e) {
+                console.error('Delete ticket error', e);
+                alert('تعذّر حذف التذكرة');
+            }
+        },
+
+        async deleteMessage(msg) {
+            if (!confirm('حذف هذه الرسالة؟')) return;
+
+            try {
+                const token = document.querySelector('meta[name="csrf-token"]').content;
+                const res = await fetch(`/admin/tickets/${this.activeTicket.id}/messages/${msg.id}`, {
+                    method: 'DELETE',
+                    headers: { 'X-CSRF-TOKEN': token, 'Accept': 'application/json' }
+                });
+                const data = await res.json();
+                if (data.success) {
+                    this.messages = this.messages.filter(m => m.id !== msg.id);
+                } else {
+                    alert('تعذّر حذف الرسالة');
+                }
+            } catch (e) {
+                console.error('Delete message error', e);
+                alert('تعذّر حذف الرسالة');
+            }
         }
     };
 }

@@ -185,10 +185,7 @@ async pollMessages() {
         },
 
         async createNew() {
-            const label = this.activePanel === 'ai' ? 'اسم المحادثة الجديدة' : 'اسم/موضوع التذكرة الجديدة';
-            const name = window.prompt(label, '');
-            if (name === null) return; // المستخدم ألغى العملية
-
+            // الاسم بيتحدد تلقائياً من أول رسالة تُرسل في المحادثة (بدل الطلب من المستخدم كتابة اسم يدوياً)
             const token = document.querySelector('meta[name="csrf-token"]').content;
             const url = this.activePanel === 'ai' ? '/api/communications/ai/new-chat' : '/api/communications/tickets/create';
             const res = await fetch(url, {
@@ -197,8 +194,7 @@ async pollMessages() {
                     'Content-Type': 'application/json',
                     'Accept': 'application/json',
                     'X-CSRF-TOKEN': token
-                },
-                body: JSON.stringify({ name: name.trim() || null })
+                }
             });
             if (!res.ok) throw new Error('Failed to create chat');
             const data = await res.json();
@@ -323,6 +319,16 @@ async pollMessages() {
                         this.selectedMessages.unshift(msg);
                     }
                 });
+            }
+
+            // 2.5 تحديث اسم المحادثة تلقائياً إذا كانت هذه أول رسالة (السيرفر بيولّد عنوان مفهوم من نص الرسالة)
+            if (data.chat_name && this.selectedChat) {
+                if (this.selectedChat.type === 'ticket') {
+                    this.selectedChat.subject = data.chat_name;
+                } else {
+                    this.selectedChat.name = data.chat_name;
+                }
+                this.loadChats();
             }
 
             // 3. منطق التحويل التلقائي للدعم الفني

@@ -56,6 +56,7 @@ class CommunicationsController extends Controller
     $request->validate(['message' => 'required|string|max:2000']);
     $user = Auth::user();
     $messageable = $this->resolveMessageable($id, $type, $user);
+    $isFirstMessage = $messageable->messages()->count() === 0;
 
     // 1. تخزين رسالة المستخدم وبثها
     $userMessage = Message::create([
@@ -72,6 +73,17 @@ class CommunicationsController extends Controller
     } catch (\Exception $e) {
         \Log::warning("ChatMessageSent broadcast failed (sendMessage/user): " . $e->getMessage());
     }
+
+    // تسمية المحادثة تلقائياً بعنوان مفهوم من محتوى أول رسالة، بدل اسم عشوائي أو تاريخ مجرد
+    if ($isFirstMessage) {
+        $autoName = \Illuminate\Support\Str::limit(trim($request->message), 40);
+        if ($messageable instanceof SupportTicket) {
+            $messageable->update(['subject' => $autoName]);
+        } else {
+            $messageable->update(['name' => $autoName]);
+        }
+    }
+    $chatName = $messageable instanceof SupportTicket ? $messageable->subject : $messageable->name;
 
     if ($type === 'ai' || (isset($messageable->type) && $messageable->type === 'ai')) {
         $groq = new \App\Services\GroqChatService();
@@ -127,11 +139,12 @@ class CommunicationsController extends Controller
         return response()->json([
             'success' => true,
             'messages' => [$userMessage, $responseMessage],
+            'chat_name' => $chatName,
             'redirect_to_support' => $result['trigger_support'] // نرسل إشارة للفرونت إند
         ]);
     }
 
-    return response()->json(['success' => true, 'messages' => [$userMessage]]);
+    return response()->json(['success' => true, 'messages' => [$userMessage], 'chat_name' => $chatName]);
 }
 
 

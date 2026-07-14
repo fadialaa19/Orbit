@@ -124,6 +124,8 @@ Route::prefix('admin')->middleware(['auth'])->name('admin.')->group(function () 
     Route::middleware(['check.permission:support'])->group(function () {
         Route::resource('tickets', AdminTicketController::class);
         Route::post('tickets/{ticket}/reply', [AdminTicketController::class, 'reply'])->name('tickets.reply');
+        Route::patch('tickets/{ticket}/rename', [AdminTicketController::class, 'rename'])->name('tickets.rename');
+        Route::delete('tickets/{ticket}/messages/{messageId}', [AdminTicketController::class, 'deleteMessage'])->name('tickets.messages.delete');
     });
 
     // 6️⃣ رسائل اتصل بنا وآراء العملاء (Contacts & Testimonials)
