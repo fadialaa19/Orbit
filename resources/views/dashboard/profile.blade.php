@@ -445,7 +445,7 @@
                 <!-- Sidebar -->
                 <div class="w-full lg:w-80 order-1 lg:order-2">
                     <div class="bg-white rounded-[2.5rem] p-8 shadow-sm border border-slate-50 text-center sticky top-8">
-                        <div class="relative w-32 h-32 mx-auto mb-6 group">
+                        <div class="relative w-32 h-32 mx-auto mb-10 group">
                             <div id="avatarDisplay">
                             @if($user->avatar)
                             <img src="{{ $user->avatar }}" alt="Avatar" class="w-full h-full rounded-full object-cover border-4 border-white shadow-lg">
