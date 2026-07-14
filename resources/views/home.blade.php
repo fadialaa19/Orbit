@@ -137,7 +137,7 @@
             <div class="w-20 h-20 bg-gradient-to-br from-sky-500 to-blue-700 rounded-2xl flex items-center justify-center text-white font-black text-2xl shadow-lg mx-auto mb-5">
                 ف
             </div>
-            <h4 class="font-black text-xl text-slate-800">Eng. Fadi Hamad</h4>
+            <h4 class="font-black text-xl text-slate-800">م. فادي حمد</h4>
             <p class="text-gold-600 font-bold mb-2">مطور ومبرمج المنصة</p>
             <p class="text-slate-500 text-sm leading-relaxed">مطور برمجيات Front-End و Back-End، صمّم وبرمج منصة Orbit بالكامل من الفكرة إلى التنفيذ ليقدّم للطلاب تجربة تقنية سلسة وموثوقة.</p>
         </div>

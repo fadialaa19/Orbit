@@ -34,21 +34,26 @@ class AdminAdminController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:6',
-            'role' => 'required|string',
+            'role' => 'required|in:super_admin,scholarship_admin,support_admin,custom',
             'permissions' => 'nullable|array'
         ]);
 
         // إذا كان مدير عام، بنعطيه كل الصلاحيات تلقائياً
-        $permissions = $request->role === 'super_admin' 
-            ? ['dashboard', 'scholarships', 'students', 'applications', 'support', 'contacts', 'admins'] 
+        $permissions = $request->role === 'super_admin'
+            ? ['dashboard', 'scholarships', 'students', 'applications', 'support', 'contacts', 'admins']
             : $request->input('permissions', []);
+
+        // "مخصص" مجرد خيار واجهة يعني "لا تطبّق صلاحيات افتراضية جاهزة"، وليس
+        // قيمة فعلية مسموح بها في عمود role (enum). التخصيص الحقيقي يظل في
+        // مصفوفة permissions أعلاه؛ نخزّن دور حقيقي فقط لعمود role.
+        $role = $request->role === 'custom' ? 'scholarship_admin' : $request->role;
 
         // ✅ تصحيح: تم تغييرها من Admin::create إلى User::create
         User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => bcrypt($request->password),
-            'role' => $request->role,
+            'role' => $role,
             'permissions' => $permissions,
             'status' => 'active',
             // Admin-created accounts are trusted immediately (no self-registration
@@ -75,7 +80,7 @@ class AdminAdminController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users,email,'.$id,
-            'role' => 'required|string',
+            'role' => 'required|in:super_admin,scholarship_admin,support_admin,custom',
             'permissions' => 'nullable|array',
             'password' => 'nullable|string|min:6',
         ]);
@@ -84,10 +89,13 @@ class AdminAdminController extends Controller
             ? ['dashboard', 'scholarships', 'students', 'applications', 'support', 'contacts', 'admins']
             : $request->input('permissions', []);
 
+        // "مخصص" خيار واجهة فقط، مش قيمة صالحة في عمود role (enum) - راجع نفس الشرح في store()
+        $role = $request->role === 'custom' ? 'scholarship_admin' : $request->role;
+
         $data = [
             'name' => $request->name,
             'email' => $request->email,
-            'role' => $request->role,
+            'role' => $role,
             'permissions' => $permissions,
         ];
 
