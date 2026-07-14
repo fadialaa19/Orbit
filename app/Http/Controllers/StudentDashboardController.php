@@ -96,13 +96,6 @@ class StudentDashboardController extends Controller
         $categories = $request->get('category'); // مصفوفة المستويات الأكاديمية القادمة من الـ Blade الجديد
         $coverages = $request->get('coverage');  // مصفوفة مزايا التمويل (JSON Array) القادمة من الـ Blade الجديد
 
-        // الفلترة التلقائية الذكية بالاعتماد على معدل الثانوية الخاصة بالطالب إن وُجد
-        $studentHighSchoolGpa = null;
-        if (Auth::check()) {
-            $studentHighSchoolGpa = Auth::user()->high_school_gpa;
-            $studentHighSchoolGpa = is_numeric($studentHighSchoolGpa) ? (float)$studentHighSchoolGpa : null;
-        }
-
         $query = Scholarship::active()
     ->where(function($q) {
         $q->where('deadline', '>=', now()->startOfDay())
@@ -128,19 +121,6 @@ class StudentDashboardController extends Controller
                     foreach ((array)$coverages as $coverItem) {
                         $subQuery->orWhereJsonContains('coverage', $coverItem);
                     }
-                });
-            })
-            // 4. الفلترة التلقائية الذكية حسب معدل الثانوية العامة
-            ->when(!is_null($studentHighSchoolGpa), function ($q) use ($studentHighSchoolGpa) {
-                if ($studentHighSchoolGpa >= 90) {
-                    return $q->where(function ($qq) {
-                        $qq->whereJsonContains('tags', '>=90')
-                           ->orWhereJsonContains('tags', 'high_gpa');
-                    });
-                }
-                return $q->where(function ($qq) {
-                    $qq->whereJsonContains('tags', '<90')
-                       ->orWhereJsonContains('tags', 'low_gpa');
                 });
             });
 

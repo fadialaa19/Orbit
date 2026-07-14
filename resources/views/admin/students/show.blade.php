@@ -184,7 +184,7 @@
     <div class="bg-white rounded-[2rem] border border-slate-100 shadow-sm p-8">
         <h2 class="text-lg font-black text-slate-900 mb-6">المستندات المرفوعة</h2>
 
-        @if($student->documents->isEmpty())
+        @if($documents->isEmpty())
             <p class="text-sm font-bold text-slate-400">لم يرفع الطالب أي مستندات بعد.</p>
         @else
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
@@ -195,7 +195,7 @@
                     'rejected' => ['bg-rose-100 text-rose-700', 'مرفوض'],
                 ];
             @endphp
-            @foreach($student->documents as $document)
+            @foreach($documents as $document)
                 @php $docStatus = $statusMap[$document->status] ?? $statusMap['pending']; @endphp
                 <div class="bg-slate-50 rounded-2xl p-4 border border-slate-100/50 space-y-3">
                     <div class="flex items-center justify-between gap-3">

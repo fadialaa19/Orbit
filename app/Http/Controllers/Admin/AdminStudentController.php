@@ -37,9 +37,14 @@ class AdminStudentController extends Controller
 
     public function show($id)
     {
-        $student = User::where('role', 'student')->with('documents')->findOrFail($id);
+        $student = User::where('role', 'student')->findOrFail($id);
 
-        return view('admin.students.show', compact('student'));
+        // النموذج فيه عمود قديم اسمه "documents" (مصفوفة JSON) بنفس اسم علاقة
+        // documents() الجديدة (StudentDocument hasMany)، فـ $student->documents
+        // بيرجع قيمة العمود القديم (null) مش نتيجة العلاقة. لازم نجيبها صراحة.
+        $documents = $student->documents()->get();
+
+        return view('admin.students.show', compact('student', 'documents'));
     }
 
     public function updateDocumentStatus(Request $request, $studentId, \App\Models\StudentDocument $document)
