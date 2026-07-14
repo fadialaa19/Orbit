@@ -54,6 +54,16 @@ PROMPT;
         'مشكلة بالحساب', 'مشكلة بالدفع', 'مشكلة فنية', 'خطأ فني',
         'لا يعمل', 'موقع لا يعمل', 'لا أفهم كيف', ' transferred',
         'احولني', 'حولني', 'تواصل مع', 'اتصل بالدعم', 'اتصل بالإدارة',
+        // طلب التحدث مع إنسان حقيقي
+        'اريد شخص', 'ابغى شخص', 'بدي شخص', 'اريد انسان', 'بدي انسان',
+        'اريد موظف', 'بدي موظف', 'ابغى موظف', 'مو بدي ذكاء اصطناعي',
+        'مش عايز اتكلم مع روبوت', 'مش بدي بوت',
+        // مشاكل الدفع (المفرد والجمع)
+        'مشكلة في الدفع', 'مشاكل بالدفع', 'مشاكل في الدفع', 'مشكلة دفع',
+        'الدفع ما اشتغل', 'الدفع لم يعمل', 'فلوسي', 'استرجاع فلوس',
+        // التسجيل عبر فريق الدعم
+        'التسجيل من خلالكم', 'سجلني', 'سجلوني', 'اريد التسجيل من خلالكم',
+        'ابغى اسجل من خلالكم', 'سجل لي', 'سجلولي',
     ];
 
     public function __construct()
@@ -73,27 +83,23 @@ PROMPT;
 
         // 1. فحص محلي فوري للشتائم (بدون استهلاك API)
         $normalized = $this->normalizeText($userMessage);
-        foreach (self::OFFENSIVE_KEYWORDS as $keyword) {
-            if (str_contains($normalized, $keyword)) {
-                return [
-                    'content' => 'عذراً، أنت شخص غير محترم ولا يشرفني مساعدتك. سيتم إغلاق المحادثة.',
-                    'force_close' => true,
-                    'trigger_support' => false,
-                    'support_ticket_id' => null,
-                ];
-            }
+        if ($this->containsKeyword($normalized, self::OFFENSIVE_KEYWORDS)) {
+            return [
+                'content' => 'عذراً، أنت شخص غير محترم ولا يشرفني مساعدتك. سيتم إغلاق المحادثة.',
+                'force_close' => true,
+                'trigger_support' => false,
+                'support_ticket_id' => null,
+            ];
         }
 
         // 2. فحص محلي فوري لطلب الدعم الفني
-        foreach (self::SUPPORT_KEYWORDS as $keyword) {
-            if (str_contains($normalized, $keyword)) {
-                return [
-                    'content' => 'تم تسجيل طلبك، وسيتواصل معك فريق الدعم قريباً.',
-                    'force_close' => false,
-                    'trigger_support' => true,
-                    'support_ticket_id' => null,
-                ];
-            }
+        if ($this->containsKeyword($normalized, self::SUPPORT_KEYWORDS)) {
+            return [
+                'content' => 'تم تسجيل طلبك، وسيتواصل معك فريق الدعم قريباً.',
+                'force_close' => false,
+                'trigger_support' => true,
+                'support_ticket_id' => null,
+            ];
         }
 
         if (empty($this->apiKey)) {
@@ -166,12 +172,40 @@ PROMPT;
     {
         $text = mb_strtolower($text);
         // Remove tashkeel/diacritics
-        $tashkeel = ['\u064b', '\u064c', '\u064d', '\u064e', '\u064f', '\u0650', '\u0651', '\u0652'];
+        $tashkeel = ["\u{064B}", "\u{064C}", "\u{064D}", "\u{064E}", "\u{064F}", "\u{0650}", "\u{0651}", "\u{0652}"];
         $text = str_replace($tashkeel, '', $text);
         // Normalize alef variants
         $text = str_replace(['أ', 'إ', 'آ', 'ء'], 'ا', $text);
         $text = str_replace(['ة'], 'ه', $text);
         return $text;
+    }
+
+    /**
+     * Check whether normalized text contains any of the given keywords.
+     *
+     * Single-word keywords are matched as whole words only (e.g. "كس" must not
+     * match inside "باكستان"). Multi-word phrases keep using substring matching
+     * since an accidental partial match across word boundaries is effectively
+     * impossible. Keywords are normalized the same way as the input text so
+     * spelling variants (تاء مربوطة/هاء، همزات) don't need duplicate entries.
+     */
+    private function containsKeyword(string $normalizedText, array $keywords): bool
+    {
+        $words = preg_split('/[\s.,!?؟،؛:\-]+/u', $normalizedText, -1, PREG_SPLIT_NO_EMPTY);
+
+        foreach ($keywords as $keyword) {
+            $normalizedKeyword = $this->normalizeText($keyword);
+
+            if (str_contains($normalizedKeyword, ' ')) {
+                if (str_contains($normalizedText, $normalizedKeyword)) {
+                    return true;
+                }
+            } elseif (in_array($normalizedKeyword, $words, true)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
 
