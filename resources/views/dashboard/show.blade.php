@@ -171,6 +171,61 @@
             </div>
         </div>
 
+        {{-- تحليل التوافق الذكي --}}
+        @if($matchScore)
+        @php
+            $score = $matchScore->score;
+            $scoreColor = $score >= 70 ? 'text-emerald-600' : ($score >= 40 ? 'text-amber-600' : 'text-rose-600');
+            $scoreBg = $score >= 70 ? 'bg-emerald-50 border-emerald-100' : ($score >= 40 ? 'bg-amber-50 border-amber-100' : 'bg-rose-50 border-rose-100');
+        @endphp
+        <div class="bg-white rounded-[2.5rem] shadow-sm border border-slate-100 p-8 md:p-10 mb-8">
+            <div class="flex flex-col md:flex-row items-center gap-8">
+                <div class="w-28 h-28 rounded-full border-4 {{ $scoreBg }} flex flex-col items-center justify-center shrink-0">
+                    <span class="text-3xl font-black {{ $scoreColor }}">{{ $score }}%</span>
+                    <span class="text-[9px] font-black text-slate-400">نسبة التوافق</span>
+                </div>
+                <div class="flex-1 text-center md:text-right">
+                    <h3 class="text-lg font-black text-slate-800 mb-1">🎯 تحليل توافقك مع هذه المنحة</h3>
+                    @if($matchScore->summary)
+                        <p class="text-sm font-bold text-slate-500 leading-relaxed">{{ $matchScore->summary }}</p>
+                    @endif
+                </div>
+            </div>
+
+            @if(!empty($matchScore->matched_criteria) || !empty($matchScore->gaps))
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8 pt-8 border-t border-slate-50">
+                @if(!empty($matchScore->matched_criteria))
+                <div>
+                    <h4 class="text-xs font-black text-emerald-600 uppercase mb-3">✅ نقاط قوتك</h4>
+                    <ul class="space-y-2">
+                        @foreach($matchScore->matched_criteria as $point)
+                            <li class="text-xs font-bold text-slate-600 flex items-start gap-2">
+                                <span class="text-emerald-500 shrink-0">•</span> {{ $point }}
+                            </li>
+                        @endforeach
+                    </ul>
+                </div>
+                @endif
+
+                @if(!empty($matchScore->gaps))
+                <div>
+                    <h4 class="text-xs font-black text-amber-600 uppercase mb-3">⚠️ عليك الانتباه لـ</h4>
+                    <ul class="space-y-2">
+                        @foreach($matchScore->gaps as $point)
+                            <li class="text-xs font-bold text-slate-600 flex items-start gap-2">
+                                <span class="text-amber-500 shrink-0">•</span> {{ $point }}
+                            </li>
+                        @endforeach
+                    </ul>
+                </div>
+                @endif
+            </div>
+            @endif
+
+            <p class="text-[10px] font-bold text-slate-300 text-center mt-6">هذا التحليل تقديري ومبني على بيانات ملفك الشخصي، ولا يضمن نتيجة القبول النهائية.</p>
+        </div>
+        @endif
+
         {{-- عداد آخر موعد للتقديم --}}
         @if($scholarship->deadline)
         @php

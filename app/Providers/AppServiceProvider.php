@@ -29,6 +29,12 @@ class AppServiceProvider extends ServiceProvider
             return Limit::perMinute(10)->by($key);
         });
 
+        // Rate limiter for AI scholarship match-score computation
+        RateLimiter::for('match-scores', function ($request) {
+            $key = $request->user()?->id ?? $request->ip();
+            return Limit::perMinute(6)->by($key);
+        });
+
         // Outgoing mail sends from a domain address (for SPF/DKIM/deliverability),
         // but replies should still land in a real inbox - see config/mail.php.
         if ($replyToAddress = config('mail.reply_to.address')) {

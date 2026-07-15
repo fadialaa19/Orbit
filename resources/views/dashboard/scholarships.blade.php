@@ -69,6 +69,22 @@
                 <div class="lg:col-span-3 space-y-6 order-1 lg:order-2">
                     @forelse($scholarships as $scholarship)
                     <div class="bg-white p-8 rounded-[2.5rem] shadow-sm border border-slate-50 hover:border-gold-100 transition duration-300 relative group">
+
+                        {{-- نسبة التوافق الذكية: مخزّنة مسبقًا أو بتتحلل في الخلفية بعد تحميل الصفحة --}}
+                        @if(isset($matchScores[$scholarship->id]))
+                            @php
+                                $score = $matchScores[$scholarship->id];
+                                $scoreColor = $score >= 70 ? 'bg-emerald-50 text-emerald-700 border-emerald-100' : ($score >= 40 ? 'bg-amber-50 text-amber-700 border-amber-100' : 'bg-rose-50 text-rose-700 border-rose-100');
+                            @endphp
+                            <div class="absolute -top-3 left-6 px-3 py-1.5 rounded-full text-[11px] font-black border shadow-sm {{ $scoreColor }}" data-match-badge="{{ $scholarship->id }}">
+                                🎯 نسبة توافقك: {{ $score }}%
+                            </div>
+                        @else
+                            <div class="absolute -top-3 left-6 px-3 py-1.5 rounded-full text-[11px] font-black border shadow-sm bg-slate-50 text-slate-400 border-slate-100 animate-pulse" data-match-badge="{{ $scholarship->id }}" data-match-pending="1">
+                                🤖 جارِ تحليل التوافق...
+                            </div>
+                        @endif
+
                         <div class="flex flex-col md:flex-row gap-8 items-center">
                             
                             {{-- صندوق اللوجو المعتمد على logo_image الفعلي والـ Fallback له --}}
@@ -170,5 +186,33 @@
             document.getElementById('filterForm').submit();
         }, 500);
     }
+
+    // تحليل نسبة التوافق الذكية للمنح اللي لسه ما اتحسبتش، بدون ما نأخر تحميل الصفحة
+    (function() {
+        const pendingIds = @json($matchMissing ?? []);
+        if (!pendingIds.length) return;
+
+        const token = document.querySelector('meta[name="csrf-token"]').content;
+        fetch('{{ route('dashboard.scholarships.match-scores') }}', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': token },
+            body: JSON.stringify({ scholarship_ids: pendingIds })
+        })
+        .then(res => res.json())
+        .then(data => {
+            Object.entries(data.scores || {}).forEach(([scholarshipId, info]) => {
+                const badge = document.querySelector(`[data-match-badge="${scholarshipId}"]`);
+                if (!badge) return;
+                const score = info.score;
+                const colorClass = score >= 70 ? 'bg-emerald-50 text-emerald-700 border-emerald-100'
+                    : score >= 40 ? 'bg-amber-50 text-amber-700 border-amber-100'
+                    : 'bg-rose-50 text-rose-700 border-rose-100';
+                badge.className = 'absolute -top-3 left-6 px-3 py-1.5 rounded-full text-[11px] font-black border shadow-sm ' + colorClass;
+                badge.removeAttribute('data-match-pending');
+                badge.textContent = '🎯 نسبة توافقك: ' + score + '%';
+            });
+        })
+        .catch(err => console.error('Match score fetch error', err));
+    })();
 </script>
 @endsection

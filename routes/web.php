@@ -167,6 +167,7 @@ Route::prefix('dashboard')->middleware(['auth', 'verified.ensure'])->name('dashb
     Route::get('/scholarships', [StudentDashboardController::class, 'scholarships'])->name('scholarships');
     Route::get('/scholarships/{scholarship}', [StudentDashboardController::class, 'show'])->name('scholarships.show');
     Route::post('/scholarships/{scholarship}/favorite', [StudentDashboardController::class, 'toggleFavorite'])->name('scholarships.favorite');
+    Route::post('/scholarships/match-scores', [StudentDashboardController::class, 'computeMatchScores'])->middleware('throttle:match-scores')->name('scholarships.match-scores');
     Route::get('/my-applications', [\App\Http\Controllers\UserApplicationController::class, 'index'])->name('applications');
 
     Route::get('/services', [StudentDashboardController::class, 'services'])->name('services');

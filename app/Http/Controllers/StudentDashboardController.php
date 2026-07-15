@@ -126,13 +126,49 @@ class StudentDashboardController extends Controller
 
         // ترتيب المنح بالتاريخ الأحدث وتحديد عدد العناصر في الصفحة
         $scholarships = $query->latest()->paginate(12);
-        
+
         // تثبيت البارامترات في روابط الترقيم السفلي لمنع اختفاء الفلاتر عند التنقل بين الصفحات
         $scholarships->appends($request->query());
 
-        return view('dashboard.scholarships', compact('scholarships', 'search'));
+        // نجيب بس النسب المخزّنة (Cache) هون عشان الصفحة تفتح بسرعة - أي منحة
+        // مالهاش نسبة محدّثة بتتحلل في الخلفية عبر JS بعد التحميل (matchMissing).
+        $user = Auth::user();
+        $cachedScores = \App\Models\ScholarshipMatchScore::where('user_id', $user->id)
+            ->whereIn('scholarship_id', $scholarships->pluck('id'))
+            ->get()
+            ->keyBy('scholarship_id');
+
+        $matchScores = [];
+        $matchMissing = [];
+        foreach ($scholarships as $scholarship) {
+            $cached = $cachedScores->get($scholarship->id);
+            if ($cached && $cached->isFresh($user, $scholarship)) {
+                $matchScores[$scholarship->id] = $cached->score;
+            } else {
+                $matchMissing[] = $scholarship->id;
+            }
+        }
+
+        return view('dashboard.scholarships', compact('scholarships', 'search', 'matchScores', 'matchMissing'));
     }
-    
+
+    public function computeMatchScores(Request $request, \App\Services\ScholarshipMatchService $matchService)
+    {
+        $validated = $request->validate([
+            'scholarship_ids' => 'required|array|max:20',
+            'scholarship_ids.*' => 'integer',
+        ]);
+
+        $scholarships = Scholarship::active()->whereIn('id', $validated['scholarship_ids'])->get();
+        $scores = $matchService->computeBatch(Auth::user(), $scholarships);
+
+        return response()->json([
+            'scores' => collect($scores)->map(fn ($s) => [
+                'score' => $s->score,
+                'summary' => $s->summary,
+            ]),
+        ]);
+    }
 
     public function show(Scholarship $scholarship)
     {
@@ -140,20 +176,24 @@ class StudentDashboardController extends Controller
             abort(404);
         }
 
-        $match_percent = rand(85, 98);
         $recommended_tags = $scholarship->recommended_tags ?? ['ممولة كاملاً', 'ماجستير', 'علوم الحاسب'];
 
         $hasPaid = false;
         $isFavorited = false;
+        $matchScore = null;
         if (Auth::check()) {
             $hasPaid = \App\Models\Order::paid()
                 ->where('user_id', Auth::id())
                 ->where('scholarship_id', $scholarship->id)
                 ->exists();
             $isFavorited = $scholarship->favoritedBy()->where('user_id', Auth::id())->exists();
+
+            $matchService = app(\App\Services\ScholarshipMatchService::class);
+            $scores = $matchService->getOrComputeScores(Auth::user(), collect([$scholarship]));
+            $matchScore = $scores[$scholarship->id] ?? null;
         }
 
-        return view('dashboard.show', compact('scholarship', 'match_percent', 'recommended_tags', 'hasPaid', 'isFavorited'));
+        return view('dashboard.show', compact('scholarship', 'matchScore', 'recommended_tags', 'hasPaid', 'isFavorited'));
     }
 
     public function applications()
