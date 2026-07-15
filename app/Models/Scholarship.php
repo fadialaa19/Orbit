@@ -24,6 +24,7 @@ class Scholarship extends Model
         'features',
         'application_process',
         'financial_value',
+        'min_gpa',
         'applicants_count',
         'recommended_tags',
         'coverage',
@@ -41,6 +42,7 @@ class Scholarship extends Model
         'recommended_tags' => 'array',
         'deadline' => 'date',
         'price' => 'decimal:2',
+        'min_gpa' => 'decimal:2',
     ];
 
     protected $appends = ['formatted_deadline'];

@@ -147,6 +147,12 @@
                             </div>
 
                             <div>
+                                <label class="text-[11px] font-black text-slate-400 uppercase mb-2 block tracking-widest">الحد الأدنى للمعدل (اختياري)</label>
+                                <input type="number" name="min_gpa" step="0.1" min="0" max="100" placeholder="مثال: 80" class="w-full bg-slate-50 border border-slate-100 rounded-xl px-5 py-3 text-sm font-bold focus:border-gold-300 outline-none transition-all">
+                                <p class="text-[10px] text-slate-400 mt-1">بيُستخدم لحساب نسبة توافق الطالب بدقة - سيبه فاضي لو مفيش حد أدنى محدد</p>
+                            </div>
+
+                            <div>
                                 <label class="text-[11px] font-black text-slate-400 uppercase mb-2 block tracking-widest">الكلمات المفتاحية الموصى بها لكارد المنحة</label>
                                 <input type="text" name="recommended_tags" placeholder="ممولة كاملاً, هندسة, بدون آيلتس" class="w-full bg-slate-50 border border-slate-100 rounded-xl px-5 py-3 text-sm font-bold focus:border-gold-300 outline-none transition-all">
                                 <p class="text-[10px] text-slate-400 mt-1">افصل بين الكلمات بفاصلة لسهولة القراءة</p>

@@ -41,6 +41,12 @@
                             <input type="text" name="financial_value" value="{{ old('financial_value', $scholarship->financial_value) }}" placeholder="₪50,000 كامل التمويل" class="w-full bg-slate-50 border border-slate-100 rounded-xl px-5 py-3 text-sm font-bold focus:border-gold-300 outline-none transition-all">
                         </div>
 
+                        <div>
+                            <label class="text-[11px] font-black text-slate-400 uppercase mb-2 block tracking-widest">الحد الأدنى للمعدل (اختياري)</label>
+                            <input type="number" name="min_gpa" value="{{ old('min_gpa', $scholarship->min_gpa) }}" step="0.1" min="0" max="100" placeholder="مثال: 80" class="w-full bg-slate-50 border border-slate-100 rounded-xl px-5 py-3 text-sm font-bold focus:border-gold-300 outline-none transition-all">
+                            <p class="text-[10px] text-slate-400 mt-1">بيُستخدم لحساب نسبة توافق الطالب بدقة</p>
+                        </div>
+
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div>
                                 <label class="text-[11px] font-black text-slate-400 uppercase mb-2 block tracking-widest">عدد المتقدمين</label>

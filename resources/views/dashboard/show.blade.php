@@ -315,6 +315,15 @@
                             <h3 class="text-xl font-black text-slate-800">الشروط والأهلية</h3>
                             <span class="text-xl">✅</span>
                         </div>
+                        @if($scholarship->min_gpa !== null)
+                        <div class="flex items-center justify-end gap-3 bg-gold-50 border border-gold-100 rounded-2xl px-5 py-4 mb-6">
+                            <div class="text-right">
+                                <p class="text-[11px] font-black text-gold-700 uppercase tracking-widest">الحد الأدنى للمعدل المطلوب</p>
+                                <p class="text-sm font-black text-slate-700 mt-0.5">{{ rtrim(rtrim(number_format($scholarship->min_gpa, 2), '0'), '.') }}%</p>
+                            </div>
+                            <div class="w-10 h-10 bg-white rounded-xl flex items-center justify-center shadow-sm text-lg">🎓</div>
+                        </div>
+                        @endif
                         <div class="prose prose-slate max-w-none text-slate-600 font-medium leading-relaxed">
                             @if($scholarship->conditions)
                                 {!! $scholarship->conditions !!}

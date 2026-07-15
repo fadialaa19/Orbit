@@ -55,6 +55,7 @@ class AdminScholarshipController extends Controller
         'features' => 'nullable|string',
         'application_process' => 'nullable|string',
         'financial_value' => 'nullable|string|max:255',
+        'min_gpa' => 'nullable|numeric|min:0|max:100',
         'applicants_count' => 'nullable|integer|min:0',
         'recommended_tags' => 'nullable|string|max:255', // نستقبله كنص أولاً
         'category' => 'required|string',
@@ -128,6 +129,7 @@ public function update(Request $request, Scholarship $scholarship)
         'features' => 'nullable|string',
         'application_process' => 'nullable|string',
         'financial_value' => 'nullable|string|max:255',
+        'min_gpa' => 'nullable|numeric|min:0|max:100',
         'applicants_count' => 'nullable|integer|min:0',
         'recommended_tags' => 'nullable|string|max:255',
         'category' => 'required|string',

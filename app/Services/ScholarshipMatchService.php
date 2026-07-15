@@ -28,13 +28,19 @@ class ScholarshipMatchService
         'intent_letter' => 'خطاب نية',
     ];
 
-    private const SYSTEM_PROMPT = <<<'PROMPT'
+private const SYSTEM_PROMPT = <<<'PROMPT'
 أنتِ مستشارة قبولات جامعية خبيرة متخصصة في المنح الدراسية الدولية. مهمتك تحليل مدى توافق ملف طالب حقيقي مع كل منحة من قائمة، وإعطاء نسبة قبول واقعية لكل واحدة - مش نسب متفائلة أو مجاملة.
 
-كوني صارمة وواقعية:
-- لو معدل الطالب أقل من المعدل المطلوب أو غير مذكور له تفاصيل كافية، النسبة تنزل فعليًا.
+كل منحة بييجي معها الحقول التالية جاهزة مسبقًا (محسوبة رياضيًا، مش تخمين):
+- min_gpa: الحد الأدنى الرسمي للمعدل (لو موجود). لو null فمفيش حد أدنى رسمي محدد.
+- student_relevant_gpa: معدل الطالب في المرحلة المناسبة لهذه المنحة تحديدًا (مثلاً معدل الثانوية لمنح البكالوريوس، معدل البكالوريوس لمنح الماجستير...).
+- meets_gpa_requirement: true لو الطالب مستوفي الحد الأدنى، false لو لأ، null لو مفيش حد أدنى محدد أو معدل الطالب غير مسجل.
+
+هذه القيم حقائق مؤكدة - لا تتجاهليها ولا تعيدي تخمين المعدل من نص الشروط. لو meets_gpa_requirement = false، هذا سبب رئيسي لنسبة منخفضة ويجب ذكره صراحة في gaps بالرقمين (معدل الطالب مقابل الحد الأدنى). لو true، اعتبريه نقطة قوة واضحة في matched_criteria.
+
+كوني صارمة وواقعية بباقي المعايير:
 - لو ناقصة مستندات أساسية (زي شهادة لغة لمنحة تتطلبها)، وضحي هذا في gaps ونزّلي النسبة.
-- لو الملف قوي ومطابق فعلاً، مسموح تدّي نسبة عالية (85+).
+- لو الملف قوي ومطابق فعلاً (معدل مستوفى + مستندات موجودة)، مسموح تدّي نسبة عالية (85+).
 - لا تكرري نفس النص لكل منحة - كل تحليل يجب يعكس تفاصيل تلك المنحة تحديدًا.
 
 أعيدي ردك ككائن JSON صالح فقط بهذا الشكل بالضبط:
@@ -98,13 +104,22 @@ PROMPT;
         }
 
         $profileSummary = $this->buildProfileSummary($user);
-        $scholarshipList = $scholarships->map(fn ($s) => [
-            'scholarship_id' => $s->id,
-            'title' => $s->title_ar,
-            'category' => $s->category,
-            'country' => $s->country,
-            'conditions' => Str::limit(strip_tags((string) $s->conditions), 600),
-        ])->values()->toArray();
+        $scholarshipList = $scholarships->map(function ($s) use ($user) {
+            $studentGpa = $this->relevantStudentGpa($user, $s->category);
+            $minGpa = $s->min_gpa !== null ? (float) $s->min_gpa : null;
+            $meetsGpa = ($minGpa !== null && $studentGpa !== null) ? ($studentGpa >= $minGpa) : null;
+
+            return [
+                'scholarship_id' => $s->id,
+                'title' => $s->title_ar,
+                'category' => $s->category,
+                'country' => $s->country,
+                'min_gpa' => $minGpa,
+                'student_relevant_gpa' => $studentGpa,
+                'meets_gpa_requirement' => $meetsGpa,
+                'conditions' => Str::limit(strip_tags((string) $s->conditions), 600),
+            ];
+        })->values()->toArray();
 
         $userPrompt = "ملف الطالب:\n" . $profileSummary
             . "\n\nالمنح المطلوب تحليلها (بصيغة JSON):\n" . json_encode($scholarshipList, JSON_UNESCAPED_UNICODE);
@@ -162,6 +177,23 @@ PROMPT;
             Log::error('ScholarshipMatchService exception: ' . $e->getMessage());
             return [];
         }
+    }
+
+    /**
+     * الحقل المناسب من معدلات الطالب حسب مرحلة المنحة (بكالوريوس ← معدل الثانوية،
+     * ماجستير ← معدل البكالوريوس، دكتوراه ← معدل الماجستير)، بدل ما نترك الذكاء
+     * الاصطناعي يخمّن أي معدل يقارن بحد المنحة الأدنى.
+     */
+    private function relevantStudentGpa(User $user, ?string $category): ?float
+    {
+        $gpa = match ($category) {
+            'Bachelor' => $user->high_school_gpa,
+            'Master' => $user->bachelor_gpa,
+            'PhD' => $user->master_gpa,
+            default => $user->bachelor_gpa ?? $user->high_school_gpa,
+        };
+
+        return $gpa !== null ? (float) $gpa : null;
     }
 
     private function buildProfileSummary(User $user): string
