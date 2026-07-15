@@ -182,7 +182,7 @@
              class="bg-white rounded-[2.5rem] shadow-sm border border-slate-100 p-8 md:p-10 mb-8 overflow-hidden relative">
             <div class="absolute top-0 left-0 w-40 h-40 bg-gold-50 rounded-full -translate-x-1/2 -translate-y-1/2 opacity-60 pointer-events-none"></div>
             <template x-if="!expired">
-                <div class="relative flex flex-col md:flex-row-reverse items-center justify-between gap-8">
+                <div class="relative flex flex-col md:flex-row items-center justify-between gap-8">
                     <div class="text-center md:text-right">
                         <span class="inline-flex items-center gap-2 bg-gold-50 text-gold-700 px-4 py-1.5 rounded-full text-[11px] font-black mb-3">
                             <span class="w-1.5 h-1.5 bg-gold-500 rounded-full animate-pulse"></span>
