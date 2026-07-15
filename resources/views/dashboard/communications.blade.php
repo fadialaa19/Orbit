@@ -4,8 +4,8 @@
 
 @section('content')
 <script>window.userId = {{ Auth::id() }};</script>
-<div class="max-w-7xl mx-auto h-screen flex bg-gradient-to-b from-slate-50 to-white">
-    <div x-data="communicationHub()" x-init="init()" class="w-full h-[calc(100vh-80px)] flex overflow-hidden rounded-3xl shadow-2xl m-4 border border-slate-100/50 backdrop-blur-xl bg-white/80">
+<div class="max-w-7xl mx-auto h-[calc(100vh-69px)] flex bg-gradient-to-b from-slate-50 to-white">
+    <div x-data="communicationHub()" x-init="init()" class="w-full flex overflow-hidden rounded-3xl shadow-2xl m-4 border border-slate-100/50 backdrop-blur-xl bg-white/80">
         
         <div class="w-20 flex flex-col bg-gradient-to-b from-gold-500 to-gold-600 text-white p-4 gap-4">
             <button @click="switchPanel('ai')" :class="activePanel === 'ai' ? 'bg-white/20 rounded-2xl p-2 shadow-lg' : 'hover:bg-white/10 rounded-xl p-2'" title="الذكاء الاصطناعي">

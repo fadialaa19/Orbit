@@ -24,25 +24,25 @@
 <body class="bg-slate-50 flex items-center justify-center min-h-screen p-4">
 
     <div class="max-w-md w-full">
-        <div class="flex justify-end mb-6">
+        <div class="flex justify-end mb-3 sm:mb-6">
             <a href="/" class="flex items-center gap-2 text-slate-600 hover:text-gold-600 font-bold transition">
                 <span>العودة للرئيسية</span>
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
             </a>
         </div>
 
-        <div class="bg-white rounded-[2.5rem] shadow-2xl shadow-gold-100/50 p-10 border border-slate-50 relative overflow-hidden">
-            
-            <div class="flex justify-center mb-8">
-                <div class="w-20 h-20 flex items-center justify-center">
-                    <img src="{{ asset('assets/images/logo.png') }}" class="w-20 h-20 object-contain" alt="Logo">
+        <div class="bg-white rounded-[2.5rem] shadow-2xl shadow-gold-100/50 p-6 sm:p-10 border border-slate-50 relative overflow-hidden">
+
+            <div class="flex justify-center mb-4 sm:mb-8">
+                <div class="w-14 h-14 sm:w-20 sm:h-20 flex items-center justify-center">
+                    <img src="{{ asset('assets/images/logo.png') }}" class="w-14 h-14 sm:w-20 sm:h-20 object-contain" alt="Logo">
                 </div>
             </div>
 
-            <h1 class="text-3xl font-black text-center text-slate-800 mb-2">مرحباً بعودتك!</h1>
-            <p class="text-center text-slate-400 mb-10 font-medium">قم بتسجيل الدخول للمتابعة</p>
+            <h1 class="text-2xl sm:text-3xl font-black text-center text-slate-800 mb-2">مرحباً بعودتك!</h1>
+            <p class="text-center text-slate-400 mb-6 sm:mb-10 font-medium">قم بتسجيل الدخول للمتابعة</p>
 
-            <div class="space-y-3 mb-8">
+            <div class="space-y-3 mb-6 sm:mb-8">
 <a href="{{ route('auth.google.redirect') }}" class="w-full border-2 border-slate-100 py-3 rounded-2xl flex items-center justify-center gap-3 font-bold text-slate-600 hover:bg-slate-50 transition">
                     <img src="https://www.svgrepo.com/show/475656/google-color.svg" class="w-5 h-5" alt="Google">
                     تسجيل الدخول بواسطة Google
@@ -50,13 +50,13 @@
 
             </div>
 
-            <div class="flex items-center gap-4 mb-8">
+            <div class="flex items-center gap-4 mb-6 sm:mb-8">
                 <div class="h-px bg-slate-100 flex-1"></div>
                 <span class="text-slate-300 font-bold text-sm">أو</span>
                 <div class="h-px bg-slate-100 flex-1"></div>
             </div>
 
-<form action="{{ route('login') }}" method="POST" class="space-y-6">
+<form action="{{ route('login') }}" method="POST" class="space-y-4 sm:space-y-6">
                 @csrf
                 <div>
                     <label class="block text-slate-700 font-bold mb-2 mr-1">البريد الإلكتروني</label>
@@ -93,8 +93,8 @@
                 </button>
             </form>
 
-            <p class="text-center mt-10 text-slate-500 font-bold">
-                ليس لديك حساب؟ 
+            <p class="text-center mt-6 sm:mt-10 text-slate-500 font-bold">
+                ليس لديك حساب؟
                 <a href="{{ route('register') }}" class="text-gold-600 hover:underline">إنشاء حساب جديد</a>
             </p>
         </div>

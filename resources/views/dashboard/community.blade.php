@@ -2,7 +2,7 @@
 @section('title', 'المجتمع')
 
 @section('content')
-<div class="max-w-7xl mx-auto h-screen flex bg-gradient-to-b from-slate-50 to-white" dir="rtl"
+<div class="max-w-7xl mx-auto h-[calc(100vh-69px)] flex bg-gradient-to-b from-slate-50 to-white" dir="rtl"
      x-data="communityHub()" x-init="init()">
 
     {{-- قائمة المجتمعات --}}

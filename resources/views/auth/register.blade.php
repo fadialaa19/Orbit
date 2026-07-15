@@ -98,18 +98,18 @@
             </a>
         </div>
 
-        <div class="bg-white rounded-[2.5rem] shadow-2xl p-8 md:p-12 border border-slate-50 relative">
-            
-            <div class="flex justify-center mb-6">
-                <div class="w-16 h-16 flex items-center justify-center">
-                    <img src="{{ asset('assets/images/logo.png') }}" class="w-16 h-16 object-contain" alt="Logo">
+        <div class="bg-white rounded-[2.5rem] shadow-2xl p-6 sm:p-8 md:p-12 border border-slate-50 relative">
+
+            <div class="flex justify-center mb-4 sm:mb-6">
+                <div class="w-12 h-12 sm:w-16 sm:h-16 flex items-center justify-center">
+                    <img src="{{ asset('assets/images/logo.png') }}" class="w-12 h-12 sm:w-16 sm:h-16 object-contain" alt="Logo">
                 </div>
             </div>
 
             <h1 class="text-2xl font-black text-center text-slate-800">إنشاء حساب جديد</h1>
-            <p class="text-center text-slate-400 mb-6 font-bold text-sm">خطوة <span x-text="step"></span> من 3</p>
+            <p class="text-center text-slate-400 mb-4 sm:mb-6 font-bold text-sm">خطوة <span x-text="step"></span> من 3</p>
 
-            <div class="w-full bg-slate-100 h-2 rounded-full mb-10 flex overflow-hidden">
+            <div class="w-full bg-slate-100 h-2 rounded-full mb-6 sm:mb-10 flex overflow-hidden">
                 <div class="grad-bg h-full transition-all duration-500" :style="'width: ' + (step * 33.33) + '%'"></div>
             </div>
 
@@ -164,7 +164,7 @@
                         </div>
                     </div>
 
-                    <div class="mt-10">
+                    <div class="mt-6 sm:mt-10">
                         <button type="button" @click="goNext()" class="w-full grad-bg text-white py-4 rounded-2xl font-black shadow-xl shadow-gold-100 hover:scale-[1.02] transition">
                             التالي
                         </button>
@@ -192,7 +192,7 @@
                         </div>
                     </div>
 
-                    <div class="mt-10 flex gap-4">
+                    <div class="mt-6 sm:mt-10 flex gap-4">
                         <button type="button" @click="goBack()" class="flex-1 border-2 border-slate-100 py-4 rounded-2xl font-black text-slate-500 hover:bg-slate-50 transition">
                             السابق
                         </button>
@@ -231,7 +231,7 @@
                         </div>
                     </div>
 
-                    <div class="mt-10 flex gap-4">
+                    <div class="mt-6 sm:mt-10 flex gap-4">
                         <button type="button" @click="goBack()" class="flex-1 border-2 border-slate-100 py-4 rounded-2xl font-black text-slate-500 hover:bg-slate-50 transition">
                             السابق
                         </button>
