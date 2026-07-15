@@ -148,6 +148,55 @@
             </div>
         </div>
 
+        {{-- عداد آخر موعد للتقديم --}}
+        @if($scholarship->deadline)
+        @php
+            $deadlineEnd = $scholarship->deadline->copy()->endOfDay();
+            $arabicDays = ['الأحد', 'الإثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت'];
+            $deadlineLabel = $arabicDays[$deadlineEnd->dayOfWeek] . '، الساعة 11:59 مساءً';
+        @endphp
+        <div x-data="scholarshipCountdown('{{ $deadlineEnd->toIso8601String() }}')" x-init="init()"
+             class="bg-white rounded-[2.5rem] shadow-sm border border-slate-100 p-8 md:p-10 mb-8 overflow-hidden relative">
+            <div class="absolute top-0 left-0 w-40 h-40 bg-gold-50 rounded-full -translate-x-1/2 -translate-y-1/2 opacity-60 pointer-events-none"></div>
+            <template x-if="!expired">
+                <div class="relative flex flex-col md:flex-row-reverse items-center justify-between gap-8">
+                    <div class="text-center md:text-right">
+                        <span class="inline-flex items-center gap-2 bg-gold-50 text-gold-700 px-4 py-1.5 rounded-full text-[11px] font-black mb-3">
+                            <span class="w-1.5 h-1.5 bg-gold-500 rounded-full animate-pulse"></span>
+                            آخر موعد للتقديم
+                        </span>
+                        <h3 class="text-lg md:text-xl font-black text-slate-800">{{ $deadlineLabel }}</h3>
+                        <p class="text-xs font-bold text-slate-400 mt-2 max-w-xs">العدّ التنازلي يساعدك على معرفة الوقت المتبقي قبل إغلاق باب التقديم على هذه المنحة.</p>
+                    </div>
+                    <div class="flex items-center gap-3 md:gap-4">
+                        <div class="bg-slate-50 border border-slate-100 rounded-2xl w-16 md:w-20 py-3 text-center">
+                            <div class="text-xl md:text-2xl font-black text-navy-900" x-text="pad(days)"></div>
+                            <div class="text-[10px] font-bold text-slate-400 mt-1">يوم</div>
+                        </div>
+                        <div class="bg-slate-50 border border-slate-100 rounded-2xl w-16 md:w-20 py-3 text-center">
+                            <div class="text-xl md:text-2xl font-black text-navy-900" x-text="pad(hours)"></div>
+                            <div class="text-[10px] font-bold text-slate-400 mt-1">ساعة</div>
+                        </div>
+                        <div class="bg-slate-50 border border-slate-100 rounded-2xl w-16 md:w-20 py-3 text-center">
+                            <div class="text-xl md:text-2xl font-black text-navy-900" x-text="pad(minutes)"></div>
+                            <div class="text-[10px] font-bold text-slate-400 mt-1">دقيقة</div>
+                        </div>
+                        <div class="bg-gold-600 rounded-2xl w-16 md:w-20 py-3 text-center shadow-lg shadow-gold-100">
+                            <div class="text-xl md:text-2xl font-black text-white" x-text="pad(seconds)"></div>
+                            <div class="text-[10px] font-bold text-gold-100 mt-1">ثانية</div>
+                        </div>
+                    </div>
+                </div>
+            </template>
+            <template x-if="expired">
+                <div class="relative flex items-center justify-center gap-3 text-center py-1">
+                    <span class="text-2xl">⏰</span>
+                    <p class="text-sm font-black text-rose-500">انتهى موعد التقديم على هذه المنحة</p>
+                </div>
+            </template>
+        </div>
+        @endif
+
         {{-- نظام التبويبات --}}
         <div x-data="{ activeTab: 'overview' }">
             <div class="flex justify-center gap-8 md:gap-12 border-b border-slate-200 mb-8 overflow-x-auto whitespace-nowrap">
@@ -245,4 +294,46 @@
 
     </div>
 </div>
+
+<script>
+function scholarshipCountdown(deadlineIso) {
+    return {
+        // ملاحظة: الوقت المعروض بالنص (11:59 مساءً) بيتحسب من السيرفر مباشرة
+        // (نفس منطقة زمنية التطبيق)، عشان منتجنبش فروقات التوقيت المحلي للمتصفح.
+        // الـ JS هون مسؤول بس عن الأرقام المتحركة (أيام/ساعات/دقايق/ثواني)،
+        // وده حساب فرق زمني مطلق فمش متأثر بأي منطقة زمنية.
+        deadline: deadlineIso ? new Date(deadlineIso) : null,
+        days: 0, hours: 0, minutes: 0, seconds: 0,
+        expired: false,
+        timer: null,
+
+        init() {
+            if (!this.deadline || isNaN(this.deadline.getTime())) {
+                this.expired = true;
+                return;
+            }
+            this.tick();
+            this.timer = setInterval(() => this.tick(), 1000);
+        },
+
+        tick() {
+            const diff = this.deadline - new Date();
+            if (diff <= 0) {
+                this.expired = true;
+                if (this.timer) clearInterval(this.timer);
+                this.days = this.hours = this.minutes = this.seconds = 0;
+                return;
+            }
+            this.days = Math.floor(diff / 86400000);
+            this.hours = Math.floor((diff / 3600000) % 24);
+            this.minutes = Math.floor((diff / 60000) % 60);
+            this.seconds = Math.floor((diff / 1000) % 60);
+        },
+
+        pad(n) {
+            return String(n).padStart(2, '0');
+        }
+    };
+}
+</script>
 @endsection
