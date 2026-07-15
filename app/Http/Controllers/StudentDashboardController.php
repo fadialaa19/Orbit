@@ -444,4 +444,62 @@ class StudentDashboardController extends Controller
     {
         return app(\App\Http\Controllers\CommunicationsController::class)->index($request);
     }
+
+    public function testimonial()
+    {
+        $testimonial = \App\Models\Testimonial::where('user_id', Auth::id())->latest()->first();
+        return view('dashboard.testimonial', compact('testimonial'));
+    }
+
+    public function storeTestimonial(Request $request)
+    {
+        $student = Auth::user();
+
+        if (\App\Models\Testimonial::where('user_id', $student->id)->exists()) {
+            return redirect()->route('dashboard.testimonial')
+                ->with('error', 'لديك تجربة مشاركة بالفعل، يمكنك تعديلها بدلاً من إضافة تجربة جديدة.');
+        }
+
+        $validated = $request->validate([
+            'content' => 'required|string|max:2000',
+            'rating' => 'required|integer|min:1|max:5',
+        ]);
+
+        \App\Models\Testimonial::create([
+            'user_id' => $student->id,
+            'name' => $student->name,
+            'university' => $student->university ?: ($student->bachelor_university ?: 'طالب أوربيت'),
+            'content' => $validated['content'],
+            'rating' => $validated['rating'],
+            'avatar' => $student->avatar,
+            'is_active' => false,
+            'status' => 'pending',
+        ]);
+
+        return redirect()->route('dashboard.testimonial')
+            ->with('success', 'شكراً لمشاركتك! تجربتك الآن قيد المراجعة من الإدارة.');
+    }
+
+    public function updateTestimonial(Request $request)
+    {
+        $testimonial = \App\Models\Testimonial::where('user_id', Auth::id())->firstOrFail();
+
+        $validated = $request->validate([
+            'content' => 'required|string|max:2000',
+            'rating' => 'required|integer|min:1|max:5',
+        ]);
+
+        // أي تعديل على المحتوى - سواء بعد الرفض أو حتى بعد الموافقة - بيرجعها
+        // لقيد المراجعة، عشان الإدارة تراجع النص الجديد قبل ما يظهر بالموقع.
+        $testimonial->update([
+            'content' => $validated['content'],
+            'rating' => $validated['rating'],
+            'status' => 'pending',
+            'is_active' => false,
+            'admin_note' => null,
+        ]);
+
+        return redirect()->route('dashboard.testimonial')
+            ->with('success', 'تم تحديث تجربتك وأصبحت قيد المراجعة من جديد.');
+    }
 }

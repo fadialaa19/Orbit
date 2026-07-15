@@ -17,6 +17,8 @@ class Testimonial extends Model
         'rating',
         'avatar',
         'is_active',
+        'status',
+        'admin_note',
     ];
 
     protected $casts = [
@@ -32,6 +34,11 @@ class Testimonial extends Model
     public function scopeActive($query)
     {
         return $query->where('is_active', true);
+    }
+
+    public function scopePending($query)
+    {
+        return $query->where('status', 'pending');
     }
 }
 

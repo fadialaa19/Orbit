@@ -132,6 +132,8 @@ Route::prefix('admin')->middleware(['auth'])->name('admin.')->group(function () 
     Route::middleware(['check.permission:contacts'])->group(function () {
         Route::resource('testimonials', AdminTestimonialController::class)->only(['index', 'store', 'update', 'destroy']);
         Route::patch('testimonials/{testimonial}/toggle', [AdminTestimonialController::class, 'toggleStatus'])->name('testimonials.toggle');
+        Route::patch('testimonials/{testimonial}/approve', [AdminTestimonialController::class, 'approve'])->name('testimonials.approve');
+        Route::patch('testimonials/{testimonial}/reject', [AdminTestimonialController::class, 'reject'])->name('testimonials.reject');
     });
 
     // 7️⃣ إدارة المدراء والصلاحيات + الإعدادات العامة
@@ -174,6 +176,9 @@ Route::prefix('dashboard')->middleware(['auth', 'verified.ensure'])->name('dashb
     Route::get('/my-tickets', [StudentDashboardController::class, 'myTickets'])->name('tickets');
     Route::get('/my-tickets/{ticket}', [StudentDashboardController::class, 'ticketShow'])->name('tickets.show');
     Route::get('/communications', [StudentDashboardController::class, 'communications'])->name('communications');
+    Route::get('/testimonial', [StudentDashboardController::class, 'testimonial'])->name('testimonial');
+    Route::post('/testimonial', [StudentDashboardController::class, 'storeTestimonial'])->name('testimonial.store');
+    Route::put('/testimonial', [StudentDashboardController::class, 'updateTestimonial'])->name('testimonial.update');
 
     // Scholarship Premium Checkout (orders)
     Route::get('/scholarships/{scholarship}/pay', [\App\Http\Controllers\StudentScholarshipCheckoutController::class, 'show'])

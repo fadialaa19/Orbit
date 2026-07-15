@@ -13,7 +13,13 @@ class AdminTestimonialController extends Controller
     {
         $testimonials = Testimonial::with('user')->latest()->get();
         $students = User::students()->select('id', 'name')->get();
-        return view('admin.testimonials', compact('testimonials', 'students'));
+        $counts = [
+            'all' => $testimonials->count(),
+            'pending' => $testimonials->where('status', 'pending')->count(),
+            'approved' => $testimonials->where('status', 'approved')->count(),
+            'rejected' => $testimonials->where('status', 'rejected')->count(),
+        ];
+        return view('admin.testimonials', compact('testimonials', 'students', 'counts'));
     }
 
     public function store(Request $request)
@@ -29,6 +35,8 @@ class AdminTestimonialController extends Controller
         ]);
 
         $validated['is_active'] = $request->has('is_active') ? true : false;
+        // اللي بيضيفه الأدمن مباشرة معتمد فورًا، ما بيحتاج مراجعة زي تجارب الطلاب.
+        $validated['status'] = 'approved';
 
         Testimonial::create($validated);
 
@@ -68,6 +76,34 @@ class AdminTestimonialController extends Controller
         $testimonial->update(['is_active' => !$testimonial->is_active]);
         return redirect()->route('admin.testimonials.index')
             ->with('success', 'تم تغيير الحالة بنجاح');
+    }
+
+    public function approve(Testimonial $testimonial)
+    {
+        $testimonial->update([
+            'status' => 'approved',
+            'is_active' => true,
+            'admin_note' => null,
+        ]);
+
+        return redirect()->route('admin.testimonials.index')
+            ->with('success', 'تمت الموافقة على التجربة وأصبحت ظاهرة بالموقع');
+    }
+
+    public function reject(Request $request, Testimonial $testimonial)
+    {
+        $validated = $request->validate([
+            'admin_note' => 'nullable|string|max:500',
+        ]);
+
+        $testimonial->update([
+            'status' => 'rejected',
+            'is_active' => false,
+            'admin_note' => $validated['admin_note'] ?? null,
+        ]);
+
+        return redirect()->route('admin.testimonials.index')
+            ->with('success', 'تم رفض التجربة');
     }
 }
 

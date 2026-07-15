@@ -4,13 +4,14 @@
 @section('breadcrumb', 'تجارب الطلاب')
 
 @section('content')
-<div x-data="{ 
-    showModal: false, 
-    editMode: false, 
+<div x-data="{
+    showModal: false,
+    editMode: false,
+    activeFilter: 'all',
     currentTestimonial: { name: '', university: '', content: '', rating: 5, avatar: '', user_id: '', is_active: true },
     storeUrl: '{{ route('admin.testimonials.store') }}',
-    updateUrl() { 
-        return this.currentTestimonial ? '{{ url('/admin/testimonials') }}/' + this.currentTestimonial.id : ''; 
+    updateUrl() {
+        return this.currentTestimonial ? '{{ url('/admin/testimonials') }}/' + this.currentTestimonial.id : '';
     }
 }" class="max-w-full mx-auto space-y-8">
 
@@ -45,6 +46,22 @@
         </button>
     </div>
 
+    {{-- فلاتر حسب حالة المراجعة --}}
+    <div class="flex items-center gap-2 flex-wrap">
+        <button @click="activeFilter = 'all'" :class="activeFilter === 'all' ? 'bg-gold-600 text-white' : 'bg-white text-slate-500 border border-slate-100'" class="px-4 py-2 rounded-xl text-xs font-black transition-all">
+            الكل <span class="opacity-70">({{ $counts['all'] }})</span>
+        </button>
+        <button @click="activeFilter = 'pending'" :class="activeFilter === 'pending' ? 'bg-amber-500 text-white' : 'bg-white text-slate-500 border border-slate-100'" class="px-4 py-2 rounded-xl text-xs font-black transition-all">
+            قيد المراجعة <span class="opacity-70">({{ $counts['pending'] }})</span>
+        </button>
+        <button @click="activeFilter = 'approved'" :class="activeFilter === 'approved' ? 'bg-emerald-500 text-white' : 'bg-white text-slate-500 border border-slate-100'" class="px-4 py-2 rounded-xl text-xs font-black transition-all">
+            مقبولة <span class="opacity-70">({{ $counts['approved'] }})</span>
+        </button>
+        <button @click="activeFilter = 'rejected'" :class="activeFilter === 'rejected' ? 'bg-rose-500 text-white' : 'bg-white text-slate-500 border border-slate-100'" class="px-4 py-2 rounded-xl text-xs font-black transition-all">
+            مرفوضة <span class="opacity-70">({{ $counts['rejected'] }})</span>
+        </button>
+    </div>
+
     <div class="bg-white rounded-[2rem] border border-slate-100 shadow-sm overflow-hidden">
         <div class="overflow-x-auto">
             <table class="w-full text-right">
@@ -59,10 +76,10 @@
                 </thead>
                 <tbody class="divide-y divide-slate-50">
                     @forelse($testimonials as $testimonial)
-                    <tr class="hover:bg-slate-50/50 transition group">
+                    <tr class="hover:bg-slate-50/50 transition group" x-show="activeFilter === 'all' || activeFilter === '{{ $testimonial->status }}'">
                         <td class="p-6">
                             <div class="flex items-center gap-4">
-                                <img src="{{ $testimonial->avatar ?? 'https://ui-avatars.com/api/?name=' . urlencode($testimonial->name) . '&background=6366f1&color=fff' }}" 
+                                <img src="{{ $testimonial->avatar ?? 'https://ui-avatars.com/api/?name=' . urlencode($testimonial->name) . '&background=6366f1&color=fff' }}"
                                      class="w-12 h-12 rounded-xl object-cover shadow-sm" alt="{{ $testimonial->name }}">
                                 <div>
                                     <p class="font-black text-sm text-slate-900">{{ $testimonial->name }}</p>
@@ -81,17 +98,35 @@
                                 @for($i = 0; $i < $testimonial->rating; $i++)★@endfor
                             </div>
                         </td>
-                        <td class="p-6">
+                        <td class="p-6 space-y-2">
+                            @php
+                                $statusMap = [
+                                    'pending' => ['bg-amber-100 text-amber-700', 'قيد المراجعة'],
+                                    'approved' => ['bg-emerald-100 text-emerald-700', 'مقبولة'],
+                                    'rejected' => ['bg-rose-100 text-rose-700', 'مرفوضة'],
+                                ];
+                                $statusInfo = $statusMap[$testimonial->status] ?? $statusMap['approved'];
+                            @endphp
+                            <span class="block w-fit px-3 py-1 rounded-lg text-[10px] font-black {{ $statusInfo[0] }}">{{ $statusInfo[1] }}</span>
                             <form action="{{ route('admin.testimonials.toggle', $testimonial) }}" method="POST" class="inline">
                                 @csrf
                                 @method('PATCH')
                                 <button type="submit" class="px-3 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-wider transition-all {{ $testimonial->is_active ? 'bg-emerald-100 text-emerald-600' : 'bg-slate-100 text-slate-400' }}">
-                                    {{ $testimonial->is_active ? 'نشط' : 'معطل' }}
+                                    {{ $testimonial->is_active ? 'ظاهر' : 'مخفي' }}
                                 </button>
                             </form>
                         </td>
                         <td class="p-6">
-                            <div class="flex items-center gap-2">
+                            <div class="flex items-center gap-2 flex-wrap">
+                                @if($testimonial->status === 'pending')
+                                    <form action="{{ route('admin.testimonials.approve', $testimonial) }}" method="POST" class="inline">
+                                        @csrf
+                                        @method('PATCH')
+                                        <button type="submit" class="px-3 py-1.5 bg-emerald-50 text-emerald-600 rounded-xl text-[10px] font-black hover:bg-emerald-100 transition">قبول</button>
+                                    </form>
+                                    <button type="button" onclick="document.getElementById('reject-note-{{ $testimonial->id }}').classList.toggle('hidden')"
+                                            class="px-3 py-1.5 bg-rose-50 text-rose-600 rounded-xl text-[10px] font-black hover:bg-rose-100 transition">رفض</button>
+                                @endif
                                 <button @click="showModal = true; editMode = true; currentTestimonial = {{ json_encode($testimonial->toArray(), JSON_INVALID_UTF8_SUBSTITUTE | JSON_UNESCAPED_UNICODE) }};"
                                         class="p-2 bg-gold-100 text-gold-600 rounded-xl hover:bg-gold-100 transition">
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
@@ -103,6 +138,17 @@
                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
                                     </button>
                                 </form>
+
+                                @if($testimonial->status === 'pending')
+                                <div id="reject-note-{{ $testimonial->id }}" class="hidden w-full mt-2">
+                                    <form action="{{ route('admin.testimonials.reject', $testimonial) }}" method="POST" class="flex items-center gap-2">
+                                        @csrf
+                                        @method('PATCH')
+                                        <input type="text" name="admin_note" placeholder="سبب الرفض (اختياري)" class="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-bold min-w-[160px]">
+                                        <button type="submit" class="bg-rose-600 text-white rounded-xl px-4 py-2 text-[10px] font-black hover:bg-rose-700 transition shrink-0">تأكيد الرفض</button>
+                                    </form>
+                                </div>
+                                @endif
                             </div>
                         </td>
                     </tr>
