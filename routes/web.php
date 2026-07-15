@@ -136,6 +136,12 @@ Route::prefix('admin')->middleware(['auth'])->name('admin.')->group(function () 
         Route::patch('testimonials/{testimonial}/reject', [AdminTestimonialController::class, 'reject'])->name('testimonials.reject');
     });
 
+    // 6️⃣.5 المجتمعات (Communities)
+    Route::middleware(['check.permission:support'])->group(function () {
+        Route::resource('communities', \App\Http\Controllers\Admin\AdminCommunityController::class)->only(['index', 'store', 'update', 'destroy']);
+        Route::patch('communities/{community}/toggle', [\App\Http\Controllers\Admin\AdminCommunityController::class, 'toggleStatus'])->name('communities.toggle');
+    });
+
     // 7️⃣ إدارة المدراء والصلاحيات + الإعدادات العامة
     Route::middleware(['check.permission:admins'])->group(function () {
         Route::resource('admins', AdminAdminController::class);
@@ -179,6 +185,7 @@ Route::prefix('dashboard')->middleware(['auth', 'verified.ensure'])->name('dashb
     Route::get('/testimonial', [StudentDashboardController::class, 'testimonial'])->name('testimonial');
     Route::post('/testimonial', [StudentDashboardController::class, 'storeTestimonial'])->name('testimonial.store');
     Route::put('/testimonial', [StudentDashboardController::class, 'updateTestimonial'])->name('testimonial.update');
+    Route::get('/community', [StudentDashboardController::class, 'community'])->name('community');
 
     // Scholarship Premium Checkout (orders)
     Route::get('/scholarships/{scholarship}/pay', [\App\Http\Controllers\StudentScholarshipCheckoutController::class, 'show'])
@@ -203,6 +210,17 @@ Route::middleware(['auth', 'verified.ensure'])->prefix('api/communications')->na
     Route::patch('/{id}/{type}/rename', [App\Http\Controllers\CommunicationsController::class, 'renameChat']);
     Route::delete('/{id}/{type}/messages/{messageId}', [App\Http\Controllers\CommunicationsController::class, 'deleteMessage']);
     Route::delete('/{id}/{type}', [App\Http\Controllers\CommunicationsController::class, 'deleteChat']);
+});
+
+Route::middleware(['auth', 'verified.ensure'])->prefix('api/community')->name('community.')->group(function () {
+    Route::get('/', [App\Http\Controllers\CommunityController::class, 'index'])->name('index');
+    Route::get('/{community}/messages', [App\Http\Controllers\CommunityController::class, 'messages'])->name('messages');
+    Route::post('/{community}/send', [App\Http\Controllers\CommunityController::class, 'send'])->name('send');
+    Route::delete('/{community}/messages/{message}', [App\Http\Controllers\CommunityController::class, 'deleteMessage'])->name('messages.delete');
+    Route::post('/{community}/messages/{message}/pin', [App\Http\Controllers\CommunityController::class, 'pinMessage'])->name('messages.pin');
+    Route::post('/{community}/unpin', [App\Http\Controllers\CommunityController::class, 'unpinMessage'])->name('unpin');
+    Route::post('/{community}/mute', [App\Http\Controllers\CommunityController::class, 'muteMember'])->name('mute');
+    Route::post('/{community}/unmute', [App\Http\Controllers\CommunityController::class, 'unmuteMember'])->name('unmute');
 });
 
 Route::middleware(['auth', 'verified.ensure'])->group(function () {

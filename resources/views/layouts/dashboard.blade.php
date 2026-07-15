@@ -45,6 +45,7 @@
                 <a href="{{ route('dashboard.favorites') }}" class="{{ request()->routeIs('dashboard.favorites') ? 'text-gold-600' : 'hover:text-gold-500' }} transition">المفضلات</a>
                 <a href="{{ route('dashboard.communications') }}" class="{{ request()->routeIs('dashboard.communications') ? 'text-gold-600' : 'hover:text-gold-500' }} transition">مركز التواصل</a>
                 <a href="{{ route('dashboard.testimonial') }}" class="{{ request()->routeIs('dashboard.testimonial') ? 'text-gold-600' : 'hover:text-gold-500' }} transition">شارك تجربتك</a>
+                <a href="{{ route('dashboard.community') }}" class="{{ request()->routeIs('dashboard.community') ? 'text-gold-600' : 'hover:text-gold-500' }} transition">المجتمع</a>
 
             </div>
         </div>
@@ -110,6 +111,7 @@
         <a href="{{ route('dashboard.favorites') }}" class="block {{ request()->routeIs('dashboard.favorites') ? 'text-gold-600' : '' }}">المفضلات</a>
         <a href="{{ route('dashboard.communications') }}" class="block {{ request()->routeIs('dashboard.communications') ? 'text-gold-600' : '' }}">مركز التواصل</a>
         <a href="{{ route('dashboard.testimonial') }}" class="block {{ request()->routeIs('dashboard.testimonial') ? 'text-gold-600' : '' }}">شارك تجربتك</a>
+        <a href="{{ route('dashboard.community') }}" class="block {{ request()->routeIs('dashboard.community') ? 'text-gold-600' : '' }}">المجتمع</a>
         <a href="{{ route('dashboard.notifications') }}" class="block">الإشعارات</a>
         <div class="border-t border-slate-100 pt-3 flex flex-col gap-3">
             <a href="{{ route('dashboard.profile') }}" class="block">الملف الشخصي</a>

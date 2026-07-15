@@ -451,6 +451,11 @@ class StudentDashboardController extends Controller
         return view('dashboard.testimonial', compact('testimonial'));
     }
 
+    public function community()
+    {
+        return view('dashboard.community');
+    }
+
     public function storeTestimonial(Request $request)
     {
         $student = Auth::user();

@@ -18,10 +18,15 @@ class Message extends Model
     'sender_type',
     'message_text',
     'file_path',
+    'is_removed',
+    'removed_by',
+    'removed_at',
 ];
 
     protected $casts = [
         'created_at' => 'datetime',
+        'is_removed' => 'boolean',
+        'removed_at' => 'datetime',
     ];
 
     public function messageable()
@@ -32,6 +37,11 @@ class Message extends Model
     public function sender()
     {
         return $this->belongsTo(User::class, 'sender_id');
+    }
+
+    public function removedBy()
+    {
+        return $this->belongsTo(User::class, 'removed_by');
     }
 
     public function scopeForMessageable($query, $messageable)
