@@ -2,18 +2,20 @@
 
 namespace App\Models;
 
+use App\Traits\ResolvesImageUrl;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Community extends Model
 {
-    use HasFactory;
+    use HasFactory, ResolvesImageUrl;
 
     protected $fillable = [
         'name',
         'description',
         'type',
         'icon',
+        'image',
         'is_active',
         'pinned_message_id',
         'created_by',
@@ -22,6 +24,11 @@ class Community extends Model
     protected $casts = [
         'is_active' => 'boolean',
     ];
+
+    public function getImageAttribute($value): ?string
+    {
+        return $this->resolveImageUrl($value);
+    }
 
     public function messages()
     {

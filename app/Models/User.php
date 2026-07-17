@@ -9,10 +9,13 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use App\Models\Room;
 use App\Models\ScholarshipApplication;
+use App\Traits\ResolvesImageUrl;
 
 
 class User extends Authenticatable
 {
+    use ResolvesImageUrl;
+
     /**
      * Required by Laravel's verification logic.
      */
@@ -37,18 +40,7 @@ class User extends Authenticatable
      */
     public function getAvatarAttribute(?string $value): ?string
     {
-        if (!$value) {
-            return null;
-        }
-
-        if (filter_var($value, FILTER_VALIDATE_URL)) {
-            $path = parse_url($value, PHP_URL_PATH) ?? '';
-            $relative = preg_replace('#^.*/storage/#', '', $path);
-
-            return $relative !== '' ? \Storage::disk('public')->url(ltrim($relative, '/')) : $value;
-        }
-
-        return \Storage::disk('public')->url($value);
+        return $this->resolveImageUrl($value);
     }
 
     /** @use HasFactory<UserFactory> */

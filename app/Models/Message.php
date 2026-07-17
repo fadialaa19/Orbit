@@ -16,6 +16,7 @@ class Message extends Model
     'messageable_type',
     'sender_id',
     'sender_type',
+    'reply_to_message_id',
     'message_text',
     'file_path',
     'is_removed',
@@ -42,6 +43,11 @@ class Message extends Model
     public function removedBy()
     {
         return $this->belongsTo(User::class, 'removed_by');
+    }
+
+    public function replyTo()
+    {
+        return $this->belongsTo(Message::class, 'reply_to_message_id');
     }
 
     public function scopeForMessageable($query, $messageable)

@@ -65,6 +65,8 @@ class AdminScholarshipController extends Controller
         'apply_via_us_link' => 'nullable|url|max:500',
         'main_image' => 'nullable|image|max:2048',
         'logo_image' => 'nullable|image|max:1048',
+        'main_image_url' => 'nullable|url|max:500',
+        'logo_image_url' => 'nullable|url|max:500',
     ]);
 
     $data = $request->all();
@@ -97,12 +99,16 @@ class AdminScholarshipController extends Controller
         $file = $request->file('main_image');
         $filename = Str::random(20) . '_' . time() . '.' . $file->getClientOriginalExtension();
         $data['main_image'] = $file->storeAs('scholarships/main-images', $filename, 'public');
+    } elseif ($request->filled('main_image_url')) {
+        $data['main_image'] = $request->input('main_image_url');
     }
 
     if ($request->hasFile('logo_image')) {
         $file = $request->file('logo_image');
         $filename = Str::random(20) . '_' . time() . '.' . $file->getClientOriginalExtension();
         $data['logo_image'] = $file->storeAs('scholarships/logos', $filename, 'public');
+    } elseif ($request->filled('logo_image_url')) {
+        $data['logo_image'] = $request->input('logo_image_url');
     }
 
     Scholarship::create(array_merge($data, ['status' => 'active']));
@@ -140,6 +146,8 @@ public function update(Request $request, Scholarship $scholarship)
         'status' => 'required|in:active,closed',
         'main_image' => 'nullable|image|max:2048',
         'logo_image' => 'nullable|image|max:1048',
+        'main_image_url' => 'nullable|url|max:500',
+        'logo_image_url' => 'nullable|url|max:500',
     ]);
 
     $data = $request->all();
@@ -166,6 +174,8 @@ public function update(Request $request, Scholarship $scholarship)
         $file = $request->file('main_image');
         $filename = Str::random(20) . '_' . time() . '.' . $file->getClientOriginalExtension();
         $data['main_image'] = $file->storeAs('scholarships/main-images', $filename, 'public');
+    } elseif ($request->filled('main_image_url')) {
+        $data['main_image'] = $request->input('main_image_url');
     } else {
         // نستخدم القيمة الخام (غير المحوّلة عبر accessor) حتى لا يُعاد حفظ
         // رابط كامل جاهز بدل المسار النسبي الأصلي عند عدم تغيير الصورة.
@@ -176,6 +186,8 @@ public function update(Request $request, Scholarship $scholarship)
         $file = $request->file('logo_image');
         $filename = Str::random(20) . '_' . time() . '.' . $file->getClientOriginalExtension();
         $data['logo_image'] = $file->storeAs('scholarships/logos', $filename, 'public');
+    } elseif ($request->filled('logo_image_url')) {
+        $data['logo_image'] = $request->input('logo_image_url');
     } else {
         $data['logo_image'] = $scholarship->getRawOriginal('logo_image');
     }

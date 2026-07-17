@@ -18,7 +18,7 @@ class CommunityMessageSent implements ShouldBroadcast
 
     public function __construct(Message $message, int $communityId)
     {
-        $this->message = $message->load('sender:id,name');
+        $this->message = $message->loadMissing(['sender:id,name,avatar', 'replyTo.sender:id,name']);
         $this->communityId = $communityId;
     }
 
@@ -43,6 +43,11 @@ class CommunityMessageSent implements ShouldBroadcast
                 'sender' => $this->message->sender,
                 'sender_type' => $this->message->sender_type,
                 'message_text' => $this->message->message_text,
+                'reply_to' => ($this->message->replyTo && !$this->message->replyTo->is_removed) ? [
+                    'id' => $this->message->replyTo->id,
+                    'sender_name' => $this->message->replyTo->sender?->name ?? 'مستخدم',
+                    'message_text' => $this->message->replyTo->message_text,
+                ] : null,
                 'created_at' => $this->message->created_at->toISOString(),
             ]
         ];

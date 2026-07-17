@@ -7,7 +7,7 @@
 <div x-data="{
     showModal: false,
     editMode: false,
-    currentCommunity: { name: '', description: '', type: 'discussion', icon: '' },
+    currentCommunity: { name: '', description: '', type: 'discussion', icon: '', image: null },
     storeUrl: '{{ route('admin.communities.store') }}',
     updateUrl() {
         return this.currentCommunity ? '{{ url('/admin/communities') }}/' + this.currentCommunity.id : '';
@@ -27,7 +27,7 @@
             <h1 class="text-2xl font-black text-slate-900">المجتمعات</h1>
             <p class="text-xs font-bold text-slate-400 mt-1">إدارة مجتمعات النقاش والتعليمات بين الطلاب</p>
         </div>
-        <button @click="showModal = true; editMode = false; currentCommunity = { name: '', description: '', type: 'discussion', icon: '' };"
+        <button @click="showModal = true; editMode = false; currentCommunity = { name: '', description: '', type: 'discussion', icon: '', image: null };"
                 class="bg-gold-600 text-white px-6 py-3 rounded-2xl font-black text-sm hover:bg-gold-700 transition-all shadow-lg shadow-gold-100 flex items-center gap-2">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
             إنشاء مجتمع جديد
@@ -51,7 +51,13 @@
                     <tr class="hover:bg-slate-50/50 transition group">
                         <td class="p-6">
                             <div class="flex items-center gap-4">
-                                <div class="w-12 h-12 bg-gold-50 rounded-xl flex items-center justify-center text-xl shrink-0">{{ $community->icon ?: ($community->type === 'announcement' ? '📢' : '💬') }}</div>
+                                <div class="w-12 h-12 bg-gold-50 rounded-xl flex items-center justify-center text-xl shrink-0 overflow-hidden">
+                                    @if($community->image)
+                                        <img src="{{ $community->image }}" class="w-full h-full object-cover">
+                                    @else
+                                        {{ $community->icon ?: ($community->type === 'announcement' ? '📢' : '💬') }}
+                                    @endif
+                                </div>
                                 <div>
                                     <p class="font-black text-sm text-slate-900">{{ $community->name }}</p>
                                     @if($community->description)
@@ -69,11 +75,13 @@
                             <p class="font-bold text-sm text-slate-700">{{ $community->messages_count }}</p>
                         </td>
                         <td class="p-6">
-                            <form action="{{ route('admin.communities.toggle', $community) }}" method="POST" class="inline">
+                            <form action="{{ route('admin.communities.toggle', $community) }}" method="POST" class="inline"
+                                  onsubmit="return {{ $community->is_active ? 'confirm(\'هل تريد إغلاق هذا المجتمع؟ لن يظهر بعدها للطلاب في قائمة المجتمعات حتى تعيد فتحه.\')' : 'true' }}">
                                 @csrf
                                 @method('PATCH')
-                                <button type="submit" class="px-3 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-wider transition-all {{ $community->is_active ? 'bg-emerald-100 text-emerald-600' : 'bg-slate-100 text-slate-400' }}">
-                                    {{ $community->is_active ? 'نشط' : 'معطل' }}
+                                <button type="submit" title="{{ $community->is_active ? 'إغلاق المجتمع أمام الطلاب' : 'فتح المجتمع أمام الطلاب' }}"
+                                        class="px-3 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-wider transition-all {{ $community->is_active ? 'bg-emerald-100 text-emerald-600 hover:bg-emerald-200' : 'bg-slate-100 text-slate-400 hover:bg-slate-200' }}">
+                                    {{ $community->is_active ? '🔓 مفتوح' : '🔒 مغلق' }}
                                 </button>
                             </form>
                         </td>
@@ -81,7 +89,7 @@
                             <div class="flex items-center gap-2">
                                 <a href="{{ route('dashboard.community') }}?open={{ $community->id }}" target="_blank"
                                    class="px-3 py-1.5 bg-navy-900 text-white rounded-xl text-[10px] font-black hover:bg-navy-800 transition">فتح المحادثة</a>
-                                <button @click="showModal = true; editMode = true; currentCommunity = {{ json_encode($community->only(['id','name','description','type','icon']), JSON_UNESCAPED_UNICODE) }};"
+                                <button @click="showModal = true; editMode = true; currentCommunity = {{ json_encode(array_merge($community->only(['id','name','description','type','icon']), ['image' => $community->image]), JSON_UNESCAPED_UNICODE) }};"
                                         class="p-2 bg-gold-100 text-gold-600 rounded-xl hover:bg-gold-100 transition">
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
                                 </button>
@@ -121,11 +129,26 @@
                         </button>
                     </div>
 
-                    <form :action="editMode ? updateUrl() : storeUrl" method="POST" class="p-6 space-y-4">
+                    <form :action="editMode ? updateUrl() : storeUrl" method="POST" enctype="multipart/form-data" class="p-6 space-y-4">
                         @csrf
                         <template x-if="editMode">
                             <input type="hidden" name="_method" value="PATCH">
                         </template>
+
+                        <div>
+                            <label class="block text-[11px] font-black text-slate-400 uppercase tracking-widest mb-2">صورة المجتمع (اختياري)</label>
+                            <div class="flex items-center gap-3 mb-2">
+                                <div class="w-14 h-14 rounded-xl bg-slate-50 border-2 border-slate-100 overflow-hidden flex items-center justify-center text-slate-300 shrink-0">
+                                    <img x-show="currentCommunity.image" :src="currentCommunity.image" class="w-full h-full object-cover">
+                                    <span x-show="!currentCommunity.image" class="text-xl">🖼️</span>
+                                </div>
+                                <input type="file" name="image" accept="image/*"
+                                       class="flex-1 text-xs font-bold text-slate-500 file:ml-3 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-gold-100 file:text-gold-700 file:font-black">
+                            </div>
+                            <input type="url" name="image_url" x-model="currentCommunity.image" placeholder="أو الصق رابط صورة مباشر (https://...)"
+                                   class="w-full bg-slate-50 border-2 border-slate-100 rounded-xl px-4 py-2.5 text-xs font-bold text-slate-800 focus:border-gold-500 focus:bg-white outline-none transition" dir="ltr">
+                            <p class="text-[10px] text-slate-400 mt-1">ارفع ملف صورة أو الصق رابطها - رفع الملف له الأولوية لو وُجد الاثنين معاً</p>
+                        </div>
 
                         <div class="grid grid-cols-4 gap-3">
                             <div class="col-span-1">

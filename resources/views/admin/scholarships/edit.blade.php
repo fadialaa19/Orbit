@@ -101,6 +101,8 @@
                             <div>
                                 <label class="text-[11px] font-black text-slate-400 block mb-2">صورة المنحة (Cover)</label>
                                 <input type="file" name="main_image" accept="image/*" class="text-xs">
+                                <input type="url" name="main_image_url" placeholder="أو الصق رابط صورة مباشر (https://...)" dir="ltr"
+                                       class="w-full bg-slate-50 border border-slate-100 rounded-xl px-3 py-2 text-xs font-bold text-slate-700 focus:border-gold-300 outline-none transition mt-2">
                                 @if($scholarship->main_image)
                                     <img src="{{ $scholarship->main_image }}" class="w-20 h-20 object-cover mt-2 rounded-xl border">
                                 @endif
@@ -108,6 +110,8 @@
                             <div>
                                 <label class="text-[11px] font-black text-slate-400 block mb-2">شعار المنحة</label>
                                 <input type="file" name="logo_image" accept="image/*" class="text-xs">
+                                <input type="url" name="logo_image_url" placeholder="أو الصق رابط صورة مباشر (https://...)" dir="ltr"
+                                       class="w-full bg-slate-50 border border-slate-100 rounded-xl px-3 py-2 text-xs font-bold text-slate-700 focus:border-gold-300 outline-none transition mt-2">
                                 @if($scholarship->logo_image)
                                     <img src="{{ $scholarship->logo_image }}" class="w-16 h-16 object-contain mt-2 rounded-xl border">
                                 @endif

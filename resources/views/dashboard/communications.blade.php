@@ -81,6 +81,10 @@
                                         class="opacity-0 group-hover/msg:opacity-100 p-1 rounded-lg text-slate-300 hover:text-red-600 hover:bg-red-50 transition-all shrink-0">
                                     <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
                                 </button>
+                                <div x-show="msg.sender_type === 'user'" class="w-8 h-8 rounded-full overflow-hidden shrink-0 bg-gold-100 flex items-center justify-center text-gold-700 text-xs font-black">
+                                    <img x-show="myAvatar" :src="myAvatar" class="w-full h-full object-cover">
+                                    <span x-show="!myAvatar" x-text="myInitial"></span>
+                                </div>
                                 <div class="max-w-[75%] p-4 rounded-3xl shadow-sm" :class="msg.sender_type === 'user' ? 'bg-gold-600 text-white rounded-tr-none' : 'bg-white border border-slate-100 rounded-tl-none text-slate-800'">
                                     <p class="text-sm leading-relaxed whitespace-pre-wrap" x-text="msg.message_text"></p>
         <p class="text-[9px] opacity-60 mt-2 text-left" x-text="msg.created_at || new Date(msg.created_at * 1000)?.toLocaleTimeString('ar-EG') || 'الآن'"></p>
@@ -120,6 +124,8 @@ function communicationHub() {
         isTyping: false,
         chatsByType: { ai: [], support: [] },
         panelTitles: { ai: 'مساعد الذكاء الاصطناعي', support: 'تذاكر الدعم الفني' },
+        myAvatar: @js(auth()->user()->avatar),
+        myInitial: @js(mb_substr(auth()->user()->name, 0, 1)),
 
         async init() {
     await this.loadChats();

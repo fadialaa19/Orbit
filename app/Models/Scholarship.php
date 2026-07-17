@@ -2,12 +2,13 @@
 
 namespace App\Models;
 
+use App\Traits\ResolvesImageUrl;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Scholarship extends Model
 {
-    use HasFactory;
+    use HasFactory, ResolvesImageUrl;
 
     protected $fillable = [
 'title_ar',
@@ -50,29 +51,6 @@ class Scholarship extends Model
 public function getFormattedDeadlineAttribute()
     {
         return $this->deadline->format('Y-m-d');
-    }
-
-    /**
-     * Resolve a stored image value to a usable URL. Older rows may have a
-     * fully pre-baked absolute URL from a previous host/scheme (e.g. a local
-     * dev URL baked in before deployment) — extract the relative storage
-     * path out of it and rebuild against the current host so it never goes
-     * stale, instead of trusting the stored domain as-is.
-     */
-    protected function resolveImageUrl(?string $value): ?string
-    {
-        if (!$value) {
-            return null;
-        }
-
-        if (filter_var($value, FILTER_VALIDATE_URL)) {
-            $path = parse_url($value, PHP_URL_PATH) ?? '';
-            $relative = preg_replace('#^.*/storage/#', '', $path);
-
-            return $relative !== '' ? \Storage::disk('public')->url(ltrim($relative, '/')) : $value;
-        }
-
-        return \Storage::disk('public')->url($value);
     }
 
     public function getLogoImageAttribute($value)

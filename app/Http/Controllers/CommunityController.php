@@ -23,6 +23,7 @@ class CommunityController extends Controller
                 'description' => $community->description,
                 'type' => $community->type,
                 'icon' => $community->icon ?: ($community->type === 'announcement' ? '📢' : '💬'),
+                'image' => $community->image,
                 'last_message' => $lastMessage?->message_text,
             ];
         });
@@ -37,7 +38,7 @@ class CommunityController extends Controller
         }
 
         $messages = $community->messages()
-            ->with('sender:id,name')
+            ->with(['sender:id,name,avatar', 'replyTo.sender:id,name'])
             ->orderBy('created_at')
             ->get()
             ->map(fn ($m) => $this->formatMessage($m, $community));
@@ -51,9 +52,10 @@ class CommunityController extends Controller
                 'description' => $community->description,
                 'type' => $community->type,
                 'icon' => $community->icon ?: ($community->type === 'announcement' ? '📢' : '💬'),
+                'image' => $community->image,
             ],
             'messages' => $messages,
-            'pinned_message' => $community->pinnedMessage ? $this->formatMessage($community->pinnedMessage->load('sender:id,name'), $community) : null,
+            'pinned_message' => $community->pinnedMessage ? $this->formatMessage($community->pinnedMessage->load(['sender:id,name,avatar', 'replyTo.sender:id,name']), $community) : null,
             'muted_until' => $mute?->muted_until?->toISOString(),
             'is_admin' => Auth::user()->isAdmin(),
             'can_post' => $this->canPost($community),
@@ -62,7 +64,10 @@ class CommunityController extends Controller
 
     public function send(Request $request, Community $community)
     {
-        $request->validate(['message' => 'required|string|max:2000']);
+        $request->validate([
+            'message' => 'required|string|max:2000',
+            'reply_to_message_id' => 'nullable|integer|exists:chat_messages,id',
+        ]);
 
         if (!$community->is_active) {
             return response()->json(['success' => false, 'message' => 'هذا المجتمع غير متاح حالياً'], 404);
@@ -88,16 +93,26 @@ class CommunityController extends Controller
             ], 422);
         }
 
+        $replyToId = null;
+        if ($request->filled('reply_to_message_id')) {
+            $replyTarget = Message::where('id', $request->reply_to_message_id)
+                ->where('messageable_id', $community->id)
+                ->where('messageable_type', Community::class)
+                ->first();
+            $replyToId = $replyTarget?->id;
+        }
+
         $message = Message::create([
             'messageable_id' => $community->id,
             'messageable_type' => Community::class,
             'sender_id' => Auth::id(),
             'sender_type' => Auth::user()->isAdmin() ? 'admin' : 'user',
+            'reply_to_message_id' => $replyToId,
             'message_text' => $request->message,
         ]);
 
         try {
-            broadcast(new CommunityMessageSent($message->load('sender:id,name'), $community->id))->toOthers();
+            broadcast(new CommunityMessageSent($message->load(['sender:id,name,avatar', 'replyTo.sender:id,name']), $community->id))->toOthers();
         } catch (\Exception $e) {
             Log::warning("CommunityMessageSent broadcast failed: " . $e->getMessage());
         }
@@ -211,9 +226,15 @@ class CommunityController extends Controller
             'sender_id' => $message->sender_id,
             'sender_name' => $message->sender?->name ?? 'مستخدم',
             'sender_type' => $message->sender_type,
+            'sender_avatar' => $message->sender?->avatar,
             'message_text' => $message->is_removed ? null : $message->message_text,
             'is_removed' => (bool) $message->is_removed,
             'is_pinned' => $community->pinned_message_id === $message->id,
+            'reply_to' => ($message->replyTo && !$message->replyTo->is_removed) ? [
+                'id' => $message->replyTo->id,
+                'sender_name' => $message->replyTo->sender?->name ?? 'مستخدم',
+                'message_text' => $message->replyTo->message_text,
+            ] : null,
             'created_at' => $message->created_at->format('H:i'),
             'created_at_full' => $message->created_at->toISOString(),
         ];
