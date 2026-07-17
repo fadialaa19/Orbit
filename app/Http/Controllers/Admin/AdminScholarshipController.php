@@ -111,13 +111,11 @@ class AdminScholarshipController extends Controller
         $data['logo_image'] = $request->input('logo_image_url');
     }
 
-    $scholarship = Scholarship::create(array_merge($data, ['status' => 'active']));
+    Scholarship::create(array_merge($data, ['status' => 'active']));
 
-    // afterResponse() بيضمن إن صفحة الأدمن ترجع فوراً بدون ما تنتظر إرسال
-    // كل إيميلات الطلاب - لأنه على الاستضافة الحية QUEUE_CONNECTION=sync
-    // (ما في queue worker)، فأي إشعار ShouldQueue بينفذ مباشرة بنفس الطلب
-    // لو ما استخدمنا afterResponse، وهو اللي كان يسبب تعليق الصفحة عند النشر.
-    \App\Jobs\NotifyStudentsOfNewScholarship::dispatch($scholarship)->afterResponse();
+    // إشعار الطلاب بيصير عبر جدولة مستقلة (routes/console.php، كل دقيقة) وليس هون
+    // مباشرة - لأنه على الاستضافة الحية ما في queue worker، وإرسال إيميلات لكل
+    // الطلاب داخل نفس الطلب كان يعلّق صفحة الأدمن لحد ما تخلص كل الإيميلات.
 
     return redirect()->route('admin.scholarships.index')->with('success', 'تم نشر المنحة بنجاح!');
 }

@@ -32,6 +32,7 @@ class Scholarship extends Model
         'category',
         'tags',
         'status',
+        'students_notified_at',
         'price',
         'application_url',
         'apply_via_us_link',
@@ -44,6 +45,7 @@ class Scholarship extends Model
         'deadline' => 'date',
         'price' => 'decimal:2',
         'min_gpa' => 'decimal:2',
+        'students_notified_at' => 'datetime',
     ];
 
     protected $appends = ['formatted_deadline'];

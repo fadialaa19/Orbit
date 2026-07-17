@@ -3,14 +3,15 @@
 namespace App\Notifications;
 
 use App\Models\Scholarship;
-use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class NewScholarshipPublished extends Notification implements ShouldQueue
+class NewScholarshipPublished extends Notification
 {
-    use Queueable;
+    // بدون ShouldQueue عمداً: بتترسل من جوا app:notify-new-scholarships
+    // (مجدولة كل دقيقة، مش من طلب الأدمن مباشرة)، فمافي داعي نأجّل التنفيذ
+    // لصف انتظار - وربطها بـ ShouldQueue كان بيحتاج queue worker شغال
+    // عشان تترسل فعلياً، وهو مش متوفر على الاستضافة الحية.
 
     public function __construct(public Scholarship $scholarship)
     {

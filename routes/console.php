@@ -16,6 +16,10 @@ Schedule::call(function () {
         ->whereNotNull('deadline')
         ->where('deadline', '<', now()->startOfDay())
         ->update(['status' => 'closed']);
-        
+
     \Log::info("تم تحديث حالة المنح المنتهية تلقائياً. العدد المحدث: {$updatedCount}");
 })->daily();
+
+// إشعار الطلاب بالمنح المنشورة حديثاً (داخل الموقع + إيميل) - مفصولة عن طلب
+// الأدمن مباشرة حتى ما تعلّق صفحة نشر المنحة بانتظار إرسال كل الإيميلات.
+Schedule::command('app:notify-new-scholarships')->everyMinute();
