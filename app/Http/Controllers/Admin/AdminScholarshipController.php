@@ -111,9 +111,26 @@ class AdminScholarshipController extends Controller
         $data['logo_image'] = $request->input('logo_image_url');
     }
 
-    Scholarship::create(array_merge($data, ['status' => 'active']));
+    $scholarship = Scholarship::create(array_merge($data, ['status' => 'active']));
+
+    $this->notifyStudentsOfNewScholarship($scholarship);
 
     return redirect()->route('admin.scholarships.index')->with('success', 'تم نشر المنحة بنجاح!');
+}
+
+/**
+ * إشعار كل الطلاب المسجلين (داخل الموقع + بريد إلكتروني) عند نشر منحة جديدة.
+ * كل طالب مُعزول بـ try/catch مستقل حتى لا يوقف فشل إشعار واحد باقي الطلاب.
+ */
+private function notifyStudentsOfNewScholarship(Scholarship $scholarship): void
+{
+    \App\Models\User::where('role', 'student')->get()->each(function ($student) use ($scholarship) {
+        try {
+            $student->notify(new \App\Notifications\NewScholarshipPublished($scholarship));
+        } catch (\Exception $e) {
+            Log::error("Failed to notify student #{$student->id} of new scholarship #{$scholarship->id}: " . $e->getMessage());
+        }
+    });
 }
 public function edit(Scholarship $scholarship)
     {
