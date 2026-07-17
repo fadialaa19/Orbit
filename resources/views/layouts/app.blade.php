@@ -30,13 +30,20 @@
     <script defer crossorigin="anonymous" src="https://unpkg.com/alpinejs@3.14.1/dist/cdn.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
-    <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+    <link rel="stylesheet" href="https://unpkg.com/aos@2.3.4/dist/aos.css" />
 
     @include('layouts.partials._brand-styles')
     <style>
-        body { font-family: 'Cairo', sans-serif; }
+        html, body { font-family: 'Cairo', sans-serif; overflow-x: hidden; max-width: 100%; }
         .bg-main { background: #DB8A47; }
         [x-cloak] { display: none !important; }
+        /* أنيميشن AOS كان بيعلق أحياناً بحالته الأولية (شفاف ومزاح عن مكانه) بسبب
+           تعارض CSS layers بين Tailwind v4 وستايل AOS غير المُطبَّق بطبقة -
+           هاد التوكيد الصريح بيضمن رجوع العنصر لحالته الطبيعية دايماً بعد التفعيل. */
+        [data-aos].aos-animate {
+            opacity: 1 !important;
+            transform: none !important;
+        }
     </style>
 </head>
 <body class="bg-gray-50 text-right">
@@ -140,12 +147,16 @@
     </footer>
 
 
-    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+    <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
 <script>
   AOS.init({
     duration: 1000,
     once: true,
   });
+  // خط Cairo والصور بيوصلوا بعد أول init، وهاد بيخلي حسابات AOS لمواقع
+  // العناصر تصير قديمة فيبقى العنصر عالق بحالته قبل الأنيميشن (شفاف وبمكانه
+  // الأصلي المزاح) - إعادة الحساب بعد اكتمال التحميل بيحل المشكلة نهائياً.
+  window.addEventListener('load', () => AOS.refresh());
 </script>
 
 @include('components.groq-chat')
