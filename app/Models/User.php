@@ -78,6 +78,8 @@ protected $fillable = [
         'documents',
         'profile_completion',
         'xp',
+        'xp_active_seconds',
+        'xp_last_heartbeat_at',
         'level',
         // Education - High School (Required)
         'high_school_name',
@@ -117,6 +119,7 @@ protected $fillable = [
 
     protected $casts = [
         'permissions' => 'array', // هاد السطر سيعامل الحقل كمصفوفة PHP طبيعية
+        'xp_last_heartbeat_at' => 'datetime',
     ];
 
 

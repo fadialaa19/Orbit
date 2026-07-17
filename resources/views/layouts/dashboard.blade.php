@@ -133,5 +133,22 @@
 
 @include('components.groq-chat')
 
+<script>
+    // نبضة XP لمكافأة وقت التصفح الفعلي بالموقع - كل 5 دقائق طالما الصفحة مرئية ونشطة
+    (function () {
+        function sendHeartbeat() {
+            if (document.visibilityState !== 'visible') return;
+            const token = document.querySelector('meta[name="csrf-token"]')?.content;
+            if (!token) return;
+            fetch('{{ route('dashboard.xp-heartbeat') }}', {
+                method: 'POST',
+                headers: { 'X-CSRF-TOKEN': token },
+            }).catch(() => {});
+        }
+        sendHeartbeat();
+        setInterval(sendHeartbeat, 5 * 60 * 1000);
+    })();
+</script>
+
 </body>
 </html>

@@ -191,24 +191,53 @@
                     </div>
                 </div>
 
-                <div class="bg-white p-6 rounded-[2.5rem] shadow-sm border border-slate-100" x-data="{ copied: false, shareUrl: '{{ url('/register?ref=' . auth()->id()) }}' }">
-                    <div class="flex items-center gap-3 mb-3">
-                        <div class="w-10 h-10 bg-gold-100 rounded-xl flex items-center justify-center text-xl">
+                <div class="relative overflow-hidden bg-gradient-to-br from-gold-500 via-gold-600 to-amber-600 p-7 rounded-[2.5rem] shadow-xl shadow-gold-200/50"
+                     x-data="{ copied: false, showInfo: false, shareUrl: '{{ url('/register?ref=' . auth()->id()) }}' }">
+                    <div class="absolute -top-8 -left-8 w-32 h-32 bg-white/10 rounded-full"></div>
+                    <div class="absolute -bottom-10 -right-6 w-28 h-28 bg-white/10 rounded-full"></div>
+
+                    <div class="relative flex items-center gap-3 mb-4">
+                        <div class="w-12 h-12 bg-white/20 backdrop-blur rounded-2xl flex items-center justify-center text-2xl animate-bounce" style="animation-duration: 2.5s;">
                             🎁
                         </div>
-                        <div>
-                            <h4 class="font-black text-slate-800 text-sm">ادعُ أصدقاءك للمنصة</h4>
-                            <p class="text-[11px] text-slate-400 font-bold mt-0.5">واكسب <span class="text-gold-600 font-black">+250 XP</span> عن كل تسجيل!</p>
+                        <div class="flex-1">
+                            <h4 class="font-black text-white text-base">ادعُ أصدقاءك واربح نقاط XP</h4>
+                            <p class="text-[11px] text-gold-50 font-bold mt-0.5">كل صديق يسجل من رابطك = <span class="font-black">+50 XP</span> فوراً لك</p>
                         </div>
+                        <button type="button" @click="showInfo = !showInfo" title="كيف تعمل نقاط XP؟"
+                                class="w-7 h-7 shrink-0 rounded-full bg-white/20 hover:bg-white/30 text-white font-black text-xs flex items-center justify-center transition">؟</button>
                     </div>
-                    
-                    <div class="flex items-center gap-2 bg-slate-50 p-1.5 rounded-2xl border border-slate-100">
-                        <input type="text" readonly :value="shareUrl" class="bg-transparent border-0 text-xs font-medium px-2 text-slate-500 focus:ring-0 flex-1 truncate select-all" dir="ltr">
-                        <button @click="navigator.clipboard.writeText(shareUrl); copied = true; setTimeout(() => copied = false, 2000)" 
-                                :class="copied ? 'bg-green-600 text-white' : 'bg-slate-900 text-white hover:bg-slate-800'"
-                                class="px-4 py-2.5 rounded-xl font-bold text-xs transition duration-300 flex-shrink-0 shadow-sm">
-                            <span x-text="copied ? 'تم النسخ!  ' : 'نسخ الرابط'"></span>
+
+                    <div class="relative flex items-center gap-2 bg-white/15 backdrop-blur p-1.5 rounded-2xl border border-white/20">
+                        <input type="text" readonly :value="shareUrl" class="bg-transparent border-0 text-xs font-bold px-2 text-white placeholder-white/70 focus:ring-0 flex-1 truncate select-all" dir="ltr">
+                        <button @click="
+                                navigator.clipboard.writeText(shareUrl);
+                                copied = true;
+                                setTimeout(() => copied = false, 2000);
+                                if (window.confetti) { window.confetti({ particleCount: 70, spread: 65, origin: { y: 0.7 }, colors: ['#f5c518','#ffffff','#1a2942'] }); }
+                            "
+                                :class="copied ? 'bg-emerald-500 text-white' : 'bg-white text-gold-700 hover:bg-gold-50'"
+                                class="px-4 py-2.5 rounded-xl font-black text-xs transition duration-300 flex-shrink-0 shadow-sm">
+                            <span x-text="copied ? '✅ تم النسخ!' : 'نسخ الرابط'"></span>
                         </button>
+                    </div>
+
+                    <div x-show="showInfo" x-cloak x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 -translate-y-2" x-transition:enter-end="opacity-100 translate-y-0"
+                         class="relative mt-4 bg-white/95 rounded-2xl p-4 space-y-3 text-right">
+                        <p class="text-[11px] font-black text-slate-800 mb-1">كيف تجمع نقاط XP؟</p>
+                        <div class="flex items-center gap-3">
+                            <span class="w-8 h-8 rounded-xl bg-gold-100 text-gold-600 flex items-center justify-center text-sm font-black shrink-0">🤝</span>
+                            <p class="text-[11px] font-bold text-slate-600">+50 XP عن كل صديق يسجل من رابط دعوتك</p>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <span class="w-8 h-8 rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center text-sm font-black shrink-0">⏱️</span>
+                            <p class="text-[11px] font-bold text-slate-600">+25 XP عن كل ساعة تقضيها متصفحاً الموقع</p>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <span class="w-8 h-8 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center text-sm font-black shrink-0">🏆</span>
+                            <p class="text-[11px] font-bold text-slate-600">كل 1000 نقطة = تقديم مجاني على منحة من فريقنا نيابةً عنك</p>
+                        </div>
+                        <p class="text-[10px] font-bold text-slate-400 pt-1 border-t border-slate-100">رصيدك الحالي: <span class="text-gold-600 font-black">{{ auth()->user()->xp }} XP</span></p>
                     </div>
                 </div>
 

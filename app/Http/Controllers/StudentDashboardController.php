@@ -170,6 +170,37 @@ class StudentDashboardController extends Controller
         ]);
     }
 
+    /**
+     * دفعة "نبض" من واجهة الطالب كل بضع دقائق طالما الصفحة مفتوحة ونشطة، تُستخدم
+     * لمنح 25 XP عن كل ساعة فعلية يقضيها الطالب بالموقع. الوقت المُضاف محسوب من
+     * الفارق الزمني الحقيقي بين آخر نبضة والآن (ومحدود بحد أقصى) بدل الثقة بقيمة
+     * ثابتة من العميل، لمنع تلاعب أي طالب بإرسال طلبات متكررة بسرعة لتضخيم النقاط.
+     */
+    public function xpHeartbeat(\App\Services\XpService $xpService)
+    {
+        $user = Auth::user();
+        $now = now();
+
+        $elapsed = $user->xp_last_heartbeat_at
+            ? min((int) $now->diffInSeconds($user->xp_last_heartbeat_at, true), 400)
+            : 0;
+
+        $user->xp_active_seconds = max(0, (int) $user->xp_active_seconds + $elapsed);
+        $user->xp_last_heartbeat_at = $now;
+
+        $hoursEarned = intdiv($user->xp_active_seconds, 3600);
+        if ($hoursEarned > 0) {
+            $user->xp_active_seconds -= $hoursEarned * 3600;
+        }
+        $user->save();
+
+        if ($hoursEarned > 0) {
+            $xpService->award($user, $hoursEarned * 25, 'time on site');
+        }
+
+        return response()->json(['success' => true]);
+    }
+
     public function show(Scholarship $scholarship)
     {
         if ($scholarship->status !== 'active') {

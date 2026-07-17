@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Services\XpService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -85,10 +86,9 @@ class AuthController extends Controller
         if ($referrerId) {
             $referrer = User::find($referrerId);
             if ($referrer) {
-                $referrer->increment('xp', 250); // زيادة 250 نقطة للداعي (يمكنك تعديل الرقم كما تحب)
-                Log::info("User ID {$referrer->id} earned 250 XP for inviting User ID {$user->id}");
+                app(XpService::class)->award($referrer, 50, "referral (invited user #{$user->id})");
             }
-            
+
             // تنظيف السيشين بعد استخدامها بنجاح
             session()->forget('referrer_id');
         }
