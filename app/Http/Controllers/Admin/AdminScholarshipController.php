@@ -113,24 +113,13 @@ class AdminScholarshipController extends Controller
 
     $scholarship = Scholarship::create(array_merge($data, ['status' => 'active']));
 
-    $this->notifyStudentsOfNewScholarship($scholarship);
+    // afterResponse() بيضمن إن صفحة الأدمن ترجع فوراً بدون ما تنتظر إرسال
+    // كل إيميلات الطلاب - لأنه على الاستضافة الحية QUEUE_CONNECTION=sync
+    // (ما في queue worker)، فأي إشعار ShouldQueue بينفذ مباشرة بنفس الطلب
+    // لو ما استخدمنا afterResponse، وهو اللي كان يسبب تعليق الصفحة عند النشر.
+    \App\Jobs\NotifyStudentsOfNewScholarship::dispatch($scholarship)->afterResponse();
 
     return redirect()->route('admin.scholarships.index')->with('success', 'تم نشر المنحة بنجاح!');
-}
-
-/**
- * إشعار كل الطلاب المسجلين (داخل الموقع + بريد إلكتروني) عند نشر منحة جديدة.
- * كل طالب مُعزول بـ try/catch مستقل حتى لا يوقف فشل إشعار واحد باقي الطلاب.
- */
-private function notifyStudentsOfNewScholarship(Scholarship $scholarship): void
-{
-    \App\Models\User::where('role', 'student')->get()->each(function ($student) use ($scholarship) {
-        try {
-            $student->notify(new \App\Notifications\NewScholarshipPublished($scholarship));
-        } catch (\Exception $e) {
-            Log::error("Failed to notify student #{$student->id} of new scholarship #{$scholarship->id}: " . $e->getMessage());
-        }
-    });
 }
 public function edit(Scholarship $scholarship)
     {
