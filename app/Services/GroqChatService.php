@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\Scholarship;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
@@ -31,6 +32,11 @@ class GroqChatService
 أسلوب الحوار:
 - استخدمي صيغة المؤنث لنفسك (أنا كأستاذة نور).
 - لا تكرري نفس ترحيب البداية بكل محادثة جديدة - نوّعيه.
+
+المنح الدراسية:
+- بيوصلك بعد هالتعليمات رسالة نظام تانية فيها "قائمة المنح المتاحة حالياً على منصة Orbit" - هاي القائمة هي مصدر الحقيقة الوحيد، معتمدة مباشرة من قاعدة بيانات الموقع.
+- أي سؤال عن منح متوفرة (بشكل عام، أو بدولة معينة، أو بمجال معين) جاوبي منها حصراً بالاسم والجامعة والدولة والموعد النهائي - لا تخترعي أسماء منح أو تفاصيل مش موجودة فيها.
+- إذا القائمة فاضية أو ما فيها شي يطابق سؤال الطالب، قوليله بصراحة إنه ما في حالياً منح تطابق طلبه على المنصة، واقترحي عليه يتابع صفحة "المنح الدراسية" بالموقع لأنها بتتحدث بشكل مستمر.
 PROMPT;
 
     // كلمات طلب الدعم الفني
@@ -101,7 +107,10 @@ PROMPT;
         }
 
         $payloadMessages = array_merge(
-            [['role' => 'system', 'content' => self::SYSTEM_PROMPT]],
+            [
+                ['role' => 'system', 'content' => self::SYSTEM_PROMPT],
+                ['role' => 'system', 'content' => $this->buildScholarshipContext()],
+            ],
             $messages
         );
 
@@ -151,6 +160,30 @@ PROMPT;
                 'support_ticket_id' => null,
             ];
         }
+    }
+
+    /**
+     * قائمة مختصرة بكل المنح النشطة حالياً، لتأصيل إجابات الشات بوت بالبيانات
+     * الحقيقية بدل ترك الذكاء الاصطناعي يخمّن أو يخترع تفاصيل غير موجودة.
+     */
+    private function buildScholarshipContext(): string
+    {
+        $scholarships = Scholarship::active()->latest()->limit(80)->get([
+            'id', 'title_ar', 'university', 'country', 'category', 'deadline', 'financial_value', 'min_gpa',
+        ]);
+
+        if ($scholarships->isEmpty()) {
+            return 'قائمة المنح المتاحة حالياً على منصة Orbit: لا توجد أي منح نشطة منشورة حالياً.';
+        }
+
+        $lines = $scholarships->map(function ($s, $i) {
+            $deadline = $s->deadline ? $s->deadline->format('Y-m-d') : 'غير محدد';
+            $minGpa = $s->min_gpa !== null ? $s->min_gpa . '%' : 'غير محدد';
+
+            return ($i + 1) . ". {$s->title_ar} | الجامعة: {$s->university} | الدولة: {$s->country} | المرحلة: {$s->category} | آخر موعد للتقديم: {$deadline} | الحد الأدنى للمعدل: {$minGpa} | التمويل: " . ($s->financial_value ?: 'غير محدد');
+        })->implode("\n");
+
+        return "قائمة المنح المتاحة حالياً على منصة Orbit (من قاعدة البيانات مباشرة):\n" . $lines;
     }
 }
 
