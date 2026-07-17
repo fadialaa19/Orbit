@@ -83,7 +83,12 @@
                             @endif
                         </td>
                         <td class="p-5 text-left">
-                            <div class="flex items-center justify-end gap-2">
+                            <div class="flex items-center justify-end gap-2" x-data="{ copied: false }">
+                                <button type="button" @click="navigator.clipboard.writeText('{{ route('guest.scholarships.show', $item) }}'); copied = true; setTimeout(() => copied = false, 1500)"
+                                    class="p-2 bg-slate-50 hover:bg-navy-100 hover:text-navy-700 text-slate-400 rounded-xl border transition-all" title="نسخ رابط صفحة المنحة">
+                                    <span x-show="!copied">🔗</span>
+                                    <span x-show="copied" x-cloak class="text-emerald-600">✅</span>
+                                </button>
                                 <a href="{{ route('admin.scholarships.edit', $item) }}" class="p-2 bg-slate-50 hover:bg-gold-100 hover:text-gold-600 text-slate-400 rounded-xl border transition-all">✏️</a>
                                 <form action="{{ route('admin.scholarships.destroy', $item) }}" method="POST" onsubmit="return confirm('هل أنت متأكد من حذف هذه المنحة نهائياً؟')">
                                     @csrf @method('DELETE')

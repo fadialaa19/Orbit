@@ -147,17 +147,39 @@
                         <div class="grid grid-cols-2 gap-4">
                             <div>
                                 <label class="block text-sm font-bold text-slate-700 mb-2">كلمة المرور</label>
-                                <input type="password" name="password" x-model="password" placeholder="••••••••" 
-                                    class="w-full bg-slate-50 border-2 rounded-xl py-3 px-5 outline-none transition-all text-left" dir="ltr"
-                                    :class="(errors.password || serverErrors.password) ? 'border-rose-500' : 'border-transparent focus:border-gold-500 focus:bg-white'">
+                                <div class="relative" x-data="{ pwShow: false }">
+                                    <input type="password" :type="pwShow ? 'text' : 'password'" name="password" x-model="password" placeholder="••••••••"
+                                        class="w-full bg-slate-50 border-2 rounded-xl py-3 pl-5 pr-11 outline-none transition-all text-left" dir="ltr"
+                                        :class="(errors.password || serverErrors.password) ? 'border-rose-500' : 'border-transparent focus:border-gold-500 focus:bg-white'">
+                                    <button type="button" @click="pwShow = !pwShow" tabindex="-1" class="absolute inset-y-0 right-3 flex items-center text-slate-300 hover:text-gold-600 transition-colors">
+                                        <svg x-show="!pwShow" x-transition:enter="transition duration-500 [transition-timing-function:cubic-bezier(.68,-0.55,.27,1.55)]" x-transition:enter-start="opacity-0 scale-0 rotate-180" x-transition:enter-end="opacity-100 scale-100 rotate-0" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                                        </svg>
+                                        <svg x-show="pwShow" x-cloak x-transition:enter="transition duration-500 [transition-timing-function:cubic-bezier(.68,-0.55,.27,1.55)]" x-transition:enter-start="opacity-0 scale-0 -rotate-180" x-transition:enter-end="opacity-100 scale-100 rotate-0" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.542-7a10.025 10.025 0 012.132-3.411m3.132-2.507A9.958 9.958 0 0112 5c4.478 0 8.268 2.943 9.542 7a9.964 9.964 0 01-1.563 3.029M3 3l18 18"></path>
+                                        </svg>
+                                    </button>
+                                </div>
                                 <p x-show="errors.password" x-text="errors.password" class="mt-1 text-sm text-rose-500 font-medium" x-cloak></p>
                                 @error('password')<p class="mt-1 text-sm text-rose-500 font-medium">{{ $message }}</p>@enderror
                             </div>
                             <div>
                                 <label class="block text-sm font-bold text-slate-700 mb-2">تأكيد كلمة المرور</label>
-                                <input type="password" name="password_confirmation" x-model="password_confirmation" placeholder="••••••••" 
-                                    class="w-full bg-slate-50 border-2 rounded-xl py-3 px-5 outline-none transition-all text-left" dir="ltr"
-                                    :class="(errors.password_confirmation || serverErrors.password_confirmation) ? 'border-rose-500' : 'border-transparent focus:border-gold-500 focus:bg-white'">
+                                <div class="relative" x-data="{ pwShow: false }">
+                                    <input type="password" :type="pwShow ? 'text' : 'password'" name="password_confirmation" x-model="password_confirmation" placeholder="••••••••"
+                                        class="w-full bg-slate-50 border-2 rounded-xl py-3 pl-5 pr-11 outline-none transition-all text-left" dir="ltr"
+                                        :class="(errors.password_confirmation || serverErrors.password_confirmation) ? 'border-rose-500' : 'border-transparent focus:border-gold-500 focus:bg-white'">
+                                    <button type="button" @click="pwShow = !pwShow" tabindex="-1" class="absolute inset-y-0 right-3 flex items-center text-slate-300 hover:text-gold-600 transition-colors">
+                                        <svg x-show="!pwShow" x-transition:enter="transition duration-500 [transition-timing-function:cubic-bezier(.68,-0.55,.27,1.55)]" x-transition:enter-start="opacity-0 scale-0 rotate-180" x-transition:enter-end="opacity-100 scale-100 rotate-0" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                                        </svg>
+                                        <svg x-show="pwShow" x-cloak x-transition:enter="transition duration-500 [transition-timing-function:cubic-bezier(.68,-0.55,.27,1.55)]" x-transition:enter-start="opacity-0 scale-0 -rotate-180" x-transition:enter-end="opacity-100 scale-100 rotate-0" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.542-7a10.025 10.025 0 012.132-3.411m3.132-2.507A9.958 9.958 0 0112 5c4.478 0 8.268 2.943 9.542 7a9.964 9.964 0 01-1.563 3.029M3 3l18 18"></path>
+                                        </svg>
+                                    </button>
+                                </div>
                                 <p x-show="errors.password_confirmation" x-text="errors.password_confirmation" class="mt-1 text-sm text-rose-500 font-medium" x-cloak></p>
                                 @error('password_confirmation')<p class="mt-1 text-sm text-rose-500 font-medium">{{ $message }}</p>@enderror
                             </div>

@@ -62,20 +62,31 @@
 
 <section class="bg-white py-20 relative z-0">
     <div class="max-w-7xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-12 px-8">
-        @foreach([
-            ['+50k', 'طالب مسجل', 'users'],
-            ['+2.5k', 'منحة متاحة', 'briefcase'],
-            ['+15k', 'قصة نجاح', 'star'],
-            ['+120', 'دولة حول العالم', 'globe']
-        ] as $index => $stat)
+        @php
+            // أرقام حقيقية 100% محسوبة من قاعدة البيانات (وليست وهمية)، تُحدَّث تلقائياً
+            $statCards = [
+                ['value' => $stats['students'], 'label' => 'طالب مسجل', 'icon' => 'M17 20h5v-2a4 4 0 00-3-3.87M9 20H4v-2a4 4 0 013-3.87m6-2.13a4 4 0 10-4-4 4 4 0 004 4zm6 0a4 4 0 10-4-4'],
+                ['value' => $stats['scholarships'], 'label' => 'منحة متاحة', 'icon' => 'M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m-4 6h16v8a2 2 0 01-2 2H6a2 2 0 01-2-2v-8z'],
+                ['value' => $stats['successStories'], 'label' => 'قصة نجاح', 'icon' => 'M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.196-1.539-1.118l1.519-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z'],
+                ['value' => $stats['countries'], 'label' => 'دولة حول العالم', 'icon' => 'M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z'],
+            ];
+
+            $formatStat = function ($n) {
+                if ($n >= 1000) {
+                    return '+' . rtrim(rtrim(number_format($n / 1000, 1), '0'), '.') . 'k';
+                }
+                return $n > 0 ? '+' . $n : $n;
+            };
+        @endphp
+        @foreach($statCards as $index => $stat)
         <div data-aos="fade-up" data-aos-delay="{{ $index * 100 }}" class="text-center group cursor-default">
             <div class="text-gold-600 bg-gold-100 w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:bg-gold-600 group-hover:text-white transition-all duration-500 transform group-hover:rotate-12 shadow-sm">
                 <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="{{ $stat['icon'] }}"></path>
                 </svg>
             </div>
-            <h2 class="text-4xl font-black text-slate-900 mb-2">{{ $stat[0] }}</h2>
-            <p class="text-gray-400 font-medium">{{ $stat[1] }}</p>
+            <h2 class="text-4xl font-black text-slate-900 mb-2">{{ $formatStat($stat['value']) }}</h2>
+            <p class="text-gray-400 font-medium">{{ $stat['label'] }}</p>
         </div>
         @endforeach
     </div>

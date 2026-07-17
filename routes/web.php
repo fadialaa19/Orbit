@@ -31,7 +31,15 @@ Route::get('/sitemap.xml', function () {
 Route::get('/', function () {
     $testimonials = \App\Models\Testimonial::active()->latest()->take(3)->get();
     $teamMembers = \App\Models\User::admins()->where('status', 'active')->get();
-    return view('home', compact('testimonials', 'teamMembers'));
+
+    $stats = [
+        'students' => \App\Models\User::where('role', 'student')->count(),
+        'scholarships' => \App\Models\Scholarship::where('status', 'active')->count(),
+        'successStories' => \App\Models\Testimonial::where('status', 'approved')->count(),
+        'countries' => \App\Models\Scholarship::whereNotNull('country')->distinct('country')->count('country'),
+    ];
+
+    return view('home', compact('testimonials', 'teamMembers', 'stats'));
 })->name('home');
 
 Route::get('/login', function () {
