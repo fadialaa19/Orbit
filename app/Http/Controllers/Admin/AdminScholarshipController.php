@@ -58,7 +58,8 @@ class AdminScholarshipController extends Controller
         'min_gpa' => 'nullable|numeric|min:0|max:100',
         'applicants_count' => 'nullable|integer|min:0',
         'recommended_tags' => 'nullable|string|max:255', // نستقبله كنص أولاً
-        'category' => 'required|string',
+        'categories' => 'required|array|min:1',
+        'categories.*' => 'in:Bachelor,Master,PhD,Short Course',
         'coverage' => 'nullable|array',
         'tags' => 'nullable|array',
         'application_url' => 'nullable|url|max:500',
@@ -70,6 +71,11 @@ class AdminScholarshipController extends Controller
     ]);
 
     $data = $request->all();
+
+    // منحة ممكن تشمل أكثر من مرحلة دراسية - category المفرد بيبقى أول
+    // عنصر من القائمة فقط لتوافق أي كود قديم لسا بيقرأه مباشرة.
+    $data['categories'] = $request->input('categories');
+    $data['category'] = $data['categories'][0];
 
     // 1. حل مشكلة الـ recommended_tags: تحويل النص المفصول بفاصلة إلى مصفوفة (لأن الموديل يعامله كـ array)
     if ($request->filled('recommended_tags')) {
@@ -142,7 +148,8 @@ public function update(Request $request, Scholarship $scholarship)
         'min_gpa' => 'nullable|numeric|min:0|max:100',
         'applicants_count' => 'nullable|integer|min:0',
         'recommended_tags' => 'nullable|string|max:255',
-        'category' => 'required|string',
+        'categories' => 'required|array|min:1',
+        'categories.*' => 'in:Bachelor,Master,PhD,Short Course',
         'coverage' => 'nullable|array',
         'tags' => 'nullable|array',
         'application_url' => 'nullable|url|max:500',
@@ -155,6 +162,11 @@ public function update(Request $request, Scholarship $scholarship)
     ]);
 
     $data = $request->all();
+
+    // منحة ممكن تشمل أكثر من مرحلة دراسية - category المفرد بيبقى أول
+    // عنصر من القائمة فقط لتوافق أي كود قديم لسا بيقرأه مباشرة.
+    $data['categories'] = $request->input('categories');
+    $data['category'] = $data['categories'][0];
 
     // 1. معالجة الـ recommended_tags لمنع تعارض مصفوفة الـ Model وحذف الفلاتر
     if ($request->filled('recommended_tags')) {

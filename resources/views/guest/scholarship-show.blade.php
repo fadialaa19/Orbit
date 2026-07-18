@@ -73,13 +73,7 @@
                     <div class="flex-1 text-right w-full">
                         <div class="flex flex-col sm:flex-row sm:items-center justify-end gap-3 mb-2">
                             <span class="bg-gold-100 text-gold-600 px-3 py-1 rounded-lg text-xs font-black self-start sm:self-auto order-2 sm:order-1">
-                                @switch($scholarship->category)
-                                    @case('Bachelor') بكالوريوس @break
-                                    @case('Master') ماجستير @break
-                                    @case('PhD') دكتوراه @break
-                                    @case('Short Course') كورس قصير @break
-                                    @default {{ $scholarship->category ?? 'منحة دراسية' }}
-                                @endswitch
+                                {{ $scholarship->category_label ?: 'منحة دراسية' }}
                             </span>
                             <h1 class="text-2xl md:text-3xl font-black text-slate-800 order-1 sm:order-2">{{ $scholarship->title_ar }}</h1>
                         </div>
@@ -122,13 +116,7 @@
                                 <div class="text-right">
                                     <p class="text-[10px] text-slate-400 font-bold uppercase">المرحلة الدراسية</p>
                                     <p class="text-sm font-black text-slate-700">
-                                        @switch($scholarship->category)
-                                            @case('Bachelor') بكالوريوس @break
-                                            @case('Master') ماجستير @break
-                                            @case('PhD') دكتوراه @break
-                                            @case('Short Course') كورس قصير @break
-                                            @default {{ $scholarship->category ?? 'كل المراحل' }}
-                                        @endswitch
+                                        {{ $scholarship->category_label ?: 'كل المراحل' }}
                                     </p>
                                 </div>
                                 <div class="w-10 h-10 bg-white rounded-xl flex items-center justify-center shadow-sm text-gold-500">

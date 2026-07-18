@@ -120,16 +120,9 @@
                                     <div class="flex items-center gap-2 bg-green-50 text-green-600 px-3 py-1.5 rounded-xl text-xs font-black">
                                         <span>💰</span> {{ $scholarship->financial_value ?? 'تمويل مرن' }}
                                     </div>
-                                    {{-- ترجمة وعرض حقل الـ category المخزن بالإنجليزية --}}
+                                    {{-- المراحل الدراسية المتعددة للمنحة، مترجمة عربي --}}
                                     <div class="flex items-center gap-2 bg-gold-100 text-gold-600 px-3 py-1.5 rounded-xl text-xs font-black">
-                                        <span>🎓</span> 
-                                        @switch($scholarship->category)
-                                            @case('Bachelor') بكالوريوس @break
-                                            @case('Master') ماجستير @break
-                                            @case('PhD') دكتوراه @break
-                                            @case('Short Course') كورس قصير @break
-                                            @default {{ $scholarship->category }}
-                                        @endswitch
+                                        <span>🎓</span> {{ $scholarship->category_label }}
                                     </div>
                                     <div class="flex items-center gap-2 bg-slate-50 text-slate-500 px-3 py-1.5 rounded-xl text-xs font-black">
                                         <span>📅</span> {{ $scholarship->formatted_deadline }}

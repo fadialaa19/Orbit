@@ -169,7 +169,7 @@ PROMPT;
     private function buildScholarshipContext(): string
     {
         $scholarships = Scholarship::active()->latest()->limit(80)->get([
-            'id', 'title_ar', 'university', 'country', 'category', 'deadline', 'financial_value', 'min_gpa',
+            'id', 'title_ar', 'university', 'country', 'category', 'categories', 'deadline', 'financial_value', 'min_gpa',
         ]);
 
         if ($scholarships->isEmpty()) {
@@ -180,7 +180,7 @@ PROMPT;
             $deadline = $s->deadline ? $s->deadline->format('Y-m-d') : 'غير محدد';
             $minGpa = $s->min_gpa !== null ? $s->min_gpa . '%' : 'غير محدد';
 
-            return ($i + 1) . ". {$s->title_ar} | الجامعة: {$s->university} | الدولة: {$s->country} | المرحلة: {$s->category} | آخر موعد للتقديم: {$deadline} | الحد الأدنى للمعدل: {$minGpa} | التمويل: " . ($s->financial_value ?: 'غير محدد');
+            return ($i + 1) . ". {$s->title_ar} | الجامعة: {$s->university} | الدولة: {$s->country} | المرحلة: {$s->category_label} | آخر موعد للتقديم: {$deadline} | الحد الأدنى للمعدل: {$minGpa} | التمويل: " . ($s->financial_value ?: 'غير محدد');
         })->implode("\n");
 
         return "قائمة المنح المتاحة حالياً على منصة Orbit (من قاعدة البيانات مباشرة):\n" . $lines;

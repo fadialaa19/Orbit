@@ -23,7 +23,7 @@ class GuestController extends Controller
                 });
             })
             ->when($category, function ($query, $category) {
-                return $query->where('category', $category);
+                return $query->whereJsonContains('categories', $category);
             })
             ->paginate(9);
 

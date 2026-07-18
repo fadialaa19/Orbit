@@ -71,7 +71,7 @@
                         </td>
                         <td class="p-5 text-xs font-black text-slate-500">{{ $item->country }}</td>
                         <td class="p-5">
-                            <span class="px-3 py-1 bg-slate-100 rounded-lg text-[11px] font-black text-slate-600">{{ $item->category }}</span>
+                            <span class="px-3 py-1 bg-slate-100 rounded-lg text-[11px] font-black text-slate-600">{{ $item->category_label }}</span>
                         </td>
                         <td class="p-5 text-xs font-black text-gold-600">{{ $item->financial_value ?? 'غير محدد' }}</td>
                         <td class="p-5 text-xs text-slate-500">{{ $item->deadline }}</td>
@@ -179,13 +179,15 @@
                                 <input type="date" name="deadline" required class="w-full bg-slate-50 border border-slate-100 rounded-xl px-5 py-3 text-sm font-bold focus:border-gold-300 outline-none transition-all">
                             </div>
                             <div>
-                                <label class="text-[11px] font-black text-slate-400 uppercase mb-2 block tracking-widest">التصنيف والمرحلة الدراسية</label>
-                                <select name="category" id="category" class="w-full bg-slate-50 border border-slate-100 rounded-xl px-5 py-3 text-sm font-bold focus:border-gold-300 outline-none transition-all">
-                                    <option value="Bachelor">بكالوريوس (Undergraduate)</option>
-                                    <option value="Master">ماجستير (Postgraduate Master)</option>
-                                    <option value="PhD">دكتوراه (PhD / Doctoral)</option>
-                                    <option value="Short Course">كورسات قصيرة وزمالات</option>
-                                </select>
+                                <label class="text-[11px] font-black text-slate-400 uppercase mb-2 block tracking-widest">التصنيف والمرحلة الدراسية (يمكن اختيار أكثر من مرحلة)</label>
+                                <div class="grid grid-cols-2 gap-2" id="category-checkboxes">
+                                    @foreach(['Bachelor' => 'بكالوريوس (Undergraduate)', 'Master' => 'ماجستير (Postgraduate Master)', 'PhD' => 'دكتوراه (PhD / Doctoral)', 'Short Course' => 'كورسات قصيرة وزمالات'] as $key => $label)
+                                    <label class="flex items-center gap-2 bg-slate-50 border border-slate-100 rounded-xl px-4 py-3 text-xs font-bold cursor-pointer hover:border-gold-300 transition-all has-[:checked]:border-gold-400 has-[:checked]:bg-gold-50">
+                                        <input type="checkbox" name="categories[]" value="{{ $key }}" class="category-checkbox w-4 h-4 rounded text-gold-600 focus:ring-gold-500" {{ $key === 'Bachelor' ? 'checked' : '' }}>
+                                        {{ $label }}
+                                    </label>
+                                    @endforeach
+                                </div>
                             </div>
                         </div>
 
@@ -409,7 +411,8 @@ async function generateAllSections() {
     const title = document.getElementById('title_ar').value.trim();
     const university = document.getElementById('university').value.trim();
     const country = document.getElementById('country').value.trim();
-    const category = document.getElementById('category').value;
+    const checkedCategory = document.querySelector('.category-checkbox:checked');
+    const category = checkedCategory ? checkedCategory.value : 'Bachelor';
 
     if (!title || !university || !country) {
         alert('من فضلك املأ حقول العنوان (بالعربية)، الجامعة، والدولة أولاً لتوليد البيانات ذكياً.');

@@ -111,9 +111,13 @@ class StudentDashboardController extends Controller
                       ->orWhereJsonContains('tags', $search);
                 });
             })
-            // 2. فلتر المستوى الأكاديمي المتعدد المحدث (category) المتوافق مع الـ Blade وقاعدة البيانات
+            // 2. فلتر المستوى الأكاديمي المتعدد - منحة توافق لو أي مرحلة من مراحلها تطابق أي فلتر مختار
             ->when($categories, function($q) use ($categories) {
-                return $q->whereIn('category', (array)$categories);
+                return $q->where(function($subQuery) use ($categories) {
+                    foreach ((array)$categories as $categoryItem) {
+                        $subQuery->orWhereJsonContains('categories', $categoryItem);
+                    }
+                });
             })
             // 3. فلتر مزايا التمويل الذكي المحدث ليتعامل مع حقول الـ JSON Array (coverage) بدقة
             ->when($coverages, function($q) use ($coverages) {

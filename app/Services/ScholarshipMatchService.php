@@ -105,14 +105,14 @@ PROMPT;
 
         $profileSummary = $this->buildProfileSummary($user);
         $scholarshipList = $scholarships->map(function ($s) use ($user) {
-            $studentGpa = $this->relevantStudentGpa($user, $s->category);
+            $studentGpa = $this->relevantStudentGpa($user, $s->categories_list);
             $minGpa = $s->min_gpa !== null ? (float) $s->min_gpa : null;
             $meetsGpa = ($minGpa !== null && $studentGpa !== null) ? ($studentGpa >= $minGpa) : null;
 
             return [
                 'scholarship_id' => $s->id,
                 'title' => $s->title_ar,
-                'category' => $s->category,
+                'category' => $s->category_label,
                 'country' => $s->country,
                 'min_gpa' => $minGpa,
                 'student_relevant_gpa' => $studentGpa,
@@ -182,18 +182,32 @@ PROMPT;
     /**
      * الحقل المناسب من معدلات الطالب حسب مرحلة المنحة (بكالوريوس ← معدل الثانوية،
      * ماجستير ← معدل البكالوريوس، دكتوراه ← معدل الماجستير)، بدل ما نترك الذكاء
-     * الاصطناعي يخمّن أي معدل يقارن بحد المنحة الأدنى.
+     * الاصطناعي يخمّن أي معدل يقارن بحد المنحة الأدنى. المنحة ممكن تشمل أكثر
+     * من مرحلة (مثلاً بكالوريوس وماجستير معاً) - بنستخدم أفضل معدل متاح للطالب
+     * بين كل المراحل المطروحة، لأنه يقدر يقدّم عن طريق أي مسار يناسب وضعه.
      */
-    private function relevantStudentGpa(User $user, ?string $category): ?float
+    private function relevantStudentGpa(User $user, array $categories): ?float
     {
-        $gpa = match ($category) {
-            'Bachelor' => $user->high_school_gpa,
-            'Master' => $user->bachelor_gpa,
-            'PhD' => $user->master_gpa,
-            default => $user->bachelor_gpa ?? $user->high_school_gpa,
-        };
+        $gpas = [];
 
-        return $gpa !== null ? (float) $gpa : null;
+        foreach ($categories as $category) {
+            $gpa = match ($category) {
+                'Bachelor' => $user->high_school_gpa,
+                'Master' => $user->bachelor_gpa,
+                'PhD' => $user->master_gpa,
+                default => null,
+            };
+            if ($gpa !== null) {
+                $gpas[] = (float) $gpa;
+            }
+        }
+
+        if (!empty($gpas)) {
+            return max($gpas);
+        }
+
+        $fallback = $user->bachelor_gpa ?? $user->high_school_gpa;
+        return $fallback !== null ? (float) $fallback : null;
     }
 
     private function buildProfileSummary(User $user): string

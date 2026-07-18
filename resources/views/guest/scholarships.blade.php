@@ -34,9 +34,10 @@
                 </div>
                 <select name="category" class="p-4 rounded-[2.5rem] bg-slate-50 border-2 border-slate-100 focus:border-gold-300 font-bold text-right text-lg focus:outline-none">
                     <option value="">جميع المستويات</option>
-                    <option value="بكالوريوس" {{ ($category ?? '') == 'بكالوريوس' ? 'selected' : '' }}>بكالوريوس</option>
-                    <option value="ماجستير" {{ ($category ?? '') == 'ماجستير' ? 'selected' : '' }}>ماجستير</option>
-                    <option value="دكتوراه" {{ ($category ?? '') == 'دكتوراه' ? 'selected' : '' }}>دكتوراه</option>
+                    <option value="Bachelor" {{ ($category ?? '') == 'Bachelor' ? 'selected' : '' }}>بكالوريوس</option>
+                    <option value="Master" {{ ($category ?? '') == 'Master' ? 'selected' : '' }}>ماجستير</option>
+                    <option value="PhD" {{ ($category ?? '') == 'PhD' ? 'selected' : '' }}>دكتوراه</option>
+                    <option value="Short Course" {{ ($category ?? '') == 'Short Course' ? 'selected' : '' }}>كورس قصير</option>
                 </select>
                 <div class="grid grid-cols-2 gap-3 lg:col-span-1">
                     <button type="submit" class="bg-gold-600 hover:bg-gold-700 text-white py-4 px-6 rounded-[2rem] font-black shadow-lg hover:shadow-xl transition-all text-lg">بحث متقدم</button>
@@ -84,7 +85,7 @@
                 <!-- Badges -->
                 <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 mb-8">
                     <span class="bg-green-50 text-green-600 px-3 py-2 rounded-xl text-xs font-black text-center shadow-sm">💰 {{ $coverageDisplay }}</span>
-                    <span class="bg-gold-100 text-gold-600 px-3 py-2 rounded-xl text-xs font-black text-center shadow-sm">🎓 {{ $scholarship->category }}</span>
+                    <span class="bg-gold-100 text-gold-600 px-3 py-2 rounded-xl text-xs font-black text-center shadow-sm">🎓 {{ $scholarship->category_label }}</span>
                     <span class="bg-gold-100 text-gold-600 px-3 py-2 rounded-xl text-xs font-black text-center shadow-sm">📅 {{ $scholarship->formatted_deadline }}</span>
                 </div>
 

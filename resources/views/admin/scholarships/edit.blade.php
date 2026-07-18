@@ -73,13 +73,16 @@
                                 <input type="date" name="deadline" value="{{ old('deadline', $scholarship->deadline ? \Carbon\Carbon::parse($scholarship->deadline)->format('Y-m-d') : '') }}" required class="w-full bg-slate-50 border border-slate-100 rounded-xl px-5 py-3 text-sm font-bold outline-none">
                             </div>
                             <div>
-                                <label class="text-[11px] font-black text-slate-400 uppercase mb-2 block tracking-widest">التصنيف</label>
-                                <select name="category" class="w-full bg-slate-50 border border-slate-100 rounded-xl px-5 py-3 text-sm font-bold outline-none">
-                                    <option value="Bachelor" {{ old('category', $scholarship->category) == 'Bachelor' ? 'selected' : '' }}>بكالوريوس</option>
-                                    <option value="Master" {{ old('category', $scholarship->category) == 'Master' ? 'selected' : '' }}>ماجستير</option>
-                                    <option value="PhD" {{ old('category', $scholarship->category) == 'PhD' ? 'selected' : '' }}>دكتوراه</option>
-                                    <option value="Short Course" {{ old('category', $scholarship->category) == 'Short Course' ? 'selected' : '' }}>كورس قصير</option>
-                                </select>
+                                <label class="text-[11px] font-black text-slate-400 uppercase mb-2 block tracking-widest">التصنيف (يمكن اختيار أكثر من مرحلة)</label>
+                                @php $selectedCategories = old('categories', $scholarship->categories_list); @endphp
+                                <div class="grid grid-cols-2 gap-2">
+                                    @foreach(['Bachelor' => 'بكالوريوس', 'Master' => 'ماجستير', 'PhD' => 'دكتوراه', 'Short Course' => 'كورس قصير'] as $key => $label)
+                                    <label class="flex items-center gap-2 bg-slate-50 border border-slate-100 rounded-xl px-4 py-3 text-xs font-bold cursor-pointer hover:border-gold-300 transition-all has-[:checked]:border-gold-400 has-[:checked]:bg-gold-50">
+                                        <input type="checkbox" name="categories[]" value="{{ $key }}" class="w-4 h-4 rounded text-gold-600 focus:ring-gold-500" {{ in_array($key, $selectedCategories) ? 'checked' : '' }}>
+                                        {{ $label }}
+                                    </label>
+                                    @endforeach
+                                </div>
                             </div>
                         </div>
 

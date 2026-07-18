@@ -30,6 +30,7 @@ class Scholarship extends Model
         'recommended_tags',
         'coverage',
         'category',
+        'categories',
         'tags',
         'status',
         'students_notified_at',
@@ -42,6 +43,7 @@ class Scholarship extends Model
         'coverage' => 'array',
         'tags' => 'array',
         'recommended_tags' => 'array',
+        'categories' => 'array',
         'deadline' => 'date',
         'price' => 'decimal:2',
         'min_gpa' => 'decimal:2',
@@ -50,9 +52,35 @@ class Scholarship extends Model
 
     protected $appends = ['formatted_deadline'];
 
+    private const CATEGORY_LABELS = [
+        'Bachelor' => 'بكالوريوس',
+        'Master' => 'ماجستير',
+        'PhD' => 'دكتوراه',
+        'Short Course' => 'كورس قصير',
+    ];
+
 public function getFormattedDeadlineAttribute()
     {
         return $this->deadline->format('Y-m-d');
+    }
+
+    /**
+     * قائمة المراحل الدراسية للمنحة - بترجع دايماً مصفوفة حتى لو المنحة
+     * قديمة ولسا بس عندها category مفرد (توافق رجعي).
+     */
+    public function getCategoriesListAttribute(): array
+    {
+        return !empty($this->categories) ? $this->categories : array_filter([$this->category]);
+    }
+
+    /**
+     * نص عربي جاهز للعرض يجمع كل المراحل الدراسية للمنحة، مثلاً "بكالوريوس، ماجستير".
+     */
+    public function getCategoryLabelAttribute(): string
+    {
+        return collect($this->categories_list)
+            ->map(fn ($c) => self::CATEGORY_LABELS[$c] ?? $c)
+            ->implode('، ');
     }
 
     public function getLogoImageAttribute($value)
