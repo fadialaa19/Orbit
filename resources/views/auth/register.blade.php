@@ -12,7 +12,7 @@
     </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" href="{{ asset('assets/images/logo.png') }}" type="image/png">
+    <link rel="icon" href="{{ asset('assets/images/logo.png') . '?v=2' }}" type="image/png">
     <title>إنشاء حساب جديد - Orbit</title>
     @vite(['resources/css/app.css'])
     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
@@ -102,7 +102,7 @@
 
             <div class="flex justify-center mb-4 sm:mb-6">
                 <div class="w-12 h-12 sm:w-16 sm:h-16 flex items-center justify-center">
-                    <img src="{{ asset('assets/images/logo.png') }}" class="w-12 h-12 sm:w-16 sm:h-16 object-contain" alt="Logo">
+                    <img src="{{ asset('assets/images/logo.png') . '?v=2' }}" class="w-12 h-12 sm:w-16 sm:h-16 object-contain" alt="Logo">
                 </div>
             </div>
 

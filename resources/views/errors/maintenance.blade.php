@@ -12,7 +12,7 @@
     </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" href="{{ asset('assets/images/logo.png') }}" type="image/png">
+    <link rel="icon" href="{{ asset('assets/images/logo.png') . '?v=2' }}" type="image/png">
     <title>تحسينات جارية</title>
 
 @vite(['resources/css/app.css'])
@@ -48,7 +48,7 @@
         
         <div class="mb-10">
             
-                <img src="{{ asset('assets/images/logo.png') }}" class="h-12 md:h-14 mx-auto" alt="Logo">
+                <img src="{{ asset('assets/images/logo.png') . '?v=2' }}" class="h-12 md:h-14 mx-auto" alt="Logo">
                 <h2 class="text-2xl font-black tracking-tighter italic">Orbit</h2>
             
         </div>
