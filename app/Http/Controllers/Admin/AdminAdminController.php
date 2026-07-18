@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 
 class AdminAdminController extends Controller
 {
@@ -38,6 +39,7 @@ class AdminAdminController extends Controller
             'permissions' => 'nullable|array',
             'job_title' => 'nullable|string|max:255',
             'team_bio' => 'nullable|string|max:1000',
+            'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
         ]);
 
         // إذا كان مدير عام، بنعطيه كل الصلاحيات تلقائياً
@@ -51,7 +53,7 @@ class AdminAdminController extends Controller
         $role = $request->role === 'custom' ? 'scholarship_admin' : $request->role;
 
         // ✅ تصحيح: تم تغييرها من Admin::create إلى User::create
-        User::create([
+        $admin = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => bcrypt($request->password),
@@ -66,6 +68,11 @@ class AdminAdminController extends Controller
             // middleware on ticket-reply routes would lock new managers out.
             'email_verified_at' => now(),
         ]);
+
+        if ($request->hasFile('avatar')) {
+            $admin->avatar = $request->file('avatar')->store('avatars', 'public');
+            $admin->save();
+        }
 
         return redirect()->back()->with('success', 'تم إضافة المدير وتخصيص صلاحياته بنجاح');
     }
@@ -90,6 +97,7 @@ class AdminAdminController extends Controller
             'password' => 'nullable|string|min:6',
             'job_title' => 'nullable|string|max:255',
             'team_bio' => 'nullable|string|max:1000',
+            'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
         ]);
 
         $permissions = $request->role === 'super_admin'
@@ -111,6 +119,13 @@ class AdminAdminController extends Controller
 
         if ($request->filled('password')) {
             $data['password'] = Hash::make($request->password);
+        }
+
+        if ($request->hasFile('avatar')) {
+            if ($admin->getRawOriginal('avatar')) {
+                Storage::disk('public')->delete($admin->getRawOriginal('avatar'));
+            }
+            $data['avatar'] = $request->file('avatar')->store('avatars', 'public');
         }
 
         $admin->update($data);

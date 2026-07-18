@@ -129,7 +129,7 @@
                     <tr class="hover:bg-slate-50/80 transition-all group">
                         <td class="px-6 py-5">
                             <div class="flex items-center gap-3">
-                                <img src="https://ui-avatars.com/api/?name={{ urlencode($admin->name) }}&background=6366f1&color=fff" class="w-10 h-10 rounded-xl shadow-sm">
+                                <img src="{{ $admin->avatar ?: 'https://ui-avatars.com/api/?name=' . urlencode($admin->name) . '&background=6366f1&color=fff' }}" class="w-10 h-10 rounded-xl shadow-sm object-cover">
                                 <div>
                                     <p class="text-xs font-black text-slate-800">{{ $admin->name }}</p>
                                     <p class="text-[10px] font-bold text-slate-400">{{ $admin->email }}</p>
@@ -226,9 +226,13 @@
     <div x-show="addModal" x-cloak class="fixed inset-0 z-[100] flex items-center justify-center bg-slate-900/40 backdrop-blur-sm p-4">
         <div @click.away="addModal = false" class="bg-white rounded-[2rem] p-8 w-full max-w-lg shadow-2xl overflow-y-auto max-h-[90vh]">
             <h2 class="text-xl font-black text-slate-900 mb-6">إضافة مدير جديد وصلاحياته</h2>
-            <form action="{{ route('admin.admins.store') }}" method="POST" class="space-y-4">
+            <form action="{{ route('admin.admins.store') }}" method="POST" enctype="multipart/form-data" class="space-y-4">
                 @csrf
                 <input type="hidden" name="form_name" value="add">
+                <div>
+                    <label class="text-[10px] font-black text-slate-400 uppercase mr-2 block mb-1">الصورة الشخصية (اختياري)</label>
+                    <input type="file" name="avatar" accept="image/*" class="w-full bg-slate-50 border border-slate-100 rounded-xl px-4 py-3 text-xs font-bold outline-none file:ml-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:bg-gold-100 file:text-gold-700 file:font-black">
+                </div>
                 <input type="text" name="name" value="{{ old('form_name') === 'add' ? old('name') : '' }}" placeholder="الاسم الكامل" required class="w-full bg-slate-50 border border-slate-100 rounded-xl px-4 py-3 text-sm font-bold outline-none focus:border-gold-300">
                 <input type="email" name="email" value="{{ old('form_name') === 'add' ? old('email') : '' }}" placeholder="البريد الإلكتروني" required class="w-full bg-slate-50 border border-slate-100 rounded-xl px-4 py-3 text-sm font-bold outline-none focus:border-gold-300">
                 <div class="relative" x-data="{ pwShow: false }">
@@ -293,12 +297,19 @@
     <div x-show="editModal" x-cloak class="fixed inset-0 z-[100] flex items-center justify-center bg-slate-900/40 backdrop-blur-sm p-4">
         <div @click.away="editModal = false" class="bg-white rounded-[2rem] p-8 w-full max-w-lg shadow-2xl overflow-y-auto max-h-[90vh]">
             <h2 class="text-xl font-black text-slate-900 mb-6">تعديل صلاحيات وبيانات المدير</h2>
-            
-            <form :action="'{{ url('admin/admins') }}/' + currentAdmin.id" method="POST" class="space-y-4">
+
+            <form :action="'{{ url('admin/admins') }}/' + currentAdmin.id" method="POST" enctype="multipart/form-data" class="space-y-4">
                 @csrf
                 @method('PATCH')
                 <input type="hidden" name="form_name" value="edit">
                 <input type="hidden" name="id" :value="currentAdmin.id">
+                <div class="space-y-1">
+                    <label class="text-[10px] font-black text-slate-400 uppercase mr-2">الصورة الشخصية</label>
+                    <div class="flex items-center gap-3">
+                        <img :src="currentAdmin.avatar || ('https://ui-avatars.com/api/?name=' + encodeURIComponent(currentAdmin.name || '') + '&background=6366f1&color=fff')" class="w-12 h-12 rounded-xl object-cover shadow-sm shrink-0">
+                        <input type="file" name="avatar" accept="image/*" class="flex-1 bg-slate-50 border border-slate-100 rounded-xl px-4 py-3 text-xs font-bold outline-none file:ml-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:bg-gold-100 file:text-gold-700 file:font-black">
+                    </div>
+                </div>
                 <div class="space-y-1">
                     <label class="text-[10px] font-black text-slate-400 uppercase mr-2">الاسم</label>
                     <input type="text" name="name" x-model="currentAdmin.name" required class="w-full bg-slate-50 border border-slate-100 rounded-xl px-4 py-3 text-sm font-bold outline-none focus:border-gold-300">
