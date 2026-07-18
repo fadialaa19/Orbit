@@ -7,7 +7,7 @@
 <div class="max-w-7xl mx-auto h-[calc(100vh-69px)] flex bg-gradient-to-b from-slate-50 to-white">
     <div x-data="communicationHub()" x-init="init()" class="w-full flex overflow-hidden rounded-3xl shadow-2xl m-4 border border-slate-100/50 backdrop-blur-xl bg-white/80">
         
-        <div class="w-20 flex flex-col bg-gradient-to-b from-gold-500 to-gold-600 text-white p-4 gap-4">
+        <div class="w-20 shrink-0 flex-col bg-gradient-to-b from-gold-500 to-gold-600 text-white p-4 gap-4" :class="(!selectedChat || !isMobile()) ? 'flex' : 'hidden'">
             <button @click="switchPanel('ai')" :class="activePanel === 'ai' ? 'bg-white/20 rounded-2xl p-2 shadow-lg' : 'hover:bg-white/10 rounded-xl p-2'" title="الذكاء الاصطناعي">
                 <svg class="w-7 h-7 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
             </button>
@@ -16,7 +16,8 @@
             </button>
         </div>
 
-        <div class="flex-1 max-w-md border-l border-slate-100/50 bg-gradient-to-b from-slate-50/50 backdrop-blur-sm flex flex-col">
+        <div class="flex-1 min-w-0 w-full md:max-w-md border-l border-slate-100/50 bg-gradient-to-b from-slate-50/50 backdrop-blur-sm flex-col"
+             :class="(!selectedChat || !isMobile()) ? 'flex' : 'hidden'">
             <div class="p-4 border-b border-slate-100/50 bg-white/70 flex justify-between items-center">
                 <h2 x-text="panelTitles[activePanel]" class="text-xl font-black text-slate-900"></h2>
                 
@@ -58,14 +59,17 @@
             </div>
         </div>
 
-        <div class="flex-1 flex flex-col bg-white/50 relative">
+        <div class="flex-1 min-w-0 flex-col bg-white/50 relative" :class="(selectedChat || !isMobile()) ? 'flex' : 'hidden'">
             <template x-if="selectedChat">
                 <div class="h-full flex flex-col">
                     <div class="p-4 border-b border-slate-100/50 bg-white/70 backdrop-blur flex items-center justify-between">
-                        <div class="flex items-center gap-3 text-right">
-                            <div class="w-10 h-10 bg-gold-100 rounded-2xl flex items-center justify-center text-gold-600 font-black" x-text="selectedChat.avatar || '💬'"></div>
-                            <div>
-                                <h3 class="font-black text-slate-900" x-text="selectedChat.name || selectedChat.subject"></h3>
+                        <div class="flex items-center gap-3 text-right min-w-0">
+                            <button @click="selectedChat = null" class="lg:hidden text-slate-400 shrink-0">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                            </button>
+                            <div class="w-10 h-10 bg-gold-100 rounded-2xl flex items-center justify-center text-gold-600 font-black shrink-0" x-text="selectedChat.avatar || '💬'"></div>
+                            <div class="min-w-0">
+                                <h3 class="font-black text-slate-900 truncate" x-text="selectedChat.name || selectedChat.subject"></h3>
                                 <p class="text-[10px] text-green-500 font-bold" x-text="activePanel === 'ai' ? 'متصل (Groq AI)' : 'فريق الدعم متاح'"></p>
                             </div>
                         </div>
@@ -119,6 +123,9 @@ function communicationHub() {
     return {
         activePanel: 'ai',
         selectedChat: null,
+        isMobile() {
+            return window.innerWidth < 1024;
+        },
         selectedMessages: [],
         newMessage: '',
         isTyping: false,
