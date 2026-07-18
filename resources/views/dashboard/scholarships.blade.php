@@ -68,7 +68,7 @@
                 {{-- قسم عرض المنح الرئيسي --}}
                 <div class="lg:col-span-3 space-y-6 order-1 lg:order-2">
                     @forelse($scholarships as $scholarship)
-                    <div class="bg-white p-8 rounded-[2.5rem] shadow-sm border border-slate-50 hover:border-gold-100 transition duration-300 relative group">
+                    <div class="bg-white rounded-[2.5rem] shadow-sm border border-slate-50 hover:border-gold-100 transition duration-300 relative group overflow-hidden">
 
                         {{-- نسبة التوافق الذكية: مخزّنة مسبقًا أو بتتحلل في الخلفية بعد تحميل الصفحة --}}
                         @if(isset($matchScores[$scholarship->id]))
@@ -76,19 +76,27 @@
                                 $score = $matchScores[$scholarship->id];
                                 $scoreColor = $score >= 70 ? 'bg-emerald-50 text-emerald-700 border-emerald-100' : ($score >= 40 ? 'bg-amber-50 text-amber-700 border-amber-100' : 'bg-rose-50 text-rose-700 border-rose-100');
                             @endphp
-                            <div class="absolute -top-3 left-6 px-3 py-1.5 rounded-full text-[11px] font-black border shadow-sm {{ $scoreColor }}" data-match-badge="{{ $scholarship->id }}">
+                            <div class="absolute top-5 left-6 z-20 px-3 py-1.5 rounded-full text-[11px] font-black border shadow-sm {{ $scoreColor }}" data-match-badge="{{ $scholarship->id }}">
                                 🎯 نسبة توافقك: {{ $score }}%
                             </div>
                         @else
-                            <div class="absolute -top-3 left-6 px-3 py-1.5 rounded-full text-[11px] font-black border shadow-sm bg-slate-50 text-slate-400 border-slate-100 animate-pulse" data-match-badge="{{ $scholarship->id }}" data-match-pending="1">
+                            <div class="absolute top-5 left-6 z-20 px-3 py-1.5 rounded-full text-[11px] font-black border shadow-sm bg-slate-50 text-slate-400 border-slate-100 animate-pulse" data-match-badge="{{ $scholarship->id }}" data-match-pending="1">
                                 🤖 جارِ تحليل التوافق...
                             </div>
                         @endif
 
+                        @if($scholarship->main_image)
+                            <div class="h-28 w-full overflow-hidden relative">
+                                <img src="{{ $scholarship->main_image }}" alt="" class="w-full h-full object-cover">
+                                <div class="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent"></div>
+                            </div>
+                        @endif
+
+                        <div class="p-8 {{ $scholarship->main_image ? '-mt-10' : '' }}">
                         <div class="flex flex-col md:flex-row gap-8 items-center">
-                            
+
                             {{-- صندوق اللوجو المعتمد على logo_image الفعلي والـ Fallback له --}}
-                            <div class="w-20 h-20 md:w-24 md:h-24 flex-shrink-0 rounded-2xl overflow-hidden border border-slate-100 bg-slate-50 flex items-center justify-center p-2">
+                            <div class="w-20 h-20 md:w-24 md:h-24 flex-shrink-0 rounded-2xl overflow-hidden border border-slate-100 bg-slate-50 flex items-center justify-center p-2 relative z-10 {{ $scholarship->main_image ? 'ring-4 ring-white shadow-lg' : '' }}">
                                 @if($scholarship->logo_image)
                                     <img src="{{ $scholarship->logo_image }}" alt="{{ $scholarship->title_ar }}" class="w-full h-full object-contain">
                                 @else
@@ -160,6 +168,7 @@
                                     </button>
                                 </div>
                             </div>
+                        </div>
                         </div>
                     </div>
                     @empty

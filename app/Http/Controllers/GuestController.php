@@ -56,4 +56,29 @@ class GuestController extends Controller
 
         return view('guest.services', compact('studentsCount', 'testimonials'));
     }
+
+    public function contact()
+    {
+        return view('guest.contact');
+    }
+
+    public function submitContact(Request $request)
+    {
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|max:255',
+            'subject' => 'required|string|max:255',
+            'message' => 'required|string|max:3000',
+        ]);
+
+        $contactMessage = \App\Models\ContactMessage::create($validated);
+
+        try {
+            User::admins()->get()->each->notify(new \App\Notifications\NewContactMessageNotification($contactMessage));
+        } catch (\Exception $e) {
+            \Log::warning('Failed to notify admins of new contact message: ' . $e->getMessage());
+        }
+
+        return redirect()->route('guest.contact')->with('success', 'تم إرسال رسالتك بنجاح! فريقنا رح يتواصل معك بأقرب وقت.');
+    }
 }

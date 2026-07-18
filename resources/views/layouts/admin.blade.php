@@ -83,6 +83,15 @@
                 <span>تجارب الطلاب</span>
                 <span class="mr-auto px-2.5 py-1 bg-amber-100 text-amber-600 rounded-xl text-[10px] font-black">{{ \App\Models\Testimonial::active()->count() }}</span>
             </a>
+            <a href="{{ url('/admin/contact-messages') }}"
+               class="group flex items-center gap-4 px-4 py-3.5 rounded-[1.3rem] font-bold text-sm transition-all {{ request()->is('admin/contact-messages*') ? 'bg-gold-100 text-gold-600' : 'text-slate-600 hover:bg-slate-50' }}">
+                <svg class="w-5 h-5 opacity-80" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+                <span>رسائل التواصل</span>
+                @php $pendingContactCount = \App\Models\ContactMessage::pending()->count(); @endphp
+                @if($pendingContactCount > 0)
+                    <span class="mr-auto px-2.5 py-1 bg-rose-100 text-rose-600 rounded-xl text-[10px] font-black">{{ $pendingContactCount }}</span>
+                @endif
+            </a>
             @endif
 @if(auth()->user()->role === 'super_admin' || in_array('support', auth()->user()->permissions ?? []))            <a href="{{ url('/admin/communities') }}"
                class="group flex items-center gap-4 px-4 py-3.5 rounded-[1.3rem] font-bold text-sm transition-all {{ request()->is('admin/communities*') ? 'bg-gold-100 text-gold-600' : 'text-slate-600 hover:bg-slate-50' }}">

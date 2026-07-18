@@ -41,6 +41,11 @@ class AppServiceProvider extends ServiceProvider
             return Limit::perMinute(3)->by($key);
         });
 
+        // Rate limiter for the public contact form (unauthenticated, IP-based)
+        RateLimiter::for('contact-form', function ($request) {
+            return Limit::perMinute(3)->by($request->ip());
+        });
+
         // Outgoing mail sends from a domain address (for SPF/DKIM/deliverability),
         // but replies should still land in a real inbox - see config/mail.php.
         if ($replyToAddress = config('mail.reply_to.address')) {

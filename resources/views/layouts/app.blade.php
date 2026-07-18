@@ -63,6 +63,7 @@
             <a href="{{ route('guest.scholarships') }}" class="hover:text-gold-600 transition">المنح الدراسية</a>
             <a href="{{ route('guest.about') }}" class="hover:text-gold-600 transition">عن المنصة</a>
             <a href="{{ route('guest.services') }}" class="hover:text-gold-600 transition">الخدمات</a>
+            <a href="{{ route('guest.contact') }}" class="hover:text-gold-600 transition">تواصل معنا</a>
 
         </div>
     </div>
@@ -92,6 +93,7 @@
             <a href="{{ route('guest.scholarships') }}" class="block hover:text-gold-600 transition">المنح الدراسية</a>
             <a href="{{ route('guest.about') }}" class="block hover:text-gold-600 transition">عن المنصة</a>
             <a href="{{ route('guest.services') }}" class="block hover:text-gold-600 transition">الخدمات</a>
+            <a href="{{ route('guest.contact') }}" class="block hover:text-gold-600 transition">تواصل معنا</a>
             <div class="border-t border-slate-100 pt-3 flex flex-col gap-3">
 @auth
                 <a href="{{ route('dashboard.student') }}" class="font-bold hover:text-gold-600 transition">لوحة التحكم</a>
@@ -129,9 +131,7 @@
             <div>
                 <h4 class="font-bold mb-4">الدعم</h4>
                 <ul class="text-gray-400 space-y-2">
-                    <li>مركز المساعدة</li>
-                    <li>الأسئلة الشائعة</li>
-                    <li>اتصل بنا</li>
+                    <li><a href="{{ route('guest.contact') }}" class="hover:text-white transition">اتصل بنا</a></li>
                 </ul>
             </div>
             <div>

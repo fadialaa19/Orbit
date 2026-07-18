@@ -1,15 +1,6 @@
 ﻿@extends('layouts.app')
 
 @section('content')
-<style>
-    .match-circle {
-        --progress: 95;
-        --size: 5rem;
-    }
-    .match-circle svg circle {
-        stroke-dasharray: calc(var(--progress) * 1.4), 314;
-    }
-</style>
 
 <section class="py-20 px-4 md:px-8 max-w-7xl mx-auto">
     <!-- Header & Search -->
@@ -59,30 +50,28 @@
     <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8 mb-20">
         @forelse($scholarships as $scholarship)
         @php
-            $matchPercent = 80 + ($scholarship->id % 19);
             $coverageList = $scholarship->coverage ?? [];
             $fundingType = (is_array($coverageList) && count($coverageList) >= 2) ? 'ممولة كاملة' : 'جزئياً ممونة';
             $coverageDisplay = is_array($coverageList) && !empty($coverageList) ? $coverageList[0] : 'ممونة';
             $countryCode = strtoupper(mb_substr($scholarship->country, 0, 2));
         @endphp
-        <div class="group bg-white rounded-[2.5rem] p-8 shadow-sm hover:shadow-2xl border border-slate-50 hover:-translate-y-4 hover:border-navy-100 transition-all duration-500 overflow-hidden" data-aos="fade-up" data-aos-delay="{{ $loop->index * 100 }}">
-            <!-- Match Score Badge -->
-            <div class="absolute top-6 right-6 w-20 h-20">
-                <svg class="w-full h-full -rotate-12" viewBox="0 0 80 80">
-                    <circle cx="40" cy="40" r="35" fill="none" stroke="#f8fafc" stroke-width="4"></circle>
-                    <circle cx="40" cy="40" r="35" fill="none" stroke="#DB8A47" stroke-width="4" stroke-linecap="round" stroke-dasharray="{{ $matchPercent * 1.11 }}, 220"></circle>
-                    <text x="40" y="45" font-size="16" font-weight="bold" fill="#1e293b" text-anchor="middle" dy=".3em">{{ $matchPercent }}%</text>
-                </svg>
-            </div>
+        <div class="group bg-white rounded-[2.5rem] shadow-sm hover:shadow-2xl border border-slate-50 hover:-translate-y-4 hover:border-navy-100 transition-all duration-500 overflow-hidden" data-aos="fade-up" data-aos-delay="{{ $loop->index * 100 }}">
+            @if($scholarship->main_image)
+                <div class="h-32 w-full overflow-hidden relative">
+                    <img src="{{ $scholarship->main_image }}" alt="" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent"></div>
+                </div>
+            @endif
 
-            <!-- University Logo -->
-            <div class="w-20 h-20 bg-gradient-to-br from-gold-100 to-cream-50 rounded-[1.5rem] flex items-center justify-center mb-6 relative z-10 shadow-inner border-4 border-white overflow-hidden">
-                @if($scholarship->logo_image)
-                    <img src="{{ $scholarship->logo_image }}" alt="{{ $scholarship->title_ar }}" class="w-full h-full object-contain p-2">
-                @else
-                    <span class="text-2xl font-black text-gold-600 drop-shadow-lg">{{ $countryCode }}</span>
-                @endif
-            </div>
+            <div class="p-8 {{ $scholarship->main_image ? '-mt-10' : '' }}">
+                <!-- University Logo -->
+                <div class="w-20 h-20 bg-gradient-to-br from-gold-100 to-cream-50 rounded-[1.5rem] flex items-center justify-center mb-6 relative z-10 shadow-inner border-4 border-white overflow-hidden {{ $scholarship->main_image ? 'shadow-lg' : '' }}">
+                    @if($scholarship->logo_image)
+                        <img src="{{ $scholarship->logo_image }}" alt="{{ $scholarship->title_ar }}" class="w-full h-full object-contain p-2">
+                    @else
+                        <span class="text-2xl font-black text-gold-600 drop-shadow-lg">{{ $countryCode }}</span>
+                    @endif
+                </div>
 
             <!-- Content -->
             <div class="relative z-10">
@@ -113,6 +102,7 @@
                         حفظ
                     </a>
                 </div>
+            </div>
             </div>
         </div>
         @empty

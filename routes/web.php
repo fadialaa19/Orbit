@@ -22,6 +22,7 @@ Route::get('/sitemap.xml', function () {
         ['loc' => route('guest.scholarships'), 'priority' => '0.9'],
         ['loc' => route('guest.about'), 'priority' => '0.7'],
         ['loc' => route('guest.services'), 'priority' => '0.7'],
+        ['loc' => route('guest.contact'), 'priority' => '0.6'],
     ];
 
     return response()->view('sitemap', ['urls' => $urls])
@@ -88,6 +89,8 @@ Route::get('/scholarships', [App\Http\Controllers\GuestController::class, 'schol
 Route::get('/scholarships/{scholarship}', [App\Http\Controllers\GuestController::class, 'scholarshipShow'])->name('guest.scholarships.show');
 Route::get('/about', [App\Http\Controllers\GuestController::class, 'about'])->name('guest.about');
 Route::get('/services', [App\Http\Controllers\GuestController::class, 'services'])->name('guest.services');
+Route::get('/contact', [App\Http\Controllers\GuestController::class, 'contact'])->name('guest.contact');
+Route::post('/contact', [App\Http\Controllers\GuestController::class, 'submitContact'])->middleware('throttle:contact-form')->name('guest.contact.submit');
 
 
 /*
@@ -142,6 +145,9 @@ Route::prefix('admin')->middleware(['auth'])->name('admin.')->group(function () 
         Route::patch('testimonials/{testimonial}/toggle', [AdminTestimonialController::class, 'toggleStatus'])->name('testimonials.toggle');
         Route::patch('testimonials/{testimonial}/approve', [AdminTestimonialController::class, 'approve'])->name('testimonials.approve');
         Route::patch('testimonials/{testimonial}/reject', [AdminTestimonialController::class, 'reject'])->name('testimonials.reject');
+
+        Route::get('contact-messages', [\App\Http\Controllers\Admin\AdminContactMessageController::class, 'index'])->name('contact-messages.index');
+        Route::patch('contact-messages/{contactMessage}/status', [\App\Http\Controllers\Admin\AdminContactMessageController::class, 'updateStatus'])->name('contact-messages.status');
     });
 
     // 6️⃣.5 المجتمعات (Communities)
