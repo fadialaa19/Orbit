@@ -35,7 +35,9 @@ class AdminAdminController extends Controller
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:6',
             'role' => 'required|in:super_admin,scholarship_admin,support_admin,custom',
-            'permissions' => 'nullable|array'
+            'permissions' => 'nullable|array',
+            'job_title' => 'nullable|string|max:255',
+            'team_bio' => 'nullable|string|max:1000',
         ]);
 
         // إذا كان مدير عام، بنعطيه كل الصلاحيات تلقائياً
@@ -56,6 +58,9 @@ class AdminAdminController extends Controller
             'role' => $role,
             'permissions' => $permissions,
             'status' => 'active',
+            'job_title' => $request->job_title,
+            'team_bio' => $request->team_bio,
+            'show_on_team' => $request->boolean('show_on_team'),
             // Admin-created accounts are trusted immediately (no self-registration
             // email-ownership check needed) — otherwise the verified.ensure
             // middleware on ticket-reply routes would lock new managers out.
@@ -83,6 +88,8 @@ class AdminAdminController extends Controller
             'role' => 'required|in:super_admin,scholarship_admin,support_admin,custom',
             'permissions' => 'nullable|array',
             'password' => 'nullable|string|min:6',
+            'job_title' => 'nullable|string|max:255',
+            'team_bio' => 'nullable|string|max:1000',
         ]);
 
         $permissions = $request->role === 'super_admin'
@@ -97,6 +104,9 @@ class AdminAdminController extends Controller
             'email' => $request->email,
             'role' => $role,
             'permissions' => $permissions,
+            'job_title' => $request->job_title,
+            'team_bio' => $request->team_bio,
+            'show_on_team' => $request->boolean('show_on_team'),
         ];
 
         if ($request->filled('password')) {

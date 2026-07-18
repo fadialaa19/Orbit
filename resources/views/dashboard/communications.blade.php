@@ -136,6 +136,19 @@ function communicationHub() {
 
         async init() {
     await this.loadChats();
+
+    // دعم الفتح المباشر من رابط إشعار (مثل مكافأة 1000 XP): ?panel=support&open=ID
+    const params = new URLSearchParams(window.location.search);
+    const panelParam = params.get('panel');
+    const openId = params.get('open');
+    if (panelParam && this.chatsByType[panelParam]) {
+        this.activePanel = panelParam;
+    }
+    if (openId) {
+        const target = this.chatsByType[this.activePanel].find(c => c.id == openId);
+        if (target) this.selectChat(target);
+    }
+
     if (window.Echo) {
         // تأكد من استخدام userId الصحيح الممرر من الـ Blade
         Echo.private(`App.Models.User.${window.userId}`)

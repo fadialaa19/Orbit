@@ -58,6 +58,9 @@ protected $fillable = [
         'email',
         'password',
         'role',
+        'job_title',
+        'team_bio',
+        'show_on_team',
         'xp',          // 👈 أضف هذا السطر
         'referred_by',
         'referral_reward_granted',
@@ -123,6 +126,7 @@ protected $fillable = [
         'permissions' => 'array', // هاد السطر سيعامل الحقل كمصفوفة PHP طبيعية
         'xp_last_heartbeat_at' => 'datetime',
         'referral_reward_granted' => 'boolean',
+        'show_on_team' => 'boolean',
     ];
 
     public function xpTransactions()

@@ -17,19 +17,19 @@
             <template x-for="community in communities" :key="community.id">
                 <button @click="selectCommunity(community)"
                         :class="selectedCommunity?.id === community.id ? 'bg-white shadow-lg border-r-4 border-gold-500' : 'hover:bg-white/50 border-r-4 border-transparent'"
-                        class="w-full flex items-center gap-4 p-4 transition-all text-right">
-                    <div class="w-12 h-12 rounded-2xl flex items-center justify-center text-white text-xl shadow-lg shrink-0 overflow-hidden bg-gradient-to-r from-gold-500 to-gold-600">
+                        class="w-full flex items-center gap-2.5 sm:gap-4 p-2.5 sm:p-4 transition-all text-right">
+                    <div class="w-9 h-9 sm:w-12 sm:h-12 rounded-2xl flex items-center justify-center text-white text-sm sm:text-xl shadow-lg shrink-0 overflow-hidden bg-gradient-to-r from-gold-500 to-gold-600">
                         <img x-show="community.image" :src="community.image" class="w-full h-full object-cover">
                         <span x-show="!community.image" x-text="community.icon"></span>
                     </div>
                     <div class="flex-1 min-w-0">
-                        <div class="flex items-center justify-between gap-2">
-                            <p class="font-black text-slate-900 text-sm truncate" x-text="community.name"></p>
-                            <span class="text-[8px] font-black px-2 py-0.5 rounded-full shrink-0"
+                        <div class="flex items-start justify-between gap-1.5">
+                            <p class="font-black text-slate-900 text-[10px] sm:text-sm leading-snug line-clamp-2" x-text="community.name"></p>
+                            <span class="text-[7px] sm:text-[8px] font-black px-1.5 sm:px-2 py-0.5 rounded-full shrink-0"
                                   :class="community.type === 'announcement' ? 'bg-amber-100 text-amber-700' : 'bg-emerald-100 text-emerald-700'"
                                   x-text="community.type === 'announcement' ? 'تعليمات' : 'نقاش'"></span>
                         </div>
-                        <p class="text-[10px] text-slate-400 truncate mt-1" x-text="community.last_message || 'لا توجد رسائل بعد'"></p>
+                        <p class="text-[9px] sm:text-[10px] text-slate-400 truncate mt-1" x-text="community.last_message || 'لا توجد رسائل بعد'"></p>
                     </div>
                 </button>
             </template>
@@ -55,7 +55,7 @@
                             <span x-show="!selectedCommunity.image" x-text="selectedCommunity.icon"></span>
                         </div>
                         <div class="min-w-0">
-                            <h3 class="font-black text-slate-900 truncate" x-text="selectedCommunity.name"></h3>
+                            <h3 class="font-black text-slate-900 text-[13px] sm:text-base leading-snug line-clamp-2" x-text="selectedCommunity.name"></h3>
                             <p class="text-[10px] text-slate-400 font-bold truncate" x-text="selectedCommunity.description || (selectedCommunity.type === 'announcement' ? 'تعليمات ومنشورات الإدارة' : 'نقاش مفتوح بين الطلاب')"></p>
                         </div>
                     </div>

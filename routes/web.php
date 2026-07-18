@@ -31,7 +31,7 @@ Route::get('/sitemap.xml', function () {
 
 Route::get('/', function () {
     $testimonials = \App\Models\Testimonial::active()->latest()->take(3)->get();
-    $teamMembers = \App\Models\User::admins()->where('status', 'active')->get();
+    $teamMembers = \App\Models\User::admins()->where('status', 'active')->where('show_on_team', true)->get();
 
     $stats = [
         'students' => \App\Models\User::where('role', 'student')->count(),

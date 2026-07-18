@@ -48,7 +48,10 @@
             name: @js(old('name')),
             email: @js(old('email')),
             role: @js(old('role')),
-            permissions: @js(old('permissions', []))
+            permissions: @js(old('permissions', [])),
+            job_title: @js(old('job_title')),
+            team_bio: @js(old('team_bio')),
+            show_on_team: @js(old('show_on_team', true))
         };
     @endif
 " class="max-w-full mx-auto space-y-6">
@@ -251,6 +254,17 @@
                     </select>
                 </div>
 
+                {{-- بيانات الظهور في صفحة "فريقنا" العامة بالموقع --}}
+                <div class="border border-slate-100 rounded-2xl p-4 bg-slate-50/50 space-y-3">
+                    <span class="text-[11px] font-black text-slate-500 block">الظهور في صفحة "فريقنا" بالموقع الرئيسي (اختياري):</span>
+                    <input type="text" name="job_title" value="{{ old('form_name') === 'add' ? old('job_title') : '' }}" placeholder="المسمى الوظيفي المعروض (مثال: مطور ويب)" class="w-full bg-white border border-slate-100 rounded-xl px-4 py-3 text-sm font-bold outline-none focus:border-gold-300">
+                    <textarea name="team_bio" rows="2" placeholder="نبذة تعريفية قصيرة تظهر تحت الاسم (اختياري)" class="w-full bg-white border border-slate-100 rounded-xl px-4 py-3 text-sm font-bold outline-none focus:border-gold-300">{{ old('form_name') === 'add' ? old('team_bio') : '' }}</textarea>
+                    <label class="flex items-center gap-3 bg-white p-3 rounded-xl border border-slate-100 cursor-pointer select-none">
+                        <input type="checkbox" name="show_on_team" value="1" {{ old('form_name') !== 'add' || old('show_on_team', true) ? 'checked' : '' }} class="rounded border-slate-200 text-gold-600 focus:ring-gold-500">
+                        <span class="text-xs font-black text-slate-700">إظهار هذا المدير في صفحة "فريقنا" بالموقع</span>
+                    </label>
+                </div>
+
                 {{-- لوحة التحكم بالصلاحيات التفاعلية --}}
                 <div class="border border-slate-100 rounded-2xl p-4 bg-slate-50/50 space-y-3">
                     <span class="text-[11px] font-black text-slate-500 block">تخصيص لوحات الوصول المسموحة:</span>
@@ -316,6 +330,17 @@
                         <option value="support_admin">دعم فني</option>
                         <option value="custom">مخصص</option>
                     </select>
+                </div>
+
+                {{-- بيانات الظهور في صفحة "فريقنا" العامة بالموقع --}}
+                <div class="border border-slate-100 rounded-2xl p-4 bg-slate-50/50 space-y-3">
+                    <span class="text-[11px] font-black text-slate-500 block">الظهور في صفحة "فريقنا" بالموقع الرئيسي (اختياري):</span>
+                    <input type="text" name="job_title" x-model="currentAdmin.job_title" placeholder="المسمى الوظيفي المعروض (مثال: مطور ويب)" class="w-full bg-white border border-slate-100 rounded-xl px-4 py-3 text-sm font-bold outline-none focus:border-gold-300">
+                    <textarea name="team_bio" x-model="currentAdmin.team_bio" rows="2" placeholder="نبذة تعريفية قصيرة تظهر تحت الاسم (اختياري)" class="w-full bg-white border border-slate-100 rounded-xl px-4 py-3 text-sm font-bold outline-none focus:border-gold-300"></textarea>
+                    <label class="flex items-center gap-3 bg-white p-3 rounded-xl border border-slate-100 cursor-pointer select-none">
+                        <input type="checkbox" name="show_on_team" value="1" x-model="currentAdmin.show_on_team" class="rounded border-slate-200 text-gold-600 focus:ring-gold-500">
+                        <span class="text-xs font-black text-slate-700">إظهار هذا المدير في صفحة "فريقنا" بالموقع</span>
+                    </label>
                 </div>
 
                 {{-- لوحة التحكم بالصلاحيات التفاعلية للتعديل --}}

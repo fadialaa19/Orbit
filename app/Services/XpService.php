@@ -116,7 +116,7 @@ class XpService
             $user->notify(new StudentAlertNotification(
                 '🎉 وصلت إلى ' . $milestoneXp . ' نقطة!',
                 'مبروك! وصلت إلى ' . $milestoneXp . ' نقطة XP وتستحق تقديم مجاني على منحة من طرفنا. فريقنا سيتواصل معك قريباً لمعرفة المنحة اللي بدك نساعدك فيها.',
-                route('dashboard.communications')
+                route('dashboard.communications', ['panel' => 'support', 'open' => $ticket->id])
             ));
         } catch (\Exception $e) {
             Log::warning('Failed to notify student of XP milestone: ' . $e->getMessage());

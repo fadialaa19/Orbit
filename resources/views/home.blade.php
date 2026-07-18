@@ -143,24 +143,14 @@
             ];
         @endphp
 
-        {{-- عضو ثابت دائم الظهور: مبرمج المنصة، غير مرتبط بحسابات لوحة التحكم --}}
-        <div data-aos="fade-up" class="bg-slate-50 p-8 rounded-[2rem] hover:bg-white hover:shadow-xl transition-all duration-500 text-center border-2 border-gold-100">
-            <div class="w-20 h-20 bg-gradient-to-br from-sky-500 to-blue-700 rounded-2xl flex items-center justify-center text-white font-black text-2xl shadow-lg mx-auto mb-5">
-                ف
-            </div>
-            <h4 class="font-black text-xl text-slate-800">م. فادي حمد</h4>
-            <p class="text-gold-600 font-bold mb-2">مطور ومبرمج المنصة</p>
-            <p class="text-slate-500 text-sm leading-relaxed">مطور برمجيات Front-End و Back-End، صمّم وبرمج منصة Orbit بالكامل من الفكرة إلى التنفيذ ليقدّم للطلاب تجربة تقنية سلسة وموثوقة.</p>
-        </div>
-
         @foreach($teamMembers as $member)
         <div data-aos="fade-up" class="bg-slate-50 p-8 rounded-[2rem] hover:bg-white hover:shadow-xl transition-all duration-500 text-center">
             <div class="w-20 h-20 bg-gradient-to-br {{ $roleColors[$member->role] ?? 'from-gold-600 to-gold-400' }} rounded-2xl flex items-center justify-center text-white font-black text-2xl shadow-lg mx-auto mb-5">
                 {{ mb_substr($member->name, 0, 1) }}
             </div>
             <h4 class="font-black text-xl text-slate-800">{{ $member->name }}</h4>
-            <p class="text-gold-600 font-bold mb-2">{{ $roleLabels[$member->role] ?? 'عضو فريق' }}</p>
-            <p class="text-slate-500 text-sm leading-relaxed">{{ $roleBios[$member->role] ?? 'خبير في إدارة المنح الدراسية ودعم الطلاب لتحقيق طموحاتهم الأكاديمية.' }}</p>
+            <p class="text-gold-600 font-bold mb-2">{{ $member->job_title ?: ($roleLabels[$member->role] ?? 'عضو فريق') }}</p>
+            <p class="text-slate-500 text-sm leading-relaxed">{{ $member->team_bio ?: ($roleBios[$member->role] ?? 'خبير في إدارة المنح الدراسية ودعم الطلاب لتحقيق طموحاتهم الأكاديمية.') }}</p>
         </div>
         @endforeach
     </div>
