@@ -4,7 +4,7 @@
 
 @section('content')
 <script>window.userId = {{ Auth::id() }};</script>
-<div class="max-w-7xl mx-auto h-[calc(100vh-69px)] flex bg-gradient-to-b from-slate-50 to-white">
+<div class="max-w-7xl mx-auto h-dashboard-screen flex bg-gradient-to-b from-slate-50 to-white">
     <div x-data="communicationHub()" x-init="init()" class="w-full flex overflow-hidden rounded-3xl shadow-2xl m-4 border border-slate-100/50 backdrop-blur-xl bg-white/80">
         
         <div class="w-20 shrink-0 flex-col bg-gradient-to-b from-gold-500 to-gold-600 text-white p-4 gap-4" :class="(!selectedChat || !isMobile()) ? 'flex' : 'hidden'">
@@ -30,16 +30,16 @@
                 <template x-for="chat in chatsByType[activePanel]" :key="chat.id">
                     <div @click="selectChat(chat)"
                             :class="selectedChat?.id === chat.id ? 'bg-white shadow-lg border-r-4 border-gold-500' : 'hover:bg-white/50 border-r-4 border-transparent'"
-                            class="w-full group flex items-center gap-4 p-4 transition-all cursor-pointer">
-                        <div class="w-12 h-12 bg-gradient-to-r from-gold-500 to-gold-600 rounded-2xl flex items-center justify-center text-white font-black shadow-lg shrink-0">
+                            class="w-full group flex items-center gap-2.5 sm:gap-4 p-2.5 sm:p-4 transition-all cursor-pointer">
+                        <div class="w-9 h-9 sm:w-12 sm:h-12 bg-gradient-to-r from-gold-500 to-gold-600 rounded-2xl flex items-center justify-center text-white font-black shadow-lg shrink-0 text-sm sm:text-base">
                             <span x-text="chat.avatar || (activePanel === 'ai' ? '🤖' : '🛠️')"></span>
                         </div>
                         <div class="flex-1 text-right min-w-0">
-                            <div class="flex justify-between items-start gap-2">
-                                <p class="font-black text-slate-900 text-sm truncate" x-text="chat.name || chat.subject"></p>
-                                <span x-show="chat.status" :class="statusColor(chat.status)" class="text-[8px] px-2 py-0.5 rounded-full font-bold uppercase shrink-0" x-text="chat.status"></span>
+                            <div class="flex justify-between items-start gap-1.5">
+                                <p class="font-black text-slate-900 text-[10px] sm:text-sm leading-snug line-clamp-2" x-text="chat.name || chat.subject"></p>
+                                <span x-show="chat.status" :class="statusColor(chat.status)" class="text-[7px] sm:text-[8px] px-1.5 sm:px-2 py-0.5 rounded-full font-bold uppercase shrink-0" x-text="chat.status"></span>
                             </div>
-                            <p class="text-[10px] text-slate-400 truncate mt-1" x-text="chat.last_message || 'لا توجد رسائل بعد'"></p>
+                            <p class="text-[9px] sm:text-[10px] text-slate-400 truncate mt-1" x-text="chat.last_message || 'لا توجد رسائل بعد'"></p>
                         </div>
                         <div class="hidden group-hover:flex items-center gap-1 shrink-0">
                             <button @click.stop="renameChat(chat)" title="إعادة تسمية" class="p-1.5 rounded-lg text-slate-400 hover:text-gold-600 hover:bg-gold-50">
@@ -69,7 +69,7 @@
                             </button>
                             <div class="w-10 h-10 bg-gold-100 rounded-2xl flex items-center justify-center text-gold-600 font-black shrink-0" x-text="selectedChat.avatar || '💬'"></div>
                             <div class="min-w-0">
-                                <h3 class="font-black text-slate-900 truncate" x-text="selectedChat.name || selectedChat.subject"></h3>
+                                <h3 class="font-black text-slate-900 text-[13px] sm:text-base leading-snug line-clamp-2" x-text="selectedChat.name || selectedChat.subject"></h3>
                                 <p class="text-[10px] text-green-500 font-bold" x-text="activePanel === 'ai' ? 'متصل (Groq AI)' : 'فريق الدعم متاح'"></p>
                             </div>
                         </div>

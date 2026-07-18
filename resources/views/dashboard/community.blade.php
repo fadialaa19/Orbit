@@ -2,7 +2,7 @@
 @section('title', 'المجتمع')
 
 @section('content')
-<div class="max-w-7xl mx-auto h-[calc(100vh-69px)] flex bg-gradient-to-b from-slate-50 to-white" dir="rtl"
+<div class="max-w-7xl mx-auto h-dashboard-screen flex bg-gradient-to-b from-slate-50 to-white" dir="rtl"
      x-data="communityHub()" x-init="init()">
 
     {{-- قائمة المجتمعات --}}
@@ -84,26 +84,26 @@
                 </div>
 
                 {{-- الرسائل --}}
-                <div id="community-messages" class="flex-1 overflow-y-auto p-6 space-y-4 bg-slate-50/30">
+                <div id="community-messages" class="flex-1 overflow-y-auto p-3 sm:p-6 space-y-2.5 sm:space-y-4 bg-slate-50/30">
                     <template x-for="msg in messages" :key="msg.id">
-                        <div class="group/msg flex gap-3 items-start" :class="msg.sender_id === currentUserId ? 'flex-row-reverse' : ''">
-                            <div class="w-9 h-9 rounded-xl flex items-center justify-center text-white text-[11px] font-black shrink-0 overflow-hidden"
+                        <div class="group/msg flex gap-2 sm:gap-3 items-start" :class="msg.sender_id === currentUserId ? 'flex-row-reverse' : ''">
+                            <div class="w-7 h-7 sm:w-9 sm:h-9 rounded-xl flex items-center justify-center text-white text-[9px] sm:text-[11px] font-black shrink-0 overflow-hidden"
                                  :class="msg.sender_type === 'admin' ? 'bg-navy-900' : 'bg-gold-600'">
                                 <img x-show="msg.sender_avatar" :src="msg.sender_avatar" class="w-full h-full object-cover">
                                 <span x-show="!msg.sender_avatar" x-text="(msg.sender_name || '؟').charAt(0)"></span>
                             </div>
 
-                            <div class="max-w-[75%]">
-                                <div class="flex items-center gap-2 mb-1" :class="msg.sender_id === currentUserId ? 'flex-row-reverse' : ''">
-                                    <span class="text-[10px] font-black text-slate-500" x-text="msg.sender_name"></span>
-                                    <span x-show="msg.sender_type === 'admin'" class="text-[8px] font-black bg-navy-900 text-white px-1.5 py-0.5 rounded">الإدارة</span>
-                                    <span x-show="msg.is_pinned" class="text-[10px]">📌</span>
+                            <div class="max-w-[82%] sm:max-w-[75%]">
+                                <div class="flex items-center gap-1.5 sm:gap-2 mb-1" :class="msg.sender_id === currentUserId ? 'flex-row-reverse' : ''">
+                                    <span class="text-[9px] sm:text-[10px] font-black text-slate-500" x-text="msg.sender_name"></span>
+                                    <span x-show="msg.sender_type === 'admin'" class="text-[7px] sm:text-[8px] font-black bg-navy-900 text-white px-1.5 py-0.5 rounded">الإدارة</span>
+                                    <span x-show="msg.is_pinned" class="text-[9px] sm:text-[10px]">📌</span>
                                 </div>
 
                                 <template x-if="!msg.is_removed">
-                                    <div class="p-3 rounded-2xl text-xs font-bold leading-relaxed shadow-sm"
+                                    <div class="p-2 sm:p-3 rounded-2xl text-[11px] sm:text-xs font-bold leading-relaxed shadow-sm"
                                          :class="msg.sender_id === currentUserId ? 'bg-gold-600 text-white rounded-tr-sm' : 'bg-white text-slate-700 rounded-tl-sm border border-slate-100'">
-                                        <div x-show="msg.reply_to" x-cloak class="mb-2 px-2.5 py-1.5 rounded-xl text-[10px] font-bold border-r-2 opacity-90"
+                                        <div x-show="msg.reply_to" x-cloak class="mb-2 px-2.5 py-1.5 rounded-xl text-[9px] sm:text-[10px] font-bold border-r-2 opacity-90"
                                              :class="msg.sender_id === currentUserId ? 'bg-white/10 border-white/40' : 'bg-slate-50 border-gold-400 text-slate-500'">
                                             <p class="opacity-80" x-text="msg.reply_to?.sender_name"></p>
                                             <p class="truncate" x-text="msg.reply_to?.message_text"></p>
@@ -112,12 +112,12 @@
                                     </div>
                                 </template>
                                 <template x-if="msg.is_removed">
-                                    <div class="p-3 rounded-2xl text-[11px] font-bold italic text-slate-400 bg-slate-100 border border-slate-200 border-dashed">
+                                    <div class="p-2 sm:p-3 rounded-2xl text-[10px] sm:text-[11px] font-bold italic text-slate-400 bg-slate-100 border border-slate-200 border-dashed">
                                         🚫 تم حذف هذه الرسالة من قبل الإدارة
                                     </div>
                                 </template>
 
-                                <p class="text-[9px] text-slate-300 font-bold mt-1" :class="msg.sender_id === currentUserId ? 'text-left' : 'text-right'" x-text="msg.created_at"></p>
+                                <p class="text-[8px] sm:text-[9px] text-slate-300 font-bold mt-1" :class="msg.sender_id === currentUserId ? 'text-left' : 'text-right'" x-text="msg.created_at"></p>
                             </div>
 
                             {{-- أدوات الرد والإدارة --}}
