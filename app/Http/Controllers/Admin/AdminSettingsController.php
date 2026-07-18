@@ -48,6 +48,22 @@ class AdminSettingsController extends Controller
         $setting->ai_api_key = $request->ai_api_key;
         $setting->maintenance_message = $request->maintenance_message;
 
+        // بيانات التواصل والروابط الاجتماعية (تظهر بالفوتر وصفحة "تواصل معنا")
+        $request->validate([
+            'contact_email' => 'nullable|email|max:255',
+            'contact_phone' => 'nullable|string|max:50',
+            'facebook_url' => 'nullable|url|max:500',
+            'instagram_url' => 'nullable|url|max:500',
+            'whatsapp_url' => 'nullable|url|max:500',
+            'telegram_url' => 'nullable|url|max:500',
+        ]);
+        $setting->contact_email = $request->contact_email;
+        $setting->contact_phone = $request->contact_phone;
+        $setting->facebook_url = $request->facebook_url;
+        $setting->instagram_url = $request->instagram_url;
+        $setting->whatsapp_url = $request->whatsapp_url;
+        $setting->telegram_url = $request->telegram_url;
+
         // 4. تحديث مصفوفة بوابات الدفع بشكل آمن ودقيق
         $gateways = $request->payment_gateways ?? [];
         foreach ($gateways as $index => $gateway) {

@@ -96,6 +96,47 @@
                 </div>
             </div>
         </div>
+
+        <div class="bg-white rounded-[1.5rem] shadow-sm border border-slate-100 p-6">
+            <h2 class="text-xl font-black text-slate-900 mb-6 flex items-center gap-2">
+                <span class="w-8 h-8 bg-blue-100 text-blue-600 rounded-lg flex items-center justify-center text-sm">04</span>
+                بيانات التواصل والروابط الاجتماعية
+            </h2>
+            <p class="text-xs font-bold text-slate-400 mb-6 -mt-4">بتظهر بفوتر الموقع وصفحة "تواصل معنا" - اتركها فاضية لإخفاء أي رابط ما بدك تعرضه</p>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                <div>
+                    <label class="text-[11px] font-black text-slate-400 uppercase tracking-widest mb-2 block">البريد الإلكتروني الظاهر للزوار</label>
+                    <input type="email" name="contact_email" value="{{ $setting->contact_email }}" placeholder="orbit.ships@gmail.com" dir="ltr"
+                           class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm outline-none focus:border-gold-500 transition text-left">
+                </div>
+                <div>
+                    <label class="text-[11px] font-black text-slate-400 uppercase tracking-widest mb-2 block">رقم الهاتف</label>
+                    <input type="text" name="contact_phone" value="{{ $setting->contact_phone }}" placeholder="+970 59 270 4945" dir="ltr"
+                           class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm outline-none focus:border-gold-500 transition text-left">
+                </div>
+                <div>
+                    <label class="text-[11px] font-black text-slate-400 uppercase tracking-widest mb-2 flex items-center gap-2">📘 رابط فيسبوك</label>
+                    <input type="url" name="facebook_url" value="{{ $setting->facebook_url }}" placeholder="https://facebook.com/..." dir="ltr"
+                           class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm outline-none focus:border-gold-500 transition text-left">
+                </div>
+                <div>
+                    <label class="text-[11px] font-black text-slate-400 uppercase tracking-widest mb-2 flex items-center gap-2">📸 رابط انستقرام</label>
+                    <input type="url" name="instagram_url" value="{{ $setting->instagram_url }}" placeholder="https://instagram.com/..." dir="ltr"
+                           class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm outline-none focus:border-gold-500 transition text-left">
+                </div>
+                <div>
+                    <label class="text-[11px] font-black text-slate-400 uppercase tracking-widest mb-2 flex items-center gap-2">💬 رابط واتساب</label>
+                    <input type="url" name="whatsapp_url" value="{{ $setting->whatsapp_url }}" placeholder="https://wa.me/970592704945" dir="ltr"
+                           class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm outline-none focus:border-gold-500 transition text-left">
+                </div>
+                <div>
+                    <label class="text-[11px] font-black text-slate-400 uppercase tracking-widest mb-2 flex items-center gap-2">✈️ رابط تيليجرام</label>
+                    <input type="url" name="telegram_url" value="{{ $setting->telegram_url }}" placeholder="https://t.me/..." dir="ltr"
+                           class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm outline-none focus:border-gold-500 transition text-left">
+                </div>
+            </div>
+        </div>
     </form>
 </div>
 @endsection

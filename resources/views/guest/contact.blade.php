@@ -37,14 +37,14 @@
                         <div class="w-12 h-12 bg-gold-500/20 rounded-2xl flex items-center justify-center text-xl shrink-0">✉️</div>
                         <div>
                             <p class="text-[11px] text-slate-300 font-bold uppercase tracking-widest">البريد الإلكتروني</p>
-                            <p class="font-black" dir="ltr">khaledelhobe@gmail.com</p>
+                            <p class="font-black" dir="ltr">{{ \App\Models\Setting::get('contact_email', 'orbit.ships@gmail.com') }}</p>
                         </div>
                     </div>
                     <div class="flex items-center gap-4">
                         <div class="w-12 h-12 bg-gold-500/20 rounded-2xl flex items-center justify-center text-xl shrink-0">📞</div>
                         <div>
                             <p class="text-[11px] text-slate-300 font-bold uppercase tracking-widest">الهاتف</p>
-                            <p class="font-black" dir="ltr">+970 59 270 4945</p>
+                            <p class="font-black" dir="ltr">{{ \App\Models\Setting::get('contact_phone', '+970 59 270 4945') }}</p>
                         </div>
                     </div>
                     <div class="flex items-center gap-4">

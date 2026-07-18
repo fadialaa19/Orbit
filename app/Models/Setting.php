@@ -19,6 +19,12 @@ class Setting extends Model
         'ai_api_key',
         'maintenance_mode',
         'maintenance_message',
+        'contact_email',
+        'contact_phone',
+        'facebook_url',
+        'instagram_url',
+        'whatsapp_url',
+        'telegram_url',
     ];
 
     protected $casts = [
