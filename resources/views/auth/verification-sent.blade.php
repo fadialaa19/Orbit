@@ -12,7 +12,7 @@
     </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" href="{{ asset('assets/images/logo.png') . '?v=2' }}" type="image/png">
+    <link rel="icon" href="{{ asset('assets/images/logo-icon.png') . '?v=1' }}" type="image/png">
     <title>تم إرسال رابط التفعيل - Orbit</title>
     @vite(['resources/css/app.css'])
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">

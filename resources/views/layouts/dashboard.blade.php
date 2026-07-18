@@ -12,7 +12,7 @@
     </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" href="{{ asset('assets/images/logo.png') . '?v=2' }}" type="image/png">
+    <link rel="icon" href="{{ asset('assets/images/logo-icon.png') . '?v=1' }}" type="image/png">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>لوحة التحكم - @yield('title', 'منحي')</title>
 
@@ -35,7 +35,7 @@
     <div class="flex justify-between items-center">
 
         <div class="flex items-center gap-10">
-            <a href="/"><img src="{{ asset('assets/images/logo.png') . '?v=2' }}" class="h-10"></a>
+            <a href="/"><img src="{{ asset('assets/images/logo-icon.png') . '?v=1' }}" class="h-10 w-10 rounded-full object-cover"></a>
 
             <div class="hidden md:flex gap-6 text-sm font-bold text-slate-600">
                 <a href="{{ route('dashboard.student') }}" class="{{ request()->routeIs('dashboard.student') ? 'text-gold-600' : 'hover:text-gold-500' }} transition">لوحة التحكم</a>

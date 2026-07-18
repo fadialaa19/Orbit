@@ -12,7 +12,7 @@
     </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" href="{{ asset('assets/images/logo.png') . '?v=2' }}" type="image/png">
+    <link rel="icon" href="{{ asset('assets/images/logo-icon.png') . '?v=1' }}" type="image/png">
     <title>استعادة كلمة المرور - Orbit</title>
     @vite(['resources/css/app.css'])
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
@@ -35,7 +35,7 @@
 
             <div class="flex justify-center mb-8">
                 <div class="w-20 h-20 flex items-center justify-center">
-                    <img src="{{ asset('assets/images/logo.png') . '?v=2' }}" class="w-20 h-20 object-contain" alt="Logo">
+                    <img src="{{ asset('assets/images/logo-icon.png') . '?v=1' }}" class="w-20 h-20 rounded-full object-cover" alt="Logo">
                 </div>
             </div>
 

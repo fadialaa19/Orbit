@@ -12,7 +12,7 @@
     </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" href="{{ asset('assets/images/logo.png') . '?v=2' }}" type="image/png">
+    <link rel="icon" href="{{ asset('assets/images/logo-icon.png') . '?v=1' }}" type="image/png">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', 'Orbit - منصتك للحصول على منح دراسية حول العالم')</title>
 
@@ -54,7 +54,7 @@
         <div class="flex justify-between items-center">
         <div class="flex items-center gap-6">
         <a href="/" class="flex items-center gap-2">
-            <img src="{{ asset('assets/images/logo.png') . '?v=2' }}" alt="Orbit Logo" class="h-12 w-auto transition-transform duration-300 hover:scale-105">
+            <img src="{{ asset('assets/images/logo-icon.png') . '?v=1' }}" alt="Orbit Logo" class="h-12 w-12 rounded-full object-cover transition-transform duration-300 hover:scale-105">
             <span class="font-bold text-xl text-slate-800 hidden md:block">Orbit</span>
         </a>
 
@@ -116,7 +116,7 @@
     <footer class="bg-navy-950 text-white py-12 px-8 mt-20">
         <div class="grid grid-cols-1 md:grid-cols-4 gap-8 max-w-7xl mx-auto">
             <div>
-                <img src="{{ asset('assets/images/logo.png') . '?v=2' }}" alt="Logo" class="h-12 w-auto mb-6"> 
+                <img src="{{ asset('assets/images/logo-icon.png') . '?v=1' }}" alt="Logo" class="h-12 w-12 rounded-full object-cover mb-6"> 
                 <p class="text-gray-400">منصة رائدة لمساعدة الطلاب للحصول على منح دراسية حول العالم بكل حرية وبدون قيود.</p>
             </div>
             <div>
