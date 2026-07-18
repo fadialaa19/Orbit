@@ -60,6 +60,8 @@ protected $fillable = [
         'role',
         'xp',          // 👈 أضف هذا السطر
         'referred_by',
+        'referral_reward_granted',
+        'total_time_spent_seconds',
         'permissions',
         'preferences',
         'status',
@@ -120,7 +122,13 @@ protected $fillable = [
     protected $casts = [
         'permissions' => 'array', // هاد السطر سيعامل الحقل كمصفوفة PHP طبيعية
         'xp_last_heartbeat_at' => 'datetime',
+        'referral_reward_granted' => 'boolean',
     ];
+
+    public function xpTransactions()
+    {
+        return $this->hasMany(\App\Models\XpTransaction::class);
+    }
 
 
     /**

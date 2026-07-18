@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
-use App\Services\XpService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -82,14 +81,10 @@ class AuthController extends Controller
             'email_verified_at' => null,
         ]);
 
-        // 🎯 3. إذا تمت الدعوة عن طريق شخص فعلي، نقوم بزيادة الـ XP الخاص به فوراً
+        // 🎯 3. ما بنمنح نقاط الداعي فوراً - لازم المدعو يكمل 50% من ملفه الشخصي
+        // أولاً (يتحقق في XpService::checkReferralReward عند تحديث الملف أو رفع
+        // مستند)، لمنع إنشاء حسابات وهمية فاضية لكسب نقاط بدون أي استخدام حقيقي.
         if ($referrerId) {
-            $referrer = User::find($referrerId);
-            if ($referrer) {
-                app(XpService::class)->award($referrer, 50, "referral (invited user #{$user->id})");
-            }
-
-            // تنظيف السيشين بعد استخدامها بنجاح
             session()->forget('referrer_id');
         }
 

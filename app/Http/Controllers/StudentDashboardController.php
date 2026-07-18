@@ -186,6 +186,7 @@ class StudentDashboardController extends Controller
             : 0;
 
         $user->xp_active_seconds = max(0, (int) $user->xp_active_seconds + $elapsed);
+        $user->total_time_spent_seconds = (int) $user->total_time_spent_seconds + $elapsed;
         $user->xp_last_heartbeat_at = $now;
 
         $hoursEarned = intdiv($user->xp_active_seconds, 3600);
@@ -198,7 +199,21 @@ class StudentDashboardController extends Controller
             $xpService->award($user, $hoursEarned * 25, 'time on site');
         }
 
-        return response()->json(['success' => true]);
+        return response()->json(['success' => true, 'total_time_spent_seconds' => $user->total_time_spent_seconds]);
+    }
+
+    public function xp()
+    {
+        $user = Auth::user();
+
+        $currentLevel = (int) floor($user->xp / 1000) + 1;
+        $xpInCurrentLevel = $user->xp % 1000;
+        $xpRemaining = 1000 - $xpInCurrentLevel;
+        $progressPercentage = ($xpInCurrentLevel / 1000) * 100;
+
+        $transactions = $user->xpTransactions()->with('admin:id,name')->latest()->paginate(15);
+
+        return view('dashboard.xp', compact('user', 'currentLevel', 'xpInCurrentLevel', 'xpRemaining', 'progressPercentage', 'transactions'));
     }
 
     public function show(Scholarship $scholarship)
@@ -294,6 +309,8 @@ class StudentDashboardController extends Controller
                     'admin_note' => null,
                 ]);
 
+                $this->refreshProfileCompletionAndReferral();
+
                 return redirect()->route('dashboard.profile')->with('success', 'تم تحديث المستند بنجاح');
             }
         }
@@ -305,7 +322,22 @@ class StudentDashboardController extends Controller
             'file_path' => $path,
         ]);
 
+        $this->refreshProfileCompletionAndReferral();
+
         return redirect()->route('dashboard.profile')->with('success', 'تم رفع المستند بنجاح');
+    }
+
+    /**
+     * يُستدعى بعد أي إجراء ممكن يرفع نسبة اكتمال الملف الشخصي (رفع مستند
+     * جديد) - يحدّث النسبة المخزّنة ويتحقق إذا استحق داعي هذا الطالب نقاطه.
+     */
+    private function refreshProfileCompletionAndReferral(): void
+    {
+        $user = Auth::user();
+        $user->profile_completion = $user->calculateProfileCompletion();
+        $user->save();
+
+        app(\App\Services\XpService::class)->checkReferralReward($user);
     }
 
     public function renameDocument(Request $request, StudentDocument $document)
@@ -408,6 +440,8 @@ class StudentDashboardController extends Controller
         $user->fill($validated);
         $user->profile_completion = $user->calculateProfileCompletion();
         $user->save();
+
+        app(\App\Services\XpService::class)->checkReferralReward($user);
 
         return redirect()->route('dashboard.profile')->with('success', 'تم تحديث الملف الشخصي بنجاح');
     }

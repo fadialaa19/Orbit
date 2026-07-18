@@ -150,6 +150,12 @@ Route::prefix('admin')->middleware(['auth'])->name('admin.')->group(function () 
         Route::patch('communities/{community}/toggle', [\App\Http\Controllers\Admin\AdminCommunityController::class, 'toggleStatus'])->name('communities.toggle');
     });
 
+    // 6️⃣.6 التحكم بنقاط XP للطلاب
+    Route::middleware(['check.permission:xp'])->group(function () {
+        Route::get('xp', [\App\Http\Controllers\Admin\AdminXpController::class, 'index'])->name('xp.index');
+        Route::post('xp/{student}/adjust', [\App\Http\Controllers\Admin\AdminXpController::class, 'adjust'])->name('xp.adjust');
+    });
+
     // 7️⃣ إدارة المدراء والصلاحيات + الإعدادات العامة
     Route::middleware(['check.permission:admins'])->group(function () {
         Route::resource('admins', AdminAdminController::class);
@@ -177,6 +183,7 @@ Route::prefix('dashboard')->middleware(['auth', 'verified.ensure'])->name('dashb
     Route::post('/scholarships/{scholarship}/favorite', [StudentDashboardController::class, 'toggleFavorite'])->name('scholarships.favorite');
     Route::post('/scholarships/match-scores', [StudentDashboardController::class, 'computeMatchScores'])->middleware('throttle:match-scores')->name('scholarships.match-scores');
     Route::post('/xp-heartbeat', [StudentDashboardController::class, 'xpHeartbeat'])->middleware('throttle:xp-heartbeat')->name('xp-heartbeat');
+    Route::get('/xp', [StudentDashboardController::class, 'xp'])->name('xp');
     Route::get('/my-applications', [\App\Http\Controllers\UserApplicationController::class, 'index'])->name('applications');
 
     Route::get('/services', [StudentDashboardController::class, 'services'])->name('services');
