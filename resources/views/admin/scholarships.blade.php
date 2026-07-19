@@ -271,7 +271,8 @@
                         
                         <div class="space-y-2">
                             <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest block">الصورة الرئيسية (بوستر المنحة)</label>
-                            <input type="file" name="main_image" accept="image/*" class="w-full text-xs font-bold text-slate-500 file:ml-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-black file:bg-slate-100 file:text-slate-700 hover:file:bg-slate-200 cursor-pointer">
+                            <input type="file" id="main_image_input" name="main_image" accept="image/*" class="w-full text-xs font-bold text-slate-500 file:ml-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-black file:bg-slate-100 file:text-slate-700 hover:file:bg-slate-200 cursor-pointer">
+                            <p class="text-[9px] text-slate-400">سيتم تصغير الصورة تلقائياً لتناسب حجم الموقع (١٦٠٠×٤٠٠)</p>
                             <input type="url" name="main_image_url" placeholder="أو الصق رابط صورة مباشر (https://...)" dir="ltr"
                                    class="w-full bg-slate-50 border border-slate-100 rounded-xl px-4 py-2 text-xs font-bold text-slate-700 focus:border-gold-300 outline-none transition">
                         </div>
@@ -473,5 +474,41 @@ async function generateAllSections() {
 document.addEventListener("DOMContentLoaded", () => {
     initAllEditors();
 });
+
+// تصغير/قص صورة الغلاف تلقائياً عند رفعها لتصبح بنفس نسبة العرض المستخدمة
+// بكل الموقع (٤:١)، بدل ما يوصل السيرفر ملف كبير عشوائي الأبعاد ويعتمد على
+// القص بالـ CSS فقط وقت العرض.
+function setupCoverImageResize(inputId, targetW, targetH) {
+    const input = document.getElementById(inputId);
+    if (!input) return;
+    input.addEventListener('change', function () {
+        const file = input.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = function (e) {
+            const img = new Image();
+            img.onload = function () {
+                const canvas = document.createElement('canvas');
+                canvas.width = targetW;
+                canvas.height = targetH;
+                const ctx = canvas.getContext('2d');
+                const scale = Math.max(targetW / img.width, targetH / img.height);
+                const scaledW = img.width * scale;
+                const scaledH = img.height * scale;
+                ctx.drawImage(img, (targetW - scaledW) / 2, (targetH - scaledH) / 2, scaledW, scaledH);
+                canvas.toBlob(function (blob) {
+                    if (!blob) return;
+                    const resized = new File([blob], file.name.replace(/\.[^.]+$/, '') + '.jpg', { type: 'image/jpeg' });
+                    const dt = new DataTransfer();
+                    dt.items.add(resized);
+                    input.files = dt.files;
+                }, 'image/jpeg', 0.85);
+            };
+            img.src = e.target.result;
+        };
+        reader.readAsDataURL(file);
+    });
+}
+setupCoverImageResize('main_image_input', 1600, 400);
 </script>
 @endsection

@@ -58,7 +58,7 @@
         @endphp
         <div class="group bg-white rounded-[2.5rem] shadow-sm hover:shadow-xl border border-slate-50 hover:border-navy-100 transition-all duration-500 overflow-hidden" data-aos="fade-up" data-aos-delay="{{ $loop->index * 100 }}">
             @if($scholarship->main_image)
-                <div class="w-full aspect-[3/1] overflow-hidden relative bg-gradient-to-br from-slate-100 to-slate-50">
+                <div class="w-full aspect-[4/1] overflow-hidden relative bg-gradient-to-br from-slate-100 to-slate-50">
                     <img src="{{ $scholarship->main_image }}" alt="" class="w-full h-full object-cover">
                 </div>
             @endif

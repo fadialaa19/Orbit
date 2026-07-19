@@ -86,7 +86,7 @@
                         @endif
 
                         @if($scholarship->main_image)
-                            <div class="w-full aspect-[3/1] overflow-hidden relative bg-gradient-to-br from-slate-100 to-slate-50">
+                            <div class="w-full aspect-[4/1] overflow-hidden relative bg-gradient-to-br from-slate-100 to-slate-50">
                                 <img src="{{ $scholarship->main_image }}" alt="" class="w-full h-full object-cover">
                             </div>
                         @endif

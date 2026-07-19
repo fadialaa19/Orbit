@@ -21,7 +21,7 @@
         <div class="bg-white rounded-[2.5rem] shadow-sm border border-slate-100 overflow-hidden mb-8">
             
             {{-- 1. كفر المنحة الفعلي من قاعدة البيانات --}}
-            <div class="relative w-full aspect-[3/1] bg-slate-100">
+            <div class="relative w-full aspect-[4/1] bg-slate-100">
                 @if($scholarship->main_image)
                     <img src="{{ $scholarship->main_image }}" alt="{{ $scholarship->title_ar }}" class="w-full h-full object-cover">
                 @else
