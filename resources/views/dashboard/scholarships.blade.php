@@ -86,12 +86,12 @@
                         @endif
 
                         @if($scholarship->main_image)
-                            <div class="w-full aspect-[4/1] overflow-hidden relative bg-gradient-to-br from-slate-100 to-slate-50">
+                            <div class="w-full aspect-[5/1] overflow-hidden relative bg-gradient-to-br from-slate-100 to-slate-50">
                                 <img src="{{ $scholarship->main_image }}" alt="" class="w-full h-full object-cover">
                             </div>
                         @endif
 
-                        <div class="p-8 {{ $scholarship->main_image ? '-mt-10' : '' }}">
+                        <div class="p-8">
                         <div class="flex flex-col md:flex-row gap-8 items-center">
 
                             {{-- صندوق اللوجو المعتمد على logo_image الفعلي والـ Fallback له --}}

@@ -104,7 +104,7 @@
                             <div>
                                 <label class="text-[11px] font-black text-slate-400 block mb-2">صورة المنحة (Cover)</label>
                                 <input type="file" id="main_image_input" name="main_image" accept="image/*" class="text-xs">
-                                <p class="text-[9px] text-slate-400 mt-1">سيتم تصغير الصورة تلقائياً لتناسب حجم الموقع (١٦٠٠×٤٠٠)</p>
+                                <p class="text-[9px] text-slate-400 mt-1">سيتم تصغير الصورة تلقائياً لتناسب حجم الموقع (١٦٠٠×٣٢٠)</p>
                                 <input type="url" name="main_image_url" placeholder="أو الصق رابط صورة مباشر (https://...)" dir="ltr"
                                        class="w-full bg-slate-50 border border-slate-100 rounded-xl px-3 py-2 text-xs font-bold text-slate-700 focus:border-gold-300 outline-none transition mt-2">
                                 @if($scholarship->main_image)
@@ -351,6 +351,6 @@ function setupCoverImageResize(inputId, targetW, targetH) {
         reader.readAsDataURL(file);
     });
 }
-setupCoverImageResize('main_image_input', 1600, 400);
+setupCoverImageResize('main_image_input', 1600, 320);
 </script>
 @endsection
