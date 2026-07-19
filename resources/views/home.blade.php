@@ -33,30 +33,28 @@
         </div>
     </div>
     
-    <div class="relative" data-aos="zoom-in-right" data-aos-duration="1500">
-        <div class="relative z-10 p-10 bg-gradient-to-br from-navy-100 to-white rounded-[2.5rem] shadow-2xl transition-transform duration-700 hover:rotate-2 group">
-            <div role="img" aria-label="مساعد أوربيت الذكي" class="max-w-xs mx-auto rounded-[2rem] overflow-hidden transition-all duration-500 group-hover:scale-[1.02]">
-                <video autoplay muted loop playsinline class="w-full h-auto block">
-                    <source src="{{ asset('assets/videos/orbit-ai-mascot.mp4') }}" type="video/mp4">
-                </video>
-            </div>
+    <div class="relative py-10">
+        <div role="img" aria-label="مساعد أوربيت الذكي" class="relative z-10 max-w-[220px] mx-auto rounded-[2rem] overflow-hidden shadow-2xl transition-transform duration-700 hover:rotate-2 group">
+            <video autoplay muted loop playsinline class="w-full h-auto block transition-all duration-500 group-hover:scale-[1.02]">
+                <source src="{{ asset('assets/videos/orbit-ai-mascot.mp4') }}" type="video/mp4">
+            </video>
         </div>
-        
-        <div data-aos="fade-down" data-aos-delay="800" class="absolute -top-8 -left-8 bg-white p-5 rounded-3xl shadow-2xl border border-gold-100 flex items-center gap-4 z-20">
-            <div class="w-12 h-12 bg-gold-600 rounded-2xl flex items-center justify-center text-white font-bold text-lg">95%</div>
+
+        <div class="absolute top-4 -left-2 sm:-left-8 bg-white p-4 sm:p-5 rounded-3xl shadow-2xl border border-gold-100 flex items-center gap-3 sm:gap-4 z-20">
+            <div class="w-10 h-10 sm:w-12 sm:h-12 bg-gold-600 rounded-2xl flex items-center justify-center text-white font-bold text-sm sm:text-lg shrink-0">95%</div>
             <div>
-                <p class="text-[10px] text-gray-400 font-black uppercase tracking-wider text-right">نسبة التطابق</p>
-                <p class="text-sm font-bold text-slate-800">ذكاء اصطناعي</p>
+                <p class="text-[9px] sm:text-[10px] text-gray-400 font-black uppercase tracking-wider text-right">نسبة التطابق</p>
+                <p class="text-xs sm:text-sm font-bold text-slate-800">ذكاء اصطناعي</p>
             </div>
         </div>
 
-        <div data-aos="fade-up" data-aos-delay="1000" class="absolute -bottom-8 -right-8 bg-white p-5 rounded-3xl shadow-2xl border border-green-50 flex items-center gap-4 z-20">
-            <div class="w-12 h-12 bg-green-500 rounded-full flex items-center justify-center text-white shadow-lg shadow-green-100">
-                <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path></svg>
+        <div class="absolute bottom-4 -right-2 sm:-right-8 bg-white p-4 sm:p-5 rounded-3xl shadow-2xl border border-navy-100 flex items-center gap-3 sm:gap-4 z-20 max-w-[210px]">
+            <div class="w-10 h-10 sm:w-12 sm:h-12 bg-navy-900 rounded-2xl flex items-center justify-center text-white shrink-0">
+                <svg class="w-5 h-5 sm:w-7 sm:h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
             </div>
             <div>
-                <p class="text-sm font-black text-slate-800">تم القبول!</p>
-                <p class="text-[10px] text-gray-400">في جامعة تورنتو</p>
+                <p class="text-xs sm:text-sm font-black text-slate-800">الأستاذة نور</p>
+                <p class="text-[9px] sm:text-[10px] text-gray-400">مستشارة ذكاء اصطناعي ٢٤/٧</p>
             </div>
         </div>
     </div>
