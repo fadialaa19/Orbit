@@ -35,8 +35,10 @@
     
     <div class="relative" data-aos="zoom-in-right" data-aos-duration="1500">
         <div class="relative z-10 p-10 bg-gradient-to-br from-navy-100 to-white rounded-[2.5rem] shadow-2xl transition-transform duration-700 hover:rotate-2 group">
-            <div role="img" aria-label="طالبة تكتب أطروحتها بين الكتب" class="max-w-xs mx-auto transition-all duration-500 group-hover:scale-[1.02]">
-                @include('layouts.partials._hero-illustration')
+            <div role="img" aria-label="مساعد أوربيت الذكي" class="max-w-xs mx-auto rounded-[2rem] overflow-hidden transition-all duration-500 group-hover:scale-[1.02]">
+                <video autoplay muted loop playsinline class="w-full h-auto block">
+                    <source src="{{ asset('assets/videos/orbit-ai-mascot.mp4') }}" type="video/mp4">
+                </video>
             </div>
         </div>
         
