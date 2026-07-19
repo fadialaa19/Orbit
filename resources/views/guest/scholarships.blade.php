@@ -47,8 +47,8 @@
         </form>
     </div>
 
-    <!-- Scholarships Grid -->
-    <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8 mb-20">
+    <!-- Scholarships List -->
+    <div class="space-y-6 mb-20">
         @forelse($scholarships as $scholarship)
         @php
             $coverageList = $scholarship->coverage ?? [];
@@ -56,58 +56,60 @@
             $coverageDisplay = is_array($coverageList) && !empty($coverageList) ? $coverageList[0] : 'ممونة';
             $countryCode = strtoupper(mb_substr($scholarship->country, 0, 2));
         @endphp
-        <div class="group bg-white rounded-[2.5rem] shadow-sm hover:shadow-2xl border border-slate-50 hover:-translate-y-4 hover:border-navy-100 transition-all duration-500 overflow-hidden" data-aos="fade-up" data-aos-delay="{{ $loop->index * 100 }}">
+        <div class="group bg-white rounded-[2.5rem] shadow-sm hover:shadow-xl border border-slate-50 hover:border-navy-100 transition-all duration-500 overflow-hidden" data-aos="fade-up" data-aos-delay="{{ $loop->index * 100 }}">
             @if($scholarship->main_image)
-                <div class="h-32 w-full overflow-hidden relative">
-                    <img src="{{ $scholarship->main_image }}" alt="" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
-                    <div class="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent"></div>
+                <div class="h-28 w-full overflow-hidden relative bg-gradient-to-br from-slate-100 to-slate-50">
+                    <img src="{{ $scholarship->main_image }}" alt="" class="w-full h-full object-contain">
                 </div>
             @endif
 
             <div class="p-8 {{ $scholarship->main_image ? '-mt-10' : '' }}">
-                <!-- University Logo -->
-                <div class="w-20 h-20 bg-gradient-to-br from-gold-100 to-cream-50 rounded-[1.5rem] flex items-center justify-center mb-6 relative z-10 shadow-inner border-4 border-white overflow-hidden {{ $scholarship->main_image ? 'shadow-lg' : '' }}">
-                    @if($scholarship->logo_image)
-                        <img src="{{ $scholarship->logo_image }}" alt="{{ $scholarship->title_ar }}" class="w-full h-full object-contain p-2">
-                    @else
-                        <span class="text-2xl font-black text-gold-600 drop-shadow-lg">{{ $countryCode }}</span>
-                    @endif
-                </div>
+                <div class="flex flex-col md:flex-row gap-8 items-center">
 
-            <!-- Content -->
-            <div class="relative z-10">
-                <h3 class="text-xl font-black text-slate-800 mb-3 leading-tight">{{ $scholarship->title_ar }}</h3>
-                <div class="flex items-center gap-2 mb-6 opacity-80">
-                    <span class="w-6 h-6 bg-slate-100 rounded-lg flex items-center justify-center text-gold-600 font-bold text-sm">{{ $countryCode }}</span>
-                    <span class="text-lg font-bold text-slate-700">{{ $scholarship->university }}</span>
-                </div>
+                    <!-- University Logo -->
+                    <div class="w-20 h-20 md:w-24 md:h-24 flex-shrink-0 bg-gradient-to-br from-gold-100 to-cream-50 rounded-[1.5rem] flex items-center justify-center relative z-10 shadow-inner border-4 border-white overflow-hidden {{ $scholarship->main_image ? 'shadow-lg' : '' }}">
+                        @if($scholarship->logo_image)
+                            <img src="{{ $scholarship->logo_image }}" alt="{{ $scholarship->title_ar }}" class="w-full h-full object-contain p-2">
+                        @else
+                            <span class="text-2xl font-black text-gold-600 drop-shadow-lg">{{ $countryCode }}</span>
+                        @endif
+                    </div>
 
-                <!-- Badges -->
-                <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 mb-8">
-                    <span class="bg-green-50 text-green-600 px-3 py-2 rounded-xl text-xs font-black text-center shadow-sm">💰 {{ $coverageDisplay }}</span>
-                    <span class="bg-gold-100 text-gold-600 px-3 py-2 rounded-xl text-xs font-black text-center shadow-sm">🎓 {{ $scholarship->category_label }}</span>
-                    <span class="bg-gold-100 text-gold-600 px-3 py-2 rounded-xl text-xs font-black text-center shadow-sm">📅 {{ $scholarship->formatted_deadline }}</span>
-                </div>
+                    <!-- Content -->
+                    <div class="flex-1 text-center md:text-right">
+                        <div class="flex items-center justify-center md:justify-start gap-2 mb-2">
+                            <span class="bg-slate-100 text-slate-600 px-2 py-1 rounded text-[10px] font-black">🌍 {{ $scholarship->country }}</span>
+                            <h3 class="text-xl font-black text-slate-800">{{ $scholarship->title_ar }}</h3>
+                        </div>
+                        <p class="text-sm text-slate-400 font-bold mb-4">{{ $scholarship->university }}</p>
 
-                <!-- Funding Badge -->
-                <div class="inline-flex items-center gap-2 px-4 py-2 rounded-3xl font-black text-sm mb-8 shadow-md
-                    {{ $fundingType == 'ممولة كاملة' ? 'bg-gradient-to-r from-gold-600 to-gold-400 text-white shadow-gold-100' : 'bg-gradient-to-r from-emerald-500 to-green-500 text-white shadow-emerald-200' }}">
-                    {{ $fundingType === 'ممولة كاملة' ? '🌟 ' : '⭐ ' }}{{ $fundingType }}
-                </div>
+                        <div class="flex flex-wrap justify-center md:justify-start gap-3">
+                            <span class="bg-green-50 text-green-600 px-3 py-1.5 rounded-xl text-xs font-black">💰 {{ $coverageDisplay }}</span>
+                            <span class="bg-gold-100 text-gold-600 px-3 py-1.5 rounded-xl text-xs font-black">🎓 {{ $scholarship->category_label }}</span>
+                            <span class="bg-slate-50 text-slate-500 px-3 py-1.5 rounded-xl text-xs font-black">📅 {{ $scholarship->formatted_deadline }}</span>
+                        </div>
+                    </div>
 
-                <!-- CTAs -->
-                <div class="flex flex-col sm:flex-row gap-3 pt-6 border-t border-slate-100">
-                    <a href="{{ route('guest.scholarships.show', $scholarship->id) }}" class="flex-1 bg-gradient-to-r from-gold-600 to-gold-700 text-white py-4 px-8 rounded-3xl font-black shadow-xl hover:shadow-2xl hover:scale-[1.02] transition-all text-lg group-hover:bg-gold-700 text-center block">عرض التفاصيل</a>
-                    <a href="{{ route('login') }}" class="flex-1 border-2 border-slate-200 text-slate-700 py-4 px-6 rounded-3xl font-black hover:bg-slate-50 hover:border-slate-300 transition-all flex items-center justify-center gap-2">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
-                        حفظ
-                    </a>
+                    <!-- CTAs -->
+                    <div class="flex flex-col gap-3 w-full md:w-auto items-center md:items-end shrink-0">
+                        <div class="inline-flex items-center gap-2 px-4 py-2 rounded-3xl font-black text-xs shadow-md
+                            {{ $fundingType == 'ممولة كاملة' ? 'bg-gradient-to-r from-gold-600 to-gold-400 text-white shadow-gold-100' : 'bg-gradient-to-r from-emerald-500 to-green-500 text-white shadow-emerald-200' }}">
+                            {{ $fundingType === 'ممولة كاملة' ? '🌟 ' : '⭐ ' }}{{ $fundingType }}
+                        </div>
+                        <div class="flex gap-2 w-full md:w-auto">
+                            <a href="{{ route('guest.scholarships.show', $scholarship->id) }}" class="bg-gold-600 text-white px-8 py-3 rounded-2xl font-bold shadow-lg shadow-gold-100 hover:bg-gold-700 transition text-center block w-full md:w-auto">
+                                عرض التفاصيل
+                            </a>
+                            <a href="{{ route('login') }}" class="bg-slate-50 hover:bg-red-50 hover:text-red-500 text-slate-400 p-3 rounded-xl transition flex items-center justify-center shrink-0" title="حفظ">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
+                            </a>
+                        </div>
+                    </div>
                 </div>
-            </div>
             </div>
         </div>
         @empty
-        <div class="col-span-1 md:col-span-2 xl:col-span-3 text-center py-20">
+        <div class="text-center py-20 bg-white rounded-[2.5rem] border border-slate-50">
             <div class="text-6xl mb-6">🔍</div>
             <h3 class="text-2xl font-black text-slate-800 mb-4">لا توجد منح متاحة</h3>
             <p class="text-slate-500 font-bold">حاول تعديل معايير البحث أو عد لاحقاً</p>

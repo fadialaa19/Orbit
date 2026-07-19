@@ -86,9 +86,8 @@
                         @endif
 
                         @if($scholarship->main_image)
-                            <div class="h-28 w-full overflow-hidden relative">
-                                <img src="{{ $scholarship->main_image }}" alt="" class="w-full h-full object-cover">
-                                <div class="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent"></div>
+                            <div class="h-28 w-full overflow-hidden relative bg-gradient-to-br from-slate-100 to-slate-50">
+                                <img src="{{ $scholarship->main_image }}" alt="" class="w-full h-full object-contain">
                             </div>
                         @endif
 
