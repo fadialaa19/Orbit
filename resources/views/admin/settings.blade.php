@@ -98,6 +98,22 @@
         </div>
 
         <div class="bg-white rounded-[1.5rem] shadow-sm border border-slate-100 p-6">
+            <div class="flex items-center justify-between mb-4">
+                <h2 class="text-xl font-black text-slate-900 flex items-center gap-2">
+                    <span class="w-8 h-8 bg-gold-100 text-gold-600 rounded-lg flex items-center justify-center text-sm">📄</span>
+                    خدمة استخراج الأوراق الرسمية
+                </h2>
+                <label class="relative inline-flex items-center cursor-pointer">
+                    <input type="checkbox" name="document_service_enabled" {{ $setting->document_service_enabled ? 'checked' : '' }} class="sr-only peer">
+                    <div class="w-11 h-6 bg-slate-200 rounded-full peer peer-checked:bg-emerald-500 after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:after:translate-x-5"></div>
+                </label>
+            </div>
+            <p class="text-xs font-bold text-slate-400 -mt-2">
+                فعّلها لما يكون مندوب استخراج الأوراق متاح. لو أوقفتها، صفحة "الأوراق الرسمية" للزائر وصفحة الطلب بلوحة الطالب رح تظهر برسالة "الخدمة متوقفة مؤقتاً" بدل نموذج الطلب.
+            </p>
+        </div>
+
+        <div class="bg-white rounded-[1.5rem] shadow-sm border border-slate-100 p-6">
             <h2 class="text-xl font-black text-slate-900 mb-6 flex items-center gap-2">
                 <span class="w-8 h-8 bg-blue-100 text-blue-600 rounded-lg flex items-center justify-center text-sm">04</span>
                 بيانات التواصل والروابط الاجتماعية

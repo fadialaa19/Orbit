@@ -565,22 +565,10 @@ class StudentDashboardController extends Controller
         return view('dashboard.community');
     }
 
-    /**
-     * قائمة المستندات الرسمية المتاحة لطلبها، نفس القائمة المعروضة بصفحة
-     * الزائر (guest.services.documents) حتى تبقى الاثنتين متطابقتين دايماً.
-     */
-    private const OFFICIAL_DOCUMENTS = [
-        'شهادة الثانوية العامة (التوجيهي)' => ['icon' => '🎓', 'source' => 'وزارة التربية والتعليم'],
-        'شهادة عدم محكومية' => ['icon' => '🕊️', 'source' => 'وزارة الداخلية'],
-        'توثيق وتصديق الشهادات' => ['icon' => '📜', 'source' => 'وزارة الخارجية'],
-        'شهادة الميلاد' => ['icon' => '👶', 'source' => 'وزارة الداخلية - الأحوال المدنية'],
-        'استخراج أو تجديد جواز السفر' => ['icon' => '🛂', 'source' => 'وزارة الداخلية'],
-        'شهادة حسن السيرة والسلوك' => ['icon' => '✅', 'source' => 'المدرسة أو الجامعة'],
-    ];
-
     public function documentRequests()
     {
-        $documents = self::OFFICIAL_DOCUMENTS;
+        $serviceEnabled = \App\Models\Setting::get('document_service_enabled', true);
+        $documents = $serviceEnabled ? \App\Models\OfficialDocument::active()->ordered()->get() : collect();
 
         // نميّز تذاكر طلب المستندات عن باقي تذاكر الدعم الفني بادئة ثابتة بالعنوان
         $myRequests = SupportTicket::where('user_id', Auth::id())
@@ -588,13 +576,20 @@ class StudentDashboardController extends Controller
             ->latest()
             ->get();
 
-        return view('dashboard.document-requests', compact('documents', 'myRequests'));
+        return view('dashboard.document-requests', compact('documents', 'myRequests', 'serviceEnabled'));
     }
 
     public function submitDocumentRequest(Request $request)
     {
+        if (!\App\Models\Setting::get('document_service_enabled', true)) {
+            return redirect()->route('dashboard.document-requests')
+                ->with('error', 'خدمة استخراج الأوراق متوقفة مؤقتاً حالياً.');
+        }
+
+        $activeTitles = \App\Models\OfficialDocument::active()->pluck('title')->toArray();
+
         $request->validate([
-            'document_type' => 'required|string|in:' . implode(',', array_keys(self::OFFICIAL_DOCUMENTS)),
+            'document_type' => 'required|string|in:' . implode(',', $activeTitles),
             'notes' => 'nullable|string|max:1000',
         ]);
 

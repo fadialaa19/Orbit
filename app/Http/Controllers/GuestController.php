@@ -64,7 +64,10 @@ class GuestController extends Controller
 
     public function documentServices()
     {
-        return view('guest.document-services');
+        $serviceEnabled = \App\Models\Setting::get('document_service_enabled', true);
+        $documents = $serviceEnabled ? \App\Models\OfficialDocument::active()->ordered()->get() : collect();
+
+        return view('guest.document-services', compact('serviceEnabled', 'documents'));
     }
 
     public function submitContact(Request $request)

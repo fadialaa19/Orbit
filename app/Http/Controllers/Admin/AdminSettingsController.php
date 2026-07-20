@@ -34,6 +34,7 @@ class AdminSettingsController extends Controller
 
         // 2. معالجة وضع الصيانة والتوقيت
         $setting->maintenance_mode = $request->has('maintenance_mode');
+        $setting->document_service_enabled = $request->has('document_service_enabled');
         
         if ($setting->maintenance_mode && $request->filled('maintenance_until')) {
             $setting->maintenance_until = $request->maintenance_until;

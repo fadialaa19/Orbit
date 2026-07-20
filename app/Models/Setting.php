@@ -25,11 +25,13 @@ class Setting extends Model
         'instagram_url',
         'whatsapp_url',
         'telegram_url',
+        'document_service_enabled',
     ];
 
     protected $casts = [
         'payment_gateways' => 'array',
         'maintenance_mode' => 'boolean',
+        'document_service_enabled' => 'boolean',
     ];
 
     public static function get($key, $default = null)

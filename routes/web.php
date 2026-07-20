@@ -158,6 +158,12 @@ Route::prefix('admin')->middleware(['auth'])->name('admin.')->group(function () 
         Route::patch('communities/{community}/toggle', [\App\Http\Controllers\Admin\AdminCommunityController::class, 'toggleStatus'])->name('communities.toggle');
     });
 
+    // 6️⃣.55 استخراج الأوراق الرسمية (المستندات المتاحة للطلب)
+    Route::middleware(['check.permission:support'])->group(function () {
+        Route::resource('official-documents', \App\Http\Controllers\Admin\AdminOfficialDocumentController::class)->only(['index', 'store', 'update', 'destroy']);
+        Route::patch('official-documents/{official_document}/toggle', [\App\Http\Controllers\Admin\AdminOfficialDocumentController::class, 'toggleStatus'])->name('official-documents.toggle');
+    });
+
     // 6️⃣.6 التحكم بنقاط XP للطلاب
     Route::middleware(['check.permission:xp'])->group(function () {
         Route::get('xp', [\App\Http\Controllers\Admin\AdminXpController::class, 'index'])->name('xp.index');

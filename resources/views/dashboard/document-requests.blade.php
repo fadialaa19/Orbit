@@ -16,12 +16,26 @@
         </div>
         @endif
 
+        @if(session('error'))
+        <div class="mb-6 p-4 bg-rose-50 border border-rose-100 text-rose-600 rounded-2xl text-sm font-bold">
+            ⚠️ {{ session('error') }}
+        </div>
+        @endif
+
         @if($errors->any())
         <div class="mb-6 p-4 bg-rose-50 border border-rose-100 text-rose-600 rounded-2xl text-sm font-bold">
             {{ $errors->first() }}
         </div>
         @endif
 
+        @if(!$serviceEnabled)
+        {{-- الخدمة متوقفة مؤقتاً --}}
+        <div class="bg-white rounded-[2.5rem] p-10 shadow-sm border border-slate-100 mb-10 text-center">
+            <div class="text-5xl mb-4">🛠️</div>
+            <h2 class="text-xl font-black text-slate-800 mb-2">خدمة استخراج الأوراق متوقفة مؤقتاً</h2>
+            <p class="text-slate-500 font-bold text-sm max-w-md mx-auto">مندوب استخراج الأوراق مش متوفر حالياً، رح تنفتح الخدمة قريباً. تقدر تتابع حالة طلباتك السابقة تحت.</p>
+        </div>
+        @else
         {{-- فورم طلب مستند جديد --}}
         <div class="bg-white rounded-[2.5rem] p-8 md:p-10 shadow-sm border border-slate-100 mb-10">
             <form action="{{ route('dashboard.document-requests.submit') }}" method="POST" class="space-y-8">
@@ -30,14 +44,14 @@
                 <div>
                     <label class="block text-sm font-black text-slate-700 mb-4">اختر المستند اللي بدك تستخرجه</label>
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        @foreach($documents as $name => $doc)
+                        @foreach($documents as $doc)
                         <label class="flex items-start gap-4 p-5 rounded-2xl border-2 cursor-pointer transition-all"
-                               :class="selected === @js($name) ? 'border-gold-500 bg-gold-50' : 'border-slate-100 hover:border-slate-200'">
-                            <input type="radio" name="document_type" value="{{ $name }}" x-model="selected" required class="mt-1 w-5 h-5 text-gold-600 focus:ring-gold-500">
-                            <div class="text-2xl shrink-0">{{ $doc['icon'] }}</div>
+                               :class="selected === @js($doc->title) ? 'border-gold-500 bg-gold-50' : 'border-slate-100 hover:border-slate-200'">
+                            <input type="radio" name="document_type" value="{{ $doc->title }}" x-model="selected" required class="mt-1 w-5 h-5 text-gold-600 focus:ring-gold-500">
+                            <div class="text-2xl shrink-0">{{ $doc->icon }}</div>
                             <div class="flex-1">
-                                <p class="font-black text-slate-800 text-sm leading-snug">{{ $name }}</p>
-                                <p class="text-[11px] text-slate-400 font-bold mt-1">{{ $doc['source'] }}</p>
+                                <p class="font-black text-slate-800 text-sm leading-snug">{{ $doc->title }}</p>
+                                <p class="text-[11px] text-slate-400 font-bold mt-1">{{ $doc->source }}</p>
                             </div>
                         </label>
                         @endforeach
@@ -57,6 +71,7 @@
                 </button>
             </form>
         </div>
+        @endif
 
         {{-- طلباتي السابقة --}}
         <div>

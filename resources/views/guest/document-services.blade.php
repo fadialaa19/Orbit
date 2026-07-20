@@ -20,31 +20,33 @@
         </p>
     </div>
 
+    @if(!$serviceEnabled)
+    <!-- الخدمة متوقفة مؤقتاً -->
+    <div class="text-center py-20 bg-slate-50 rounded-[2.5rem] max-w-3xl mx-auto mb-20" data-aos="zoom-in">
+        <div class="text-6xl mb-6">🛠️</div>
+        <h2 class="text-2xl font-black text-slate-800 mb-4">الخدمة متوقفة مؤقتاً</h2>
+        <p class="text-slate-500 font-bold max-w-lg mx-auto leading-relaxed mb-8">
+            مندوب استخراج الأوراق الرسمية مش متوفر حالياً، وبنشتغل على تفعيل الخدمة من جديد قريباً. تابعنا أو تواصل معنا لأي استفسار.
+        </p>
+        <a href="{{ route('guest.contact') }}" class="inline-block bg-gold-600 text-white px-10 py-4 rounded-2xl font-black shadow-lg shadow-gold-100 hover:bg-gold-700 transition">
+            تواصل معنا
+        </a>
+    </div>
+    @else
     <!-- المستندات المتاحة -->
     <div class="mb-20">
         <h2 class="text-3xl font-black text-slate-900 text-center mb-4" data-aos="fade-up">المستندات اللي بنساعدك فيها</h2>
         <p class="text-gray-500 font-bold text-center max-w-xl mx-auto mb-14">قائمة بأهم الأوراق الرسمية المطلوبة عادة للتقديم على المنح والسفارات، ومصدرها الرسمي</p>
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            @php
-                $documents = [
-                    ['icon' => '🎓', 'title' => 'شهادة الثانوية العامة (التوجيهي)', 'source' => 'وزارة التربية والتعليم', 'desc' => 'نسخة رسمية مصدّقة من نتيجة التوجيهي، مطلوبة غالباً لكل طلبات القبول الجامعي بالخارج.'],
-                    ['icon' => '🕊️', 'title' => 'شهادة عدم محكومية', 'source' => 'وزارة الداخلية', 'desc' => 'شرط أساسي بمعظم طلبات التأشيرة (الفيزا) والقبول بالمنح الدولية.'],
-                    ['icon' => '📜', 'title' => 'توثيق وتصديق الشهادات', 'source' => 'وزارة الخارجية', 'desc' => 'تصديق الشهادات الدراسية رسمياً حتى تكون معتمدة ومقبولة لدى الجامعات والسفارات الأجنبية.'],
-                    ['icon' => '👶', 'title' => 'شهادة الميلاد', 'source' => 'وزارة الداخلية - الأحوال المدنية', 'desc' => 'نسخة حديثة مطلوبة عادة ضمن ملف التقديم أو استخراج تأشيرة الدراسة.'],
-                    ['icon' => '🛂', 'title' => 'استخراج أو تجديد جواز السفر', 'source' => 'وزارة الداخلية', 'desc' => 'نتابع معك إجراءات الاستخراج أو التجديد حتى يكون جاهز قبل موعد سفرك.'],
-                    ['icon' => '✅', 'title' => 'شهادة حسن السيرة والسلوك', 'source' => 'المدرسة أو الجامعة', 'desc' => 'مستند إضافي تطلبه بعض المنح والجامعات لتقييم الملف الشخصي للطالب.'],
-                ];
-            @endphp
-
             @foreach($documents as $index => $doc)
             <div class="bg-white rounded-[2.5rem] p-8 shadow-sm hover:shadow-xl border border-slate-50 hover:-translate-y-2 hover:border-gold-100 transition-all duration-500" data-aos="fade-up" data-aos-delay="{{ $index * 100 }}">
                 <div class="w-16 h-16 bg-gradient-to-br from-gold-100 to-cream-50 rounded-2xl flex items-center justify-center text-3xl mb-6 shadow-inner">
-                    {{ $doc['icon'] }}
+                    {{ $doc->icon }}
                 </div>
-                <h3 class="text-lg font-black text-slate-800 mb-2 leading-snug">{{ $doc['title'] }}</h3>
-                <span class="inline-block bg-navy-100 text-navy-700 px-3 py-1 rounded-lg text-[11px] font-black mb-4">{{ $doc['source'] }}</span>
-                <p class="text-sm text-slate-500 font-bold leading-relaxed">{{ $doc['desc'] }}</p>
+                <h3 class="text-lg font-black text-slate-800 mb-2 leading-snug">{{ $doc->title }}</h3>
+                <span class="inline-block bg-navy-100 text-navy-700 px-3 py-1 rounded-lg text-[11px] font-black mb-4">{{ $doc->source }}</span>
+                <p class="text-sm text-slate-500 font-bold leading-relaxed">{{ $doc->description }}</p>
             </div>
             @endforeach
         </div>
@@ -89,5 +91,6 @@
             </div>
         </div>
     </div>
+    @endif
 </section>
 @endsection
