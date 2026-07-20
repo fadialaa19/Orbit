@@ -34,27 +34,35 @@
     </div>
     
     <div class="relative py-10">
-        <div role="img" aria-label="مساعد أوربيت الذكي" class="relative z-10 max-w-[220px] mx-auto rounded-[2rem] overflow-hidden shadow-2xl transition-transform duration-700 hover:rotate-2 group">
-            <video autoplay muted loop playsinline class="w-full h-auto block transition-all duration-500 group-hover:scale-[1.02]">
-                <source src="{{ asset('assets/videos/orbit-ai-mascot.mp4') }}" type="video/mp4">
-            </video>
-        </div>
+        {{-- إطار مرجعي بنفس عرض الفيديو بالضبط، حتى تتموضع الكاردات العائمة
+             بالنسبة لحواف الفيديو نفسه وليس بالنسبة لعرض العمود الأوسع -
+             هيك ما بتنكسر وتتراكب فوق الفيديو لما يضيق العمود بمقاسات الشاشة المتوسطة. --}}
+        <div class="relative max-w-[220px] mx-auto">
+            {{-- توهج خفيف خلف الإطار بنفس الألوان الذهبية الدافئة لإضاءة الفيديو --}}
+            <div class="absolute -inset-6 bg-gradient-to-br from-gold-300/40 via-gold-200/25 to-transparent blur-2xl rounded-full pointer-events-none"></div>
 
-        <div class="absolute top-4 -left-2 sm:-left-8 bg-white p-4 sm:p-5 rounded-3xl shadow-2xl border border-gold-100 flex items-center gap-3 sm:gap-4 z-20">
-            <div class="w-10 h-10 sm:w-12 sm:h-12 bg-gold-600 rounded-2xl flex items-center justify-center text-white font-bold text-sm sm:text-lg shrink-0">95%</div>
-            <div>
-                <p class="text-[9px] sm:text-[10px] text-gray-400 font-black uppercase tracking-wider text-right">نسبة التطابق</p>
-                <p class="text-xs sm:text-sm font-bold text-slate-800">ذكاء اصطناعي</p>
+            <div role="img" aria-label="مساعد أوربيت الذكي" class="relative z-10 rounded-[2rem] overflow-hidden shadow-[0_25px_60px_-15px_rgba(219,138,71,0.4)] transition-transform duration-700 hover:rotate-2 group">
+                <video autoplay muted loop playsinline class="w-full h-auto block transition-all duration-500 group-hover:scale-[1.02]">
+                    <source src="{{ asset('assets/videos/orbit-ai-mascot.mp4') }}" type="video/mp4">
+                </video>
             </div>
-        </div>
 
-        <div class="absolute bottom-4 -right-2 sm:-right-8 bg-white p-4 sm:p-5 rounded-3xl shadow-2xl border border-navy-100 flex items-center gap-3 sm:gap-4 z-20 max-w-[210px]">
-            <div class="w-10 h-10 sm:w-12 sm:h-12 bg-navy-900 rounded-2xl flex items-center justify-center text-white shrink-0">
-                <svg class="w-5 h-5 sm:w-7 sm:h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
+            <div class="absolute top-2 left-0 -translate-x-[calc(100%+14px)] bg-white p-3 sm:p-4 rounded-3xl shadow-2xl border border-gold-100 flex items-center gap-2.5 sm:gap-3 z-20">
+                <div class="w-8 h-8 sm:w-10 sm:h-10 bg-gold-600 rounded-xl flex items-center justify-center text-white font-bold text-xs sm:text-sm shrink-0">95%</div>
+                <div>
+                    <p class="text-[8px] sm:text-[9px] text-gray-400 font-black uppercase tracking-wider text-right">نسبة التطابق</p>
+                    <p class="text-[11px] sm:text-xs font-bold text-slate-800">ذكاء اصطناعي</p>
+                </div>
             </div>
-            <div>
-                <p class="text-xs sm:text-sm font-black text-slate-800">الأستاذة نور</p>
-                <p class="text-[9px] sm:text-[10px] text-gray-400">مستشارة ذكاء اصطناعي ٢٤/٧</p>
+
+            <div class="absolute bottom-2 right-0 translate-x-[calc(100%+14px)] bg-white p-3 sm:p-4 rounded-3xl shadow-2xl border border-navy-100 flex items-center gap-2.5 sm:gap-3 z-20 max-w-[180px]">
+                <div class="w-8 h-8 sm:w-10 sm:h-10 bg-navy-900 rounded-xl flex items-center justify-center text-white shrink-0">
+                    <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
+                </div>
+                <div>
+                    <p class="text-[11px] sm:text-xs font-black text-slate-800">الأستاذة نور</p>
+                    <p class="text-[8px] sm:text-[9px] text-gray-400">مستشارة ذكاء اصطناعي ٢٤/٧</p>
+                </div>
             </div>
         </div>
     </div>
