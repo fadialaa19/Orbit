@@ -22,6 +22,7 @@ Route::get('/sitemap.xml', function () {
         ['loc' => route('guest.scholarships'), 'priority' => '0.9'],
         ['loc' => route('guest.about'), 'priority' => '0.7'],
         ['loc' => route('guest.services'), 'priority' => '0.7'],
+        ['loc' => route('guest.services.documents'), 'priority' => '0.6'],
         ['loc' => route('guest.contact'), 'priority' => '0.6'],
     ];
 
@@ -89,6 +90,7 @@ Route::get('/scholarships', [App\Http\Controllers\GuestController::class, 'schol
 Route::get('/scholarships/{scholarship}', [App\Http\Controllers\GuestController::class, 'scholarshipShow'])->name('guest.scholarships.show');
 Route::get('/about', [App\Http\Controllers\GuestController::class, 'about'])->name('guest.about');
 Route::get('/services', [App\Http\Controllers\GuestController::class, 'services'])->name('guest.services');
+Route::get('/services/official-documents', [App\Http\Controllers\GuestController::class, 'documentServices'])->name('guest.services.documents');
 Route::get('/contact', [App\Http\Controllers\GuestController::class, 'contact'])->name('guest.contact');
 Route::post('/contact', [App\Http\Controllers\GuestController::class, 'submitContact'])->middleware('throttle:contact-form')->name('guest.contact.submit');
 

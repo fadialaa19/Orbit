@@ -21,7 +21,7 @@
         </div>
         <div class="absolute -bottom-20 -right-20 w-64 h-64 bg-navy-100/20 rounded-full blur-3xl"></div>
     <div class="relative mt-20 mb-24">
-        <div class="max-w-2xl mx-auto">
+        <div class="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 items-stretch">
             {{-- كارد الخدمة المجانية --}}
             <div class="bg-white rounded-[3rem] shadow-xl border border-slate-100 p-10 text-center flex flex-col" data-aos="fade-up">
                 <div class="w-20 h-20 bg-gradient-to-br from-gold-100 to-navy-100 rounded-full flex items-center justify-center mx-auto mb-6 text-3xl shadow-sm">
@@ -51,6 +51,38 @@
                 </div>
                 <a href="{{ route('guest.scholarships') }}" class="block w-full bg-gold-600 text-white py-4 rounded-2xl font-black shadow-lg shadow-gold-100 hover:bg-gold-700 transition">
                     استكشف المنح المجانية
+                </a>
+            </div>
+
+            {{-- كارد خدمة استخراج الأوراق الرسمية --}}
+            <div class="bg-white rounded-[3rem] shadow-xl border border-slate-100 p-10 text-center flex flex-col" data-aos="fade-up" data-aos-delay="150">
+                <div class="w-20 h-20 bg-gradient-to-br from-navy-100 to-gold-100 rounded-full flex items-center justify-center mx-auto mb-6 text-3xl shadow-sm">
+                    📜
+                </div>
+                <h2 class="text-2xl font-black text-slate-800 mb-3">استخراج الأوراق الرسمية</h2>
+                <p class="text-slate-500 font-bold text-base max-w-sm mx-auto mb-6 leading-relaxed flex-grow">
+                    نساعدك تستخرج أوراقك من الوزارات الفلسطينية (شهادة التوجيهي، عدم محكومية، تصديق شهادات وغيرها) نيابة عنك.
+                </p>
+                <div class="space-y-3 mb-8 text-right px-4">
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5 text-emerald-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+                        <span class="text-sm font-bold text-slate-600">متابعة الإجراءات نيابة عنك</span>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5 text-emerald-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+                        <span class="text-sm font-bold text-slate-600">مناسبة للطلاب خارج البلاد</span>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5 text-emerald-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+                        <span class="text-sm font-bold text-slate-600">تغطي أهم المستندات الرسمية</span>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5 text-emerald-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+                        <span class="text-sm font-bold text-slate-600">تواصل مباشر مع فريقنا</span>
+                    </div>
+                </div>
+                <a href="{{ route('guest.services.documents') }}" class="block w-full bg-navy-900 text-white py-4 rounded-2xl font-black shadow-lg hover:bg-navy-800 transition">
+                    اطلع على تفاصيل الخدمة
                 </a>
             </div>
         </div>

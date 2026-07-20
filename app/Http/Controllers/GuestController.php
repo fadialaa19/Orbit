@@ -62,6 +62,11 @@ class GuestController extends Controller
         return view('guest.contact');
     }
 
+    public function documentServices()
+    {
+        return view('guest.document-services');
+    }
+
     public function submitContact(Request $request)
     {
         $validated = $request->validate([
