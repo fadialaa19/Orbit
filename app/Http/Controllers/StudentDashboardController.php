@@ -565,6 +565,59 @@ class StudentDashboardController extends Controller
         return view('dashboard.community');
     }
 
+    /**
+     * قائمة المستندات الرسمية المتاحة لطلبها، نفس القائمة المعروضة بصفحة
+     * الزائر (guest.services.documents) حتى تبقى الاثنتين متطابقتين دايماً.
+     */
+    private const OFFICIAL_DOCUMENTS = [
+        'شهادة الثانوية العامة (التوجيهي)' => ['icon' => '🎓', 'source' => 'وزارة التربية والتعليم'],
+        'شهادة عدم محكومية' => ['icon' => '🕊️', 'source' => 'وزارة الداخلية'],
+        'توثيق وتصديق الشهادات' => ['icon' => '📜', 'source' => 'وزارة الخارجية'],
+        'شهادة الميلاد' => ['icon' => '👶', 'source' => 'وزارة الداخلية - الأحوال المدنية'],
+        'استخراج أو تجديد جواز السفر' => ['icon' => '🛂', 'source' => 'وزارة الداخلية'],
+        'شهادة حسن السيرة والسلوك' => ['icon' => '✅', 'source' => 'المدرسة أو الجامعة'],
+    ];
+
+    public function documentRequests()
+    {
+        $documents = self::OFFICIAL_DOCUMENTS;
+
+        // نميّز تذاكر طلب المستندات عن باقي تذاكر الدعم الفني بادئة ثابتة بالعنوان
+        $myRequests = SupportTicket::where('user_id', Auth::id())
+            ->where('subject', 'like', '📄 طلب استخراج مستند:%')
+            ->latest()
+            ->get();
+
+        return view('dashboard.document-requests', compact('documents', 'myRequests'));
+    }
+
+    public function submitDocumentRequest(Request $request)
+    {
+        $request->validate([
+            'document_type' => 'required|string|in:' . implode(',', array_keys(self::OFFICIAL_DOCUMENTS)),
+            'notes' => 'nullable|string|max:1000',
+        ]);
+
+        $user = Auth::user();
+        $ticket = SupportTicket::create([
+            'user_id' => $user->id,
+            'subject' => '📄 طلب استخراج مستند: ' . $request->document_type,
+            'priority' => 'medium',
+            'status' => 'pending',
+            'ai_summary' => "طلب الطالب {$user->name} استخراج مستند رسمي: {$request->document_type}."
+                . ($request->filled('notes') ? "\n\nملاحظات إضافية من الطالب:\n{$request->notes}" : ''),
+        ]);
+
+        try {
+            User::admins()->get()->each->notify(new \App\Notifications\NewTicketNotification($ticket));
+        } catch (\Exception $e) {
+            \Log::warning('Failed to notify admins of document request: ' . $e->getMessage());
+        }
+
+        return redirect()->route('dashboard.document-requests')
+            ->with('success', 'تم إرسال طلبك بنجاح! فريقنا رح يتواصل معك قريباً عبر مركز التواصل.');
+    }
+
     public function storeTestimonial(Request $request)
     {
         $student = Auth::user();

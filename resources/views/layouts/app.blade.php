@@ -63,6 +63,7 @@
             <a href="{{ route('guest.scholarships') }}" class="hover:text-gold-600 transition">المنح الدراسية</a>
             <a href="{{ route('guest.about') }}" class="hover:text-gold-600 transition">عن المنصة</a>
             <a href="{{ route('guest.services') }}" class="hover:text-gold-600 transition">الخدمات</a>
+            <a href="{{ route('guest.services.documents') }}" class="hover:text-gold-600 transition">الأوراق الرسمية</a>
             <a href="{{ route('guest.contact') }}" class="hover:text-gold-600 transition">تواصل معنا</a>
 
         </div>
@@ -93,6 +94,7 @@
             <a href="{{ route('guest.scholarships') }}" class="block hover:text-gold-600 transition">المنح الدراسية</a>
             <a href="{{ route('guest.about') }}" class="block hover:text-gold-600 transition">عن المنصة</a>
             <a href="{{ route('guest.services') }}" class="block hover:text-gold-600 transition">الخدمات</a>
+            <a href="{{ route('guest.services.documents') }}" class="block hover:text-gold-600 transition">الأوراق الرسمية</a>
             <a href="{{ route('guest.contact') }}" class="block hover:text-gold-600 transition">تواصل معنا</a>
             <div class="border-t border-slate-100 pt-3 flex flex-col gap-3">
 @auth

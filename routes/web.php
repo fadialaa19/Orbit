@@ -211,6 +211,8 @@ Route::prefix('dashboard')->middleware(['auth', 'verified.ensure'])->name('dashb
     Route::post('/testimonial', [StudentDashboardController::class, 'storeTestimonial'])->name('testimonial.store');
     Route::put('/testimonial', [StudentDashboardController::class, 'updateTestimonial'])->name('testimonial.update');
     Route::get('/community', [StudentDashboardController::class, 'community'])->name('community');
+    Route::get('/document-requests', [StudentDashboardController::class, 'documentRequests'])->name('document-requests');
+    Route::post('/document-requests', [StudentDashboardController::class, 'submitDocumentRequest'])->name('document-requests.submit');
 
     // Scholarship Premium Checkout (orders)
     Route::get('/scholarships/{scholarship}/pay', [\App\Http\Controllers\StudentScholarshipCheckoutController::class, 'show'])

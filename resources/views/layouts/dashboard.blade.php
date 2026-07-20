@@ -46,6 +46,7 @@
                 <a href="{{ route('dashboard.communications') }}" class="{{ request()->routeIs('dashboard.communications') ? 'text-gold-600' : 'hover:text-gold-500' }} transition">مركز التواصل</a>
                 <a href="{{ route('dashboard.testimonial') }}" class="{{ request()->routeIs('dashboard.testimonial') ? 'text-gold-600' : 'hover:text-gold-500' }} transition">شارك تجربتك</a>
                 <a href="{{ route('dashboard.community') }}" class="{{ request()->routeIs('dashboard.community') ? 'text-gold-600' : 'hover:text-gold-500' }} transition">المجتمع</a>
+                <a href="{{ route('dashboard.document-requests') }}" class="{{ request()->routeIs('dashboard.document-requests') ? 'text-gold-600' : 'hover:text-gold-500' }} transition">الأوراق الرسمية</a>
                 <a href="{{ route('dashboard.xp') }}" class="{{ request()->routeIs('dashboard.xp') ? 'text-gold-600' : 'hover:text-gold-500' }} transition">⚡ نقاطي</a>
 
             </div>
@@ -113,6 +114,7 @@
         <a href="{{ route('dashboard.communications') }}" class="block {{ request()->routeIs('dashboard.communications') ? 'text-gold-600' : '' }}">مركز التواصل</a>
         <a href="{{ route('dashboard.testimonial') }}" class="block {{ request()->routeIs('dashboard.testimonial') ? 'text-gold-600' : '' }}">شارك تجربتك</a>
         <a href="{{ route('dashboard.community') }}" class="block {{ request()->routeIs('dashboard.community') ? 'text-gold-600' : '' }}">المجتمع</a>
+        <a href="{{ route('dashboard.document-requests') }}" class="block {{ request()->routeIs('dashboard.document-requests') ? 'text-gold-600' : '' }}">الأوراق الرسمية</a>
         <a href="{{ route('dashboard.xp') }}" class="block {{ request()->routeIs('dashboard.xp') ? 'text-gold-600' : '' }}">⚡ نقاطي</a>
         <a href="{{ route('dashboard.notifications') }}" class="block">الإشعارات</a>
         <div class="border-t border-slate-100 pt-3 flex flex-col gap-3">
