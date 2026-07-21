@@ -164,6 +164,12 @@ Route::prefix('admin')->middleware(['auth'])->name('admin.')->group(function () 
         Route::patch('official-documents/{official_document}/toggle', [\App\Http\Controllers\Admin\AdminOfficialDocumentController::class, 'toggleStatus'])->name('official-documents.toggle');
     });
 
+    // 6️⃣.56 لوحة الإعلانات (تظهر بأعلى لوحة تحكم الطالب)
+    Route::middleware(['check.permission:support'])->group(function () {
+        Route::resource('announcements', \App\Http\Controllers\Admin\AdminAnnouncementController::class)->only(['index', 'store', 'update', 'destroy']);
+        Route::patch('announcements/{announcement}/toggle', [\App\Http\Controllers\Admin\AdminAnnouncementController::class, 'toggleStatus'])->name('announcements.toggle');
+    });
+
     // 6️⃣.6 التحكم بنقاط XP للطلاب
     Route::middleware(['check.permission:xp'])->group(function () {
         Route::get('xp', [\App\Http\Controllers\Admin\AdminXpController::class, 'index'])->name('xp.index');

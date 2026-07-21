@@ -50,6 +50,55 @@
 
         </div>
 
+        @if($announcements->isNotEmpty())
+        @php
+            $announcementStyles = [
+                'info' => ['bg' => 'bg-gradient-to-l from-navy-900 to-navy-800', 'chip' => 'bg-white/15 text-white'],
+                'warning' => ['bg' => 'bg-gradient-to-l from-amber-600 to-amber-500', 'chip' => 'bg-white/20 text-white'],
+                'urgent' => ['bg' => 'bg-gradient-to-l from-rose-700 to-rose-600', 'chip' => 'bg-white/20 text-white'],
+            ];
+            $typeLabels = ['info' => 'إعلان', 'warning' => 'تنبيه', 'urgent' => 'عاجل'];
+        @endphp
+        <div class="mb-10" x-data="{
+                active: 0,
+                total: {{ $announcements->count() }},
+                timer: null,
+                start() { this.timer = setInterval(() => { this.active = (this.active + 1) % this.total }, 6000); },
+             }" x-init="if (total > 1) start()">
+            <div class="relative rounded-[2rem] overflow-hidden shadow-lg">
+                @foreach($announcements as $index => $announcement)
+                @php $style = $announcementStyles[$announcement->type] ?? $announcementStyles['info']; @endphp
+                <div x-show="active === {{ $index }}"
+                     class="{{ $style['bg'] }} px-6 py-6 md:px-10 md:py-8 {{ $index === 0 ? '' : 'absolute inset-0' }}">
+                    <div class="flex items-start md:items-center gap-5">
+                        <div class="w-14 h-14 rounded-2xl bg-white/15 flex items-center justify-center text-3xl shrink-0">
+                            {{ $announcement->icon }}
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <div class="flex items-center gap-3 mb-1.5 flex-wrap">
+                                <span class="{{ $style['chip'] }} px-3 py-1 rounded-lg text-[10px] font-black uppercase tracking-wider">{{ $typeLabels[$announcement->type] ?? 'إعلان' }}</span>
+                                <h3 class="font-black text-white text-lg leading-tight">{{ $announcement->title }}</h3>
+                            </div>
+                            <p class="text-white/85 font-bold text-sm leading-relaxed">{{ $announcement->body }}</p>
+                        </div>
+                    </div>
+                </div>
+                @endforeach
+            </div>
+
+            @if($announcements->count() > 1)
+            <div class="flex items-center justify-center gap-2 mt-4">
+                @foreach($announcements as $index => $announcement)
+                <button @click="active = {{ $index }}; clearInterval(timer); start();"
+                        class="h-2 rounded-full transition-all"
+                        :class="active === {{ $index }} ? 'w-6 bg-gold-600' : 'w-2 bg-slate-200 hover:bg-slate-300'"
+                        aria-label="إعلان {{ $index + 1 }}"></button>
+                @endforeach
+            </div>
+            @endif
+        </div>
+        @endif
+
         <div class="bg-white rounded-[2.5rem] p-8 mb-10 shadow-sm border border-slate-100 relative overflow-hidden">
             <div class="flex flex-col md:flex-row justify-between items-center gap-6">
                 <div class="flex-1">

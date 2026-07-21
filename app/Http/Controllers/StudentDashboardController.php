@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Announcement;
 use App\Models\Scholarship;
 use App\Models\StudentDocument;
 use App\Models\SupportTicket;
@@ -16,7 +17,9 @@ class StudentDashboardController extends Controller
     public function student()
     {
         $student = Auth::user();
-        
+
+        $announcements = Announcement::active()->ordered()->get();
+
         $profileCompletion = $student->calculateProfileCompletion();
         
         // جلب الإحصائيات الحقيقية من قاعدة البيانات
@@ -87,7 +90,7 @@ class StudentDashboardController extends Controller
             ['icon' => '🚀', 'name' => 'طموح لا ينتهي', 'description' => 'الوصول إلى المستوى الخامس في المنصة', 'unlocked' => $currentLevel >= 5],
         ];
 
-        return view('dashboard.student', compact('student', 'stats', 'recommended_scholarships', 'activities', 'profileCompletion', 'tasks', 'badges'));
+        return view('dashboard.student', compact('student', 'announcements', 'stats', 'recommended_scholarships', 'activities', 'profileCompletion', 'tasks', 'badges'));
     }
 
     public function scholarships(Request $request)
