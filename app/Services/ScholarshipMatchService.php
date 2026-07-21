@@ -5,15 +5,12 @@ namespace App\Services;
 use App\Models\ScholarshipMatchScore;
 use App\Models\User;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
 class ScholarshipMatchService
 {
-    private string $apiKey;
-    private string $baseUrl = 'https://api.groq.com/openai/v1/chat/completions';
-    private string $model = 'llama-3.3-70b-versatile';
+    private AiCompletionService $ai;
 
     // نفس قائمة المستندات المستخدمة في صفحة الملف الشخصي (resources/views/dashboard/profile.blade.php)
     private const DOCUMENT_LABELS = [
@@ -57,9 +54,9 @@ private const SYSTEM_PROMPT = <<<'PROMPT'
 }
 PROMPT;
 
-    public function __construct()
+    public function __construct(?AiCompletionService $ai = null)
     {
-        $this->apiKey = config('services.groq.key');
+        $this->ai = $ai ?? new AiCompletionService();
     }
 
     /**
@@ -99,7 +96,7 @@ PROMPT;
      */
     public function computeBatch(User $user, Collection $scholarships): array
     {
-        if ($scholarships->isEmpty() || empty($this->apiKey)) {
+        if ($scholarships->isEmpty()) {
             return [];
         }
 
@@ -124,59 +121,45 @@ PROMPT;
         $userPrompt = "ملف الطالب:\n" . $profileSummary
             . "\n\nالمنح المطلوب تحليلها (بصيغة JSON):\n" . json_encode($scholarshipList, JSON_UNESCAPED_UNICODE);
 
-        try {
-            $response = Http::withHeaders([
-                'Authorization' => 'Bearer ' . $this->apiKey,
-                'Content-Type' => 'application/json',
-            ])->timeout(45)->post($this->baseUrl, [
-                'model' => $this->model,
-                'messages' => [
-                    ['role' => 'system', 'content' => self::SYSTEM_PROMPT],
-                    ['role' => 'user', 'content' => $userPrompt],
-                ],
-                'temperature' => 0.3,
-                'max_tokens' => 4096,
-                'response_format' => ['type' => 'json_object'],
-            ]);
+        $aiResult = $this->ai->complete([
+            ['role' => 'system', 'content' => self::SYSTEM_PROMPT],
+            ['role' => 'user', 'content' => $userPrompt],
+        ], ['temperature' => 0.3, 'max_tokens' => 4096, 'json_mode' => true, 'timeout' => 45]);
 
-            if (!$response->successful()) {
-                Log::error('ScholarshipMatchService API error: ' . $response->body());
-                return [];
-            }
-
-            $raw = $response->json('choices.0.message.content', '');
-            $parsed = json_decode($raw, true);
-
-            if (json_last_error() !== JSON_ERROR_NONE || !isset($parsed['results'])) {
-                Log::error('ScholarshipMatchService JSON parse error. Raw: ' . $raw);
-                return [];
-            }
-
-            $saved = [];
-            foreach ($parsed['results'] as $result) {
-                if (!isset($result['scholarship_id'], $result['score'])) {
-                    continue;
-                }
-
-                $score = ScholarshipMatchScore::updateOrCreate(
-                    ['user_id' => $user->id, 'scholarship_id' => $result['scholarship_id']],
-                    [
-                        'score' => max(0, min(100, (int) $result['score'])),
-                        'summary' => $result['summary'] ?? null,
-                        'matched_criteria' => $result['matched_criteria'] ?? [],
-                        'gaps' => $result['gaps'] ?? [],
-                        'computed_at' => now(),
-                    ]
-                );
-
-                $saved[$result['scholarship_id']] = $score;
-            }
-
-            return $saved;
-        } catch (\Exception $e) {
-            Log::error('ScholarshipMatchService exception: ' . $e->getMessage());
+        if (!$aiResult['success']) {
+            Log::error('ScholarshipMatchService AI error: ' . $aiResult['error']);
             return [];
         }
+
+        $raw = $aiResult['content'];
+        $parsed = json_decode($raw, true);
+
+        if (json_last_error() !== JSON_ERROR_NONE || !isset($parsed['results'])) {
+            Log::error('ScholarshipMatchService JSON parse error. Raw: ' . $raw);
+            return [];
+        }
+
+        $saved = [];
+        foreach ($parsed['results'] as $result) {
+            if (!isset($result['scholarship_id'], $result['score'])) {
+                continue;
+            }
+
+            $score = ScholarshipMatchScore::updateOrCreate(
+                ['user_id' => $user->id, 'scholarship_id' => $result['scholarship_id']],
+                [
+                    'score' => max(0, min(100, (int) $result['score'])),
+                    'summary' => $result['summary'] ?? null,
+                    'matched_criteria' => $result['matched_criteria'] ?? [],
+                    'gaps' => $result['gaps'] ?? [],
+                    'computed_at' => now(),
+                ]
+            );
+
+            $saved[$result['scholarship_id']] = $score;
+        }
+
+        return $saved;
     }
 
     /**

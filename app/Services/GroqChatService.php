@@ -3,14 +3,11 @@
 namespace App\Services;
 
 use App\Models\Scholarship;
-use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
 class GroqChatService
 {
-    private string $apiKey;
-    private string $baseUrl = 'https://api.groq.com/openai/v1/chat/completions';
-    private string $model = 'llama-3.3-70b-versatile';
+    private AiCompletionService $ai;
     private ContentModerationService $moderation;
 
     private const SYSTEM_PROMPT = <<<'PROMPT'
@@ -60,10 +57,10 @@ PROMPT;
         'ابغى اسجل من خلالكم', 'سجل لي', 'سجلولي',
     ];
 
-    public function __construct(?ContentModerationService $moderation = null)
+    public function __construct(?ContentModerationService $moderation = null, ?AiCompletionService $ai = null)
     {
-        $this->apiKey = config('services.groq.key');
         $this->moderation = $moderation ?? new ContentModerationService();
+        $this->ai = $ai ?? new AiCompletionService();
     }
 
     public function chat(array $messages): array
@@ -97,15 +94,6 @@ PROMPT;
             ];
         }
 
-        if (empty($this->apiKey)) {
-            return [
-                'content' => '⚠️ مفتاح Groq API غير مضبوط.',
-                'force_close' => false,
-                'trigger_support' => true,
-                'support_ticket_id' => null,
-            ];
-        }
-
         $payloadMessages = array_merge(
             [
                 ['role' => 'system', 'content' => self::SYSTEM_PROMPT],
@@ -114,52 +102,33 @@ PROMPT;
             $messages
         );
 
-        try {
-            $response = Http::withHeaders([
-                'Authorization' => 'Bearer ' . $this->apiKey,
-                'Content-Type' => 'application/json',
-            ])->timeout(30)->post($this->baseUrl, [
-                'model' => $this->model,
-                'messages' => $payloadMessages,
-                'temperature' => 0.6,
-                'max_tokens' => 2048,
-            ]);
+        $result = $this->ai->complete($payloadMessages, ['temperature' => 0.6, 'max_tokens' => 2048]);
 
-            if (!$response->successful()) {
-                Log::error('Groq API error: ' . $response->body());
-                return [
-                    'content' => 'عذراً، حدث خطأ في الاتصال بالمستشارة نور.',
-                    'force_close' => false,
-                    'trigger_support' => false,
-                    'support_ticket_id' => null,
-                ];
-            }
-
-            $content = $response->json('choices.0.message.content', '');
-
-            // فحص إذا كان الرد يحتوي على جملة الطرد
-            $forceClose = str_contains($content, 'غير محترم');
-
-            // فحص إذا كان الرد يشير لتحويل للدعم الفني
-            $triggerSupport = str_contains(mb_strtolower($content), 'الدعم الفني')
-                || str_contains(mb_strtolower($content), 'سأحولك');
-
+        if (!$result['success']) {
+            Log::error('GroqChatService AI error: ' . $result['error']);
             return [
-                'content' => $content,
-                'force_close' => $forceClose,
-                'trigger_support' => $triggerSupport,
-                'support_ticket_id' => null,
-            ];
-
-        } catch (\Exception $e) {
-            Log::error('GroqChatService exception: ' . $e->getMessage());
-            return [
-                'content' => 'خطأ تقني، يرجى المحاولة لاحقاً.',
+                'content' => 'عذراً، حدث خطأ في الاتصال بالمستشارة نور.',
                 'force_close' => false,
-                'trigger_support' => true,
+                'trigger_support' => false,
                 'support_ticket_id' => null,
             ];
         }
+
+        $content = $result['content'];
+
+        // فحص إذا كان الرد يحتوي على جملة الطرد
+        $forceClose = str_contains($content, 'غير محترم');
+
+        // فحص إذا كان الرد يشير لتحويل للدعم الفني
+        $triggerSupport = str_contains(mb_strtolower($content), 'الدعم الفني')
+            || str_contains(mb_strtolower($content), 'سأحولك');
+
+        return [
+            'content' => $content,
+            'force_close' => $forceClose,
+            'trigger_support' => $triggerSupport,
+            'support_ticket_id' => null,
+        ];
     }
 
     /**
