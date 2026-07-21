@@ -80,7 +80,7 @@ PROMPT;
         $normalized = $this->moderation->normalizeText($userMessage);
         if ($this->moderation->containsProfanity($userMessage)) {
             return [
-                'content' => 'عذراً، أنت شخص غير محترم ولا يشرفني مساعدتك. سيتم إغلاق المحادثة.',
+                'content' => 'عذراً، أنت شخص غير محترم ولا يشرفني مساعدتك. سيتم إغلاق المحادثة لمدة ساعة.',
                 'force_close' => true,
                 'trigger_support' => false,
                 'support_ticket_id' => null,

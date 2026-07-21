@@ -37,14 +37,19 @@ class GroqChatController extends Controller
             'message' => 'required|string|max:3000',
         ]);
 
-        if (session('groq_chat_banned', false)) {
+        $bannedUntil = session('groq_chat_banned_until');
+        if ($bannedUntil && now()->lt($bannedUntil)) {
             return response()->json([
                 'success' => true,
-                'reply' => '⛔ تم إغلاق هذه المحادثة نهائياً بسبب استخدامك لألفاظ غير لائقة.',
+                'reply' => '⛔ تم إغلاق هذه المحادثة مؤقتاً بسبب استخدامك لألفاظ غير لائقة.',
                 'force_close' => true,
+                'banned_until' => $bannedUntil->timestamp,
                 'trigger_support' => false,
                 'support_ticket_id' => null,
             ]);
+        }
+        if ($bannedUntil) {
+            session()->forget('groq_chat_banned_until');
         }
 
         $userMessage = $request->input('message');
@@ -54,8 +59,10 @@ class GroqChatController extends Controller
 
         $result = $this->groq->chat($history);
 
+        $bannedUntil = null;
         if ($result['force_close']) {
-            session(['groq_chat_banned' => true]);
+            $bannedUntil = now()->addHour();
+            session(['groq_chat_banned_until' => $bannedUntil]);
         }
 
         $supportTicketId = null;
@@ -73,6 +80,7 @@ class GroqChatController extends Controller
             'success' => true,
             'reply' => $result['content'],
             'force_close' => $result['force_close'],
+            'banned_until' => $bannedUntil?->timestamp,
             'trigger_support' => $result['trigger_support'],
             'support_ticket_id' => $supportTicketId,
             'is_authenticated' => Auth::check(),
@@ -87,7 +95,7 @@ class GroqChatController extends Controller
 
     public function clearBan(Request $request)
     {
-        session()->forget('groq_chat_banned');
+        session()->forget('groq_chat_banned_until');
         return response()->json(['success' => true]);
     }
 

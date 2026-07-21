@@ -1,12 +1,13 @@
 ﻿<div id="groq-chat-widget"
-     class="fixed bottom-6 right-6 z-[9999] rtl:font-sans"
+     class="fixed bottom-6 left-6 z-[9999] rtl:font-sans"
      style="font-family:'Cairo',sans-serif;direction:rtl;"
      x-data="{
         open: false,
         input: '',
         loading: false,
         handoff: false,
-        banned: false,
+        bannedUntil: null,
+        nowTick: Date.now(),
         isAuthenticated: false,
         supportTicketId: null,
         supportCreated: false,
@@ -14,12 +15,30 @@
         msgId: 0,
 
         init() {
-            // Check if user was banned in previous session (localStorage)
-            this.banned = localStorage.getItem('groq_chat_banned') === 'true';
+            // Check if user is still under a temporary ban from a previous session (localStorage)
+            const stored = localStorage.getItem('groq_chat_banned_until');
+            this.bannedUntil = stored ? parseInt(stored, 10) : null;
             this.supportTicketId = localStorage.getItem('groq_chat_support_ticket_id');
             if (this.supportTicketId) {
                 this.supportCreated = true;
             }
+            setInterval(() => {
+                this.nowTick = Date.now();
+                if (this.bannedUntil && this.bannedUntil <= this.nowTick) {
+                    this.clearBan();
+                }
+            }, 1000);
+        },
+
+        get banned() {
+            return this.bannedUntil !== null && this.bannedUntil > this.nowTick;
+        },
+
+        get remainingLabel() {
+            const totalSeconds = Math.max(0, Math.ceil((this.bannedUntil - this.nowTick) / 1000));
+            const m = Math.floor(totalSeconds / 60);
+            const s = totalSeconds % 60;
+            return m > 0 ? (m + ' دقيقة و ' + s + ' ثانية') : (s + ' ثانية');
         },
 
         toggle() {
@@ -51,10 +70,10 @@
                 } else {
                     this.messages.push({ id: ++this.msgId, role: 'ai', content: data.reply });
 
-                    // Handle permanent ban
+                    // Handle temporary ban (1 hour)
                     if (data.force_close) {
-                        this.banned = true;
-                        localStorage.setItem('groq_chat_banned', 'true');
+                        this.bannedUntil = data.banned_until ? data.banned_until * 1000 : (Date.now() + 3600000);
+                        localStorage.setItem('groq_chat_banned_until', this.bannedUntil);
                     }
 
         // Handle support ticket creation
@@ -89,10 +108,10 @@
         },
 
         async clearBan() {
-            this.banned = false;
+            this.bannedUntil = null;
             this.messages = [];
             this.msgId = 0;
-            localStorage.removeItem('groq_chat_banned');
+            localStorage.removeItem('groq_chat_banned_until');
             await fetch('{{ route('api.chat.clear-ban') }}', {
                 method: 'POST',
                 headers: { 'X-CSRF-TOKEN': document.querySelector('meta[name=csrf-token]').getAttribute('content') }
@@ -132,7 +151,7 @@
 
     {{-- Chat Window --}}
     <div x-show="open" x-cloak x-transition
-         class="absolute bottom-16 right-0 w-[340px] md:w-[380px] bg-white rounded-[2rem] shadow-2xl border border-slate-100 overflow-hidden flex flex-col"
+         class="absolute bottom-16 left-0 w-[340px] md:w-[380px] bg-white rounded-[2rem] shadow-2xl border border-slate-100 overflow-hidden flex flex-col"
          style="max-height:600px;height:500px;">
 
         {{-- Header --}}
@@ -154,7 +173,7 @@
                 <span x-show="!banned" class="w-2 h-2 bg-emerald-400 rounded-full animate-pulse"></span>
                 <span x-show="banned" class="w-2 h-2 bg-rose-500 rounded-full"></span>
                 <span x-show="!banned" class="text-[10px] font-bold">متصل</span>
-                <span x-show="banned" class="text-[10px] font-bold">مغلق</span>
+                <span x-show="banned" class="text-[10px] font-bold">مغلق مؤقتاً</span>
             </div>
         </div>
 
@@ -175,19 +194,18 @@
             <div x-show="banned" x-cloak x-transition
                  class="absolute inset-0 bg-rose-50/95 backdrop-blur-sm z-10 flex flex-col items-center justify-center p-6 text-center">
                 <div class="text-4xl mb-3">🚫</div>
-                <h3 class="text-base font-black text-rose-800 mb-2">تم إغلاق المحادثة نهائياً</h3>
+                <h3 class="text-base font-black text-rose-800 mb-2">تم إغلاق المحادثة مؤقتاً</h3>
                 <p class="text-xs font-bold text-rose-600 mb-4 leading-relaxed">
                     تم إغلاق هذه المحادثة بسبب استخدامك لألفاظ غير لائقة.<br>
                     إذا كنت تعتقد أن هذا خطأ، يمكنك التواصل مع الدعم الفني.
                 </p>
+                <div class="bg-white border border-rose-100 px-5 py-2.5 rounded-xl text-xs font-black text-rose-700 mb-4">
+                    ⏱️ ستُفتح المحادثة تلقائياً خلال <span x-text="remainingLabel"></span>
+                </div>
                 <a href="{{ url('/#contact') }}"
-                   class="inline-block bg-rose-600 text-white px-5 py-2.5 rounded-xl text-xs font-black hover:bg-rose-700 transition shadow-lg shadow-rose-200 mb-2">
+                   class="inline-block bg-rose-600 text-white px-5 py-2.5 rounded-xl text-xs font-black hover:bg-rose-700 transition shadow-lg shadow-rose-200">
                     📞 تواصل مع الدعم الفني
                 </a>
-                <button @click="clearBan()"
-                        class="text-[10px] font-bold text-rose-400 hover:text-rose-600 underline mt-2">
-                    المحاولة مرة أخرى
-                </button>
             </div>
 
             <template x-for="msg in messages" :key="msg.id">
