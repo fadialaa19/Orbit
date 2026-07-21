@@ -116,6 +116,7 @@ Route::prefix('admin')->middleware(['auth'])->name('admin.')->group(function () 
     Route::middleware(['check.permission:scholarships'])->group(function () {
         Route::resource('scholarships', AdminScholarshipController::class);
         Route::post('/scholarships/generate-sections', [AdminScholarshipController::class, 'generateAllSections'])->name('scholarships.generate-sections');
+        Route::post('/scholarships/ai-autofill-text', [AdminScholarshipController::class, 'aiAutofillFromText'])->name('scholarships.ai-autofill-text');
         Route::post('/scholarships/rich-text/upload-image', [ScholarshipRichTextUploadController::class, 'uploadImage'])->name('scholarships.rich-text.upload-image');
     });
 

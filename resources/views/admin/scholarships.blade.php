@@ -118,7 +118,23 @@
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-0 divide-y lg:divide-y-0 lg:divide-x lg:divide-x-reverse divide-slate-100">
                 
                 <div class="lg:col-span-8 p-8 space-y-8">
-                    
+
+                    <div class="bg-gradient-to-br from-navy-900 to-navy-800 rounded-[1.5rem] p-6 shadow-lg space-y-4">
+                        <h3 class="text-sm font-black text-white flex items-center gap-2">
+                            <span class="text-gold-400">🤖</span> تعبئة تلقائية من نص خام بالذكاء الاصطناعي
+                        </h3>
+                        <p class="text-xs text-slate-300 font-bold leading-relaxed">
+                            الصق أي نص عن المنحة (من موقع الجامعة، ملف، أو رسالة) وخلي الذكاء الاصطناعي يقرأه ويوزّع بياناته على كل حقول النموذج تلقائياً، بما فيها العنوان والجامعة والموعد النهائي والأقسام النصية.
+                        </p>
+                        <textarea id="raw_text_input" rows="6" placeholder="الصق النص الخام هنا..."
+                                  class="w-full bg-white/10 border border-white/10 rounded-xl px-4 py-3 text-sm font-bold text-white placeholder-slate-400 outline-none focus:border-gold-400 transition-all resize-y"></textarea>
+                        <button type="button" onclick="autofillFromRawText()" id="autofillBtn"
+                                class="w-full bg-gold-500 text-white font-black py-3.5 rounded-2xl text-xs hover:bg-gold-400 transition-all shadow-lg shadow-gold-500/20 flex items-center justify-center gap-2">
+                            <svg id="autofillIcon" class="w-4 h-4 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+                            <span id="autofillText">تعبئة كل الحقول تلقائياً</span>
+                        </button>
+                    </div>
+
                     <div class="bg-white rounded-[1.5rem] border border-slate-100 p-6 shadow-sm space-y-6">
                         <h3 class="text-sm font-black text-slate-800 pb-3 border-b border-slate-50 flex items-center gap-2">
                             <span class="text-gold-500">📝</span> البيانات الأساسية للمنحة
@@ -469,6 +485,84 @@ async function generateAllSections() {
         aiBtn.disabled = false;
         aiBtn.classList.remove('opacity-60', 'cursor-not-allowed');
     }
+}
+
+async function autofillFromRawText() {
+    const rawText = document.getElementById('raw_text_input').value.trim();
+    if (!rawText) {
+        alert('الصق نص المنحة الخام أولاً.');
+        return;
+    }
+
+    const btn = document.getElementById('autofillBtn');
+    const label = document.getElementById('autofillText');
+
+    btn.disabled = true;
+    btn.classList.add('opacity-60', 'cursor-not-allowed');
+    label.innerText = 'جاري القراءة والتحليل...';
+
+    try {
+        const response = await fetch("{{ route('admin.scholarships.ai-autofill-text') }}", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+            },
+            body: JSON.stringify({ raw_text: rawText })
+        });
+
+        const result = await response.json();
+
+        if (response.ok && result.success) {
+            applyAutofillData(result.data);
+            label.innerText = '✅ تم تعبئة الحقول!';
+            setTimeout(() => { label.innerText = 'تعبئة كل الحقول تلقائياً'; }, 3000);
+        } else {
+            alert(result.error || 'حدث خطأ غير متوقع أثناء التحليل.');
+            label.innerText = 'تعبئة كل الحقول تلقائياً';
+        }
+    } catch (error) {
+        console.error('AI Autofill Error:', error);
+        alert('حدث خطأ في الاتصال بالخادم، تأكد من الاتصال بالشبكة.');
+        label.innerText = 'تعبئة كل الحقول تلقائياً';
+    } finally {
+        btn.disabled = false;
+        btn.classList.remove('opacity-60', 'cursor-not-allowed');
+    }
+}
+
+function applyAutofillData(data) {
+    const simpleFields = ['title_ar', 'title_en', 'country', 'university', 'financial_value',
+        'applicants_count', 'min_gpa', 'recommended_tags', 'application_url', 'apply_via_us_link'];
+
+    simpleFields.forEach(name => {
+        const value = data[name];
+        if (value === null || value === undefined || value === '') return;
+        const el = document.querySelector(`[name="${name}"]`);
+        if (el) el.value = value;
+    });
+
+    if (data.deadline) {
+        const deadlineEl = document.querySelector('[name="deadline"]');
+        if (deadlineEl) deadlineEl.value = data.deadline;
+    }
+
+    // لا نلمس فلتر التصنيف لو الذكاء الاصطناعي ما لقاش أي مرحلة صريحة بالنص،
+    // حتى يضل "بكالوريوس" الافتراضي محدد وما يوصلش الفورم بصفر تصنيفات (مطلوب حقل إلزامي).
+    setCheckboxGroup('categories[]', data.categories || [], true);
+    setCheckboxGroup('coverage[]', data.coverage || []);
+    setCheckboxGroup('tags[]', data.tags || []);
+
+    ['description', 'overview', 'conditions', 'documents', 'features', 'application_process'].forEach(field => {
+        if (data[field]) setQuillHtml(field, data[field]);
+    });
+}
+
+function setCheckboxGroup(name, values, keepDefaultIfEmpty = false) {
+    if (keepDefaultIfEmpty && (!values || values.length === 0)) return;
+    document.querySelectorAll(`input[name="${name}"]`).forEach(cb => {
+        cb.checked = values.includes(cb.value);
+    });
 }
 
 document.addEventListener("DOMContentLoaded", () => {

@@ -257,4 +257,26 @@ public function update(Request $request, Scholarship $scholarship)
             return response()->json(['success' => false, 'error' => 'خطأ داخلي: ' . $e->getMessage()], 500);
         }
     }
+
+    public function aiAutofillFromText(Request $request)
+    {
+        $request->validate([
+            'raw_text' => 'required|string|max:20000',
+        ]);
+
+        try {
+            $service = new \App\Services\GroqChatServiceScholarshipPrompt();
+
+            $data = $service->extractFromRawText($request->raw_text);
+
+            if (isset($data['error'])) {
+                return response()->json(['success' => false, 'error' => $data['error']], 400);
+            }
+
+            return response()->json(['success' => true, 'data' => $data]);
+        } catch (\Exception $e) {
+            Log::error('Groq aiAutofillFromText error: ' . $e->getMessage());
+            return response()->json(['success' => false, 'error' => 'خطأ داخلي: ' . $e->getMessage()], 500);
+        }
+    }
 }
