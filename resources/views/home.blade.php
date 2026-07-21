@@ -154,9 +154,9 @@
         @foreach($teamMembers as $member)
         <div data-aos="fade-up" class="bg-slate-50 p-8 rounded-[2rem] hover:bg-white hover:shadow-xl transition-all duration-500 text-center">
             @if($member->avatar)
-                <img src="{{ $member->avatar }}" alt="{{ $member->name }}" class="w-20 h-20 rounded-2xl object-cover shadow-lg mx-auto mb-5">
+                <img src="{{ $member->avatar }}" alt="{{ $member->name }}" class="w-20 h-20 rounded-full object-cover shadow-lg mx-auto mb-5">
             @else
-                <div class="w-20 h-20 bg-gradient-to-br {{ $roleColors[$member->role] ?? 'from-gold-600 to-gold-400' }} rounded-2xl flex items-center justify-center text-white font-black text-2xl shadow-lg mx-auto mb-5">
+                <div class="w-20 h-20 bg-gradient-to-br {{ $roleColors[$member->role] ?? 'from-gold-600 to-gold-400' }} rounded-full flex items-center justify-center text-white font-black text-2xl shadow-lg mx-auto mb-5">
                     {{ mb_substr($member->name, 0, 1) }}
                 </div>
             @endif
