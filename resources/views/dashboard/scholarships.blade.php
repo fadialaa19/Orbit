@@ -78,25 +78,43 @@
                 @forelse($scholarships as $scholarship)
                     <div class="bg-white rounded-[2.5rem] shadow-sm border border-slate-50 hover:border-gold-100 transition duration-300 relative group overflow-hidden">
 
-                        {{-- نسبة التوافق الذكية: مخزّنة مسبقًا أو بتتحلل في الخلفية بعد تحميل الصفحة --}}
-                        @if(isset($matchScores[$scholarship->id]))
-                            @php
-                                $score = $matchScores[$scholarship->id];
-                                $scoreColor = $score >= 70 ? 'bg-emerald-50 text-emerald-700 border-emerald-100' : ($score >= 40 ? 'bg-amber-50 text-amber-700 border-amber-100' : 'bg-rose-50 text-rose-700 border-rose-100');
-                            @endphp
-                            <div class="absolute top-5 left-6 z-20 px-3 py-1.5 rounded-full text-[11px] font-black border shadow-sm {{ $scoreColor }}" data-match-badge="{{ $scholarship->id }}">
-                                🎯 نسبة توافقك: {{ $score }}%
-                            </div>
-                        @else
-                            <div class="absolute top-5 left-6 z-20 px-3 py-1.5 rounded-full text-[11px] font-black border shadow-sm bg-slate-50 text-slate-400 border-slate-100 animate-pulse" data-match-badge="{{ $scholarship->id }}" data-match-pending="1">
-                                🤖 جارِ تحليل التوافق...
-                            </div>
-                        @endif
-
                         @if($scholarship->main_image)
                             <div class="w-full aspect-[5/1] overflow-hidden relative bg-gradient-to-br from-slate-100 to-slate-50">
                                 <img src="{{ $scholarship->main_image }}" alt="" class="w-full h-full object-cover">
+
+                                {{-- نسبة التوافق الذكية: مخزّنة مسبقًا أو بتتحلل بالخلفية - محاطة داخل صورة
+                                     الغلاف نفسها وملاصقة لأسفلها، بعيدة عن زاوية الكارد المدوّرة العلوية
+                                     حتى ما تنقص وتُقتطع بصرياً. --}}
+                                @if(isset($matchScores[$scholarship->id]))
+                                    @php
+                                        $score = $matchScores[$scholarship->id];
+                                        $scoreColor = $score >= 70 ? 'bg-emerald-50 text-emerald-700 border-emerald-100' : ($score >= 40 ? 'bg-amber-50 text-amber-700 border-amber-100' : 'bg-rose-50 text-rose-700 border-rose-100');
+                                    @endphp
+                                    <div class="absolute bottom-4 left-4 z-20 px-3 py-1.5 rounded-full text-[11px] font-black border shadow-sm {{ $scoreColor }}" data-match-badge="{{ $scholarship->id }}">
+                                        🎯 نسبة توافقك: {{ $score }}%
+                                    </div>
+                                @else
+                                    <div class="absolute bottom-4 left-4 z-20 px-3 py-1.5 rounded-full text-[11px] font-black border shadow-sm bg-slate-50 text-slate-400 border-slate-100 animate-pulse" data-match-badge="{{ $scholarship->id }}" data-match-pending="1">
+                                        🤖 جارِ تحليل التوافق...
+                                    </div>
+                                @endif
                             </div>
+                        @else
+                            {{-- بدون صورة غلاف: الشارة تضل بأعلى الكارد كالسابق (بدون صورة، اقتطاع الزاوية
+                                 غير ملحوظ لأنه فوق خلفية بيضاء بسيطة). --}}
+                            @if(isset($matchScores[$scholarship->id]))
+                                @php
+                                    $score = $matchScores[$scholarship->id];
+                                    $scoreColor = $score >= 70 ? 'bg-emerald-50 text-emerald-700 border-emerald-100' : ($score >= 40 ? 'bg-amber-50 text-amber-700 border-amber-100' : 'bg-rose-50 text-rose-700 border-rose-100');
+                                @endphp
+                                <div class="absolute top-5 left-6 z-20 px-3 py-1.5 rounded-full text-[11px] font-black border shadow-sm {{ $scoreColor }}" data-match-badge="{{ $scholarship->id }}">
+                                    🎯 نسبة توافقك: {{ $score }}%
+                                </div>
+                            @else
+                                <div class="absolute top-5 left-6 z-20 px-3 py-1.5 rounded-full text-[11px] font-black border shadow-sm bg-slate-50 text-slate-400 border-slate-100 animate-pulse" data-match-badge="{{ $scholarship->id }}" data-match-pending="1">
+                                    🤖 جارِ تحليل التوافق...
+                                </div>
+                            @endif
                         @endif
 
                         <div class="p-8">
@@ -215,7 +233,11 @@
                 const colorClass = score >= 70 ? 'bg-emerald-50 text-emerald-700 border-emerald-100'
                     : score >= 40 ? 'bg-amber-50 text-amber-700 border-amber-100'
                     : 'bg-rose-50 text-rose-700 border-rose-100';
-                badge.className = 'absolute -top-3 left-6 px-3 py-1.5 rounded-full text-[11px] font-black border shadow-sm ' + colorClass;
+                // نحافظ على نفس صفوف الموضع اللي كانت موجودة أصلاً (bottom-4/left-4 داخل
+                // صورة الغلاف، أو top-5/left-6 بدون صورة) بدل استبدالها بموضع ثابت واحد،
+                // حتى ما ترجع الشارة تنقص وتُقتطع بزاوية الكارد المدوّرة.
+                const positionClass = badge.classList.contains('bottom-4') ? 'bottom-4 left-4' : 'top-5 left-6';
+                badge.className = 'absolute ' + positionClass + ' z-20 px-3 py-1.5 rounded-full text-[11px] font-black border shadow-sm ' + colorClass;
                 badge.removeAttribute('data-match-pending');
                 badge.textContent = '🎯 نسبة توافقك: ' + score + '%';
             });
