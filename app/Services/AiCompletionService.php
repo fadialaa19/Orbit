@@ -121,6 +121,11 @@ class AiCompletionService
             $generationConfig = [
                 'temperature' => $options['temperature'] ?? 0.5,
                 'maxOutputTokens' => $options['max_tokens'] ?? 2048,
+                // Gemini's *-latest flash models default to an internal "thinking" pass before
+                // answering, which both slows responses down (risking timeouts) and eats into
+                // maxOutputTokens before any visible text is produced. We just want a plain
+                // completion (matching how Groq behaves), so switch thinking off.
+                'thinkingConfig' => ['thinkingBudget' => 0],
             ];
             if (!empty($options['json_mode'])) {
                 $generationConfig['responseMimeType'] = 'application/json';
@@ -133,27 +138,59 @@ class AiCompletionService
 
             $url = "https://generativelanguage.googleapis.com/v1beta/models/{$this->geminiModel}:generateContent";
 
-            $response = Http::withHeaders(['Content-Type' => 'application/json'])
-                ->timeout($options['timeout'] ?? 30)
-                ->post($url . '?key=' . $this->geminiKey, $payload);
+            // Gemini can be slower than Groq even without thinking, especially over a real
+            // server-to-server connection (vs local dev) - give it a more generous floor than
+            // whatever timeout the caller configured for Groq's typically-fast responses.
+            $timeout = max($options['timeout'] ?? 30, 45);
 
-            if (!$response->successful()) {
-                return $this->fail('Gemini: ' . $response->body());
+            // Gemini is our safety net for when Groq is already down, so it's worth one quick
+            // retry on transient hiccups (momentary "high demand" 503s, brief timeouts) before
+            // giving up and reporting total failure to the caller.
+            $lastError = null;
+            for ($attempt = 1; $attempt <= 2; $attempt++) {
+                try {
+                    $response = Http::withHeaders(['Content-Type' => 'application/json'])
+                        ->timeout($timeout)
+                        ->post($url . '?key=' . $this->geminiKey, $payload);
+
+                    if (!$response->successful()) {
+                        $lastError = 'Gemini: ' . $response->body();
+                        if ($attempt < 2) {
+                            sleep(1);
+                            continue;
+                        }
+                        return $this->fail($lastError);
+                    }
+
+                    $content = $response->json('candidates.0.content.parts.0.text', '');
+
+                    if ($content === '') {
+                        $finishReason = $response->json('candidates.0.finishReason');
+                        $lastError = 'Gemini returned empty content (finishReason: ' . ($finishReason ?? 'unknown') . ')';
+                        if ($attempt < 2) {
+                            sleep(1);
+                            continue;
+                        }
+                        return $this->fail($lastError);
+                    }
+
+                    return [
+                        'success' => true,
+                        'content' => $content,
+                        'provider' => 'gemini',
+                        'error' => null,
+                    ];
+                } catch (\Exception $e) {
+                    $lastError = 'Gemini exception: ' . $e->getMessage();
+                    if ($attempt < 2) {
+                        sleep(1);
+                        continue;
+                    }
+                    return $this->fail($lastError);
+                }
             }
 
-            $content = $response->json('candidates.0.content.parts.0.text', '');
-
-            if ($content === '') {
-                $finishReason = $response->json('candidates.0.finishReason');
-                return $this->fail('Gemini returned empty content (finishReason: ' . ($finishReason ?? 'unknown') . ')');
-            }
-
-            return [
-                'success' => true,
-                'content' => $content,
-                'provider' => 'gemini',
-                'error' => null,
-            ];
+            return $this->fail($lastError ?? 'Gemini: unknown failure');
         } catch (\Exception $e) {
             return $this->fail('Gemini exception: ' . $e->getMessage());
         }
