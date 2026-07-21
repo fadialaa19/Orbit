@@ -52,50 +52,55 @@
 
         @if($announcements->isNotEmpty())
         @php
-            $announcementStyles = [
-                'info' => ['bg' => 'bg-gradient-to-l from-navy-900 to-navy-800', 'chip' => 'bg-white/15 text-white'],
-                'warning' => ['bg' => 'bg-gradient-to-l from-amber-600 to-amber-500', 'chip' => 'bg-white/20 text-white'],
-                'urgent' => ['bg' => 'bg-gradient-to-l from-rose-700 to-rose-600', 'chip' => 'bg-white/20 text-white'],
-            ];
-            $typeLabels = ['info' => 'إعلان', 'warning' => 'تنبيه', 'urgent' => 'عاجل'];
+            $announcementsJson = $announcements->map(fn ($a) => [
+                'id' => $a->id,
+                'icon' => $a->icon,
+                'title' => $a->title,
+                'body' => $a->body,
+                'type' => $a->type,
+            ]);
         @endphp
-        <div class="mb-10" x-data="{
-                active: 0,
-                total: {{ $announcements->count() }},
+        <script type="application/json" id="announcements-data">@json($announcementsJson)</script>
+        <div class="mb-8" x-cloak x-show="current" x-data="{
+                all: JSON.parse(document.getElementById('announcements-data').textContent),
+                dismissed: JSON.parse(localStorage.getItem('dismissedAnnouncements') || '[]'),
+                index: 0,
                 timer: null,
-                start() { this.timer = setInterval(() => { this.active = (this.active + 1) % this.total }, 6000); },
-             }" x-init="if (total > 1) start()">
-            <div class="relative rounded-[2rem] overflow-hidden shadow-lg">
-                @foreach($announcements as $index => $announcement)
-                @php $style = $announcementStyles[$announcement->type] ?? $announcementStyles['info']; @endphp
-                <div x-show="active === {{ $index }}"
-                     class="{{ $style['bg'] }} px-6 py-6 md:px-10 md:py-8 {{ $index === 0 ? '' : 'absolute inset-0' }}">
-                    <div class="flex items-start md:items-center gap-5">
-                        <div class="w-14 h-14 rounded-2xl bg-white/15 flex items-center justify-center text-3xl shrink-0">
-                            {{ $announcement->icon }}
-                        </div>
-                        <div class="flex-1 min-w-0">
-                            <div class="flex items-center gap-3 mb-1.5 flex-wrap">
-                                <span class="{{ $style['chip'] }} px-3 py-1 rounded-lg text-[10px] font-black uppercase tracking-wider">{{ $typeLabels[$announcement->type] ?? 'إعلان' }}</span>
-                                <h3 class="font-black text-white text-lg leading-tight">{{ $announcement->title }}</h3>
-                            </div>
-                            <p class="text-white/85 font-bold text-sm leading-relaxed">{{ $announcement->body }}</p>
-                        </div>
-                    </div>
+                typeClasses: {
+                    info: 'bg-gradient-to-l from-navy-900 to-navy-800',
+                    warning: 'bg-gradient-to-l from-amber-600 to-amber-500',
+                    urgent: 'bg-gradient-to-l from-rose-700 to-rose-600',
+                },
+                get visible() { return this.all.filter(a => !this.dismissed.includes(a.id)); },
+                get current() { return this.visible[this.index] || null; },
+                init() { if (this.visible.length > 1) this.start(); },
+                start() { this.timer = setInterval(() => { this.index = (this.index + 1) % this.visible.length; }, 6000); },
+                restart() { clearInterval(this.timer); if (this.visible.length > 1) this.start(); },
+                dismiss() {
+                    if (!this.current) return;
+                    this.dismissed.push(this.current.id);
+                    localStorage.setItem('dismissedAnnouncements', JSON.stringify(this.dismissed));
+                    if (this.index >= this.visible.length) this.index = 0;
+                    this.restart();
+                },
+             }">
+            <div class="rounded-2xl shadow-sm px-5 py-3.5 flex items-center gap-4" :class="typeClasses[current.type] || typeClasses.info">
+                <span class="text-2xl shrink-0" x-text="current.icon"></span>
+                <div class="flex-1 min-w-0">
+                    <h3 class="font-black text-white text-sm leading-tight" x-text="current.title"></h3>
+                    <p class="text-white/75 text-xs font-bold truncate" x-text="current.body"></p>
                 </div>
-                @endforeach
+                <template x-if="visible.length > 1">
+                    <div class="hidden sm:flex items-center gap-1.5 shrink-0">
+                        <template x-for="(item, i) in visible" :key="item.id">
+                            <button type="button" @click="index = i; restart()" class="h-1.5 rounded-full transition-all" :class="i === index ? 'w-5 bg-white' : 'w-1.5 bg-white/40 hover:bg-white/60'" aria-label="إعلان آخر"></button>
+                        </template>
+                    </div>
+                </template>
+                <button type="button" @click="dismiss()" class="shrink-0 text-white/70 hover:text-white hover:bg-white/10 rounded-lg p-1.5 transition" aria-label="إخفاء الإعلان">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"/></svg>
+                </button>
             </div>
-
-            @if($announcements->count() > 1)
-            <div class="flex items-center justify-center gap-2 mt-4">
-                @foreach($announcements as $index => $announcement)
-                <button @click="active = {{ $index }}; clearInterval(timer); start();"
-                        class="h-2 rounded-full transition-all"
-                        :class="active === {{ $index }} ? 'w-6 bg-gold-600' : 'w-2 bg-slate-200 hover:bg-slate-300'"
-                        aria-label="إعلان {{ $index + 1 }}"></button>
-                @endforeach
-            </div>
-            @endif
         </div>
         @endif
 

@@ -20,54 +20,62 @@
         </div>
 
         {{-- بداية الفورم الرئيسي --}}
-        <form method="GET" action="{{ route('dashboard.scholarships') }}" id="filterForm">
-            
-            <div class="bg-white p-4 rounded-[2rem] shadow-sm mb-10 flex gap-4 border border-slate-100">
+        @php
+            $activeFiltersCount = count((array) request('coverage')) + count((array) request('category'));
+        @endphp
+        <form method="GET" action="{{ route('dashboard.scholarships') }}" id="filterForm" x-data="{ filtersOpen: {{ $activeFiltersCount > 0 ? 'true' : 'false' }} }">
+
+            <div class="bg-white p-4 rounded-[2rem] shadow-sm mb-4 flex gap-3 border border-slate-100">
                 <input type="text" name="q" value="{{ request('q') }}" placeholder="ابحث عن منحة، جامعة أو تخصص..." class="flex-1 bg-transparent pr-4 outline-none font-medium text-right">
+                <button type="button" @click="filtersOpen = !filtersOpen" class="relative flex items-center gap-2 px-5 py-3 rounded-2xl font-bold text-sm transition" :class="filtersOpen ? 'bg-gold-100 text-gold-600' : 'bg-slate-50 text-slate-500 hover:bg-slate-100'">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"/></svg>
+                    الفلاتر
+                    @if($activeFiltersCount > 0)
+                    <span class="bg-gold-600 text-white text-[10px] w-5 h-5 rounded-full flex items-center justify-center">{{ $activeFiltersCount }}</span>
+                    @endif
+                </button>
                 <button type="submit" class="bg-gold-600 text-white px-8 py-3 rounded-2xl font-bold shadow-lg shadow-gold-100 hover:bg-gold-700 transition">بحث</button>
             </div>
 
-            <div class="grid grid-cols-1 lg:grid-cols-4 gap-10">
-                
-                {{-- شريط الفلاتر الجانبي --}}
-                <aside class="lg:col-span-1 space-y-8 order-2 lg:order-1">
-                    <div class="bg-white p-8 rounded-[2.5rem] shadow-sm border border-slate-50">
-                        <div class="flex justify-between items-center mb-6">
-                            <h3 class="font-black text-slate-800">الفلاتر</h3>
-                            <a href="{{ route('dashboard.scholarships') }}" class="text-xs text-gold-600 font-bold hover:underline">إعادة تعيين</a>
-                        </div>
+            {{-- لوحة الفلاتر: منسدلة أفقياً بدل شريط جانبي ثابت، حتى ما تزاحم السايدبار --}}
+            <div x-show="filtersOpen" x-cloak class="bg-white p-6 md:p-8 rounded-[2rem] shadow-sm border border-slate-100 mb-10">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="font-black text-slate-800">الفلاتر</h3>
+                    <a href="{{ route('dashboard.scholarships') }}" class="text-xs text-gold-600 font-bold hover:underline">إعادة تعيين</a>
+                </div>
 
-                        {{-- فلتر مميزات التغطية والتمويل (Coverage الفعلي بقاعدة البيانات) --}}
-                        <div class="mb-8">
-                            <h4 class="text-sm font-black text-slate-700 mb-4 text-right">مزايا التمويل</h4>
-                            <div class="space-y-3">
-                                @foreach(['تمويل كامل' => 'ممولة بالكامل', 'إعفاء من الرسوم' => 'إعفاء من الرسوم', 'راتب شهري' => 'راتب شهري', 'سكن جامعي' => 'سكن جامعي'] as $value => $label)
-                                <label class="flex items-center justify-end gap-3 cursor-pointer group">
-                                    <span class="text-sm font-bold text-slate-500 group-hover:text-slate-800">{{ $label }}</span>
-                                    <input type="checkbox" name="coverage[]" value="{{ $value }}" onchange="this.form.submit()" {{ in_array($value, (array)request('coverage')) ? 'checked' : '' }} class="w-5 h-5 rounded border-slate-200 text-gold-600 focus:ring-gold-500">
-                                </label>
-                                @endforeach
-                            </div>
-                        </div>
-
-                        {{-- فلتر التصنيف والمستوى الأكاديمي متوافق مع خيارات قاعدة البيانات (Category) --}}
-                        <div>
-                            <h4 class="text-sm font-black text-slate-700 mb-4 text-right">المستوى الأكاديمي</h4>
-                            <div class="space-y-3">
-                                @foreach(['Bachelor' => 'بكالوريوس', 'Master' => 'ماجستير', 'PhD' => 'دكتوراه', 'Short Course' => 'كورسات قصيرة وزمالات'] as $key => $level)
-                                <label class="flex items-center justify-end gap-3 cursor-pointer group">
-                                    <span class="text-sm font-bold text-slate-500 group-hover:text-slate-800">{{ $level }}</span>
-                                    <input type="checkbox" name="category[]" value="{{ $key }}" onchange="this.form.submit()" {{ in_array($key, (array)request('category')) ? 'checked' : '' }} class="w-5 h-5 rounded border-slate-200 text-gold-600 focus:ring-gold-500">
-                                </label>
-                                @endforeach
-                            </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    {{-- فلتر مميزات التغطية والتمويل (Coverage الفعلي بقاعدة البيانات) --}}
+                    <div>
+                        <h4 class="text-sm font-black text-slate-700 mb-4 text-right">مزايا التمويل</h4>
+                        <div class="flex flex-wrap gap-3 justify-end">
+                            @foreach(['تمويل كامل' => 'ممولة بالكامل', 'إعفاء من الرسوم' => 'إعفاء من الرسوم', 'راتب شهري' => 'راتب شهري', 'سكن جامعي' => 'سكن جامعي'] as $value => $label)
+                            <label class="flex items-center gap-2 cursor-pointer group bg-slate-50 hover:bg-slate-100 px-3 py-2 rounded-xl">
+                                <span class="text-sm font-bold text-slate-500 group-hover:text-slate-800">{{ $label }}</span>
+                                <input type="checkbox" name="coverage[]" value="{{ $value }}" onchange="this.form.submit()" {{ in_array($value, (array)request('coverage')) ? 'checked' : '' }} class="w-5 h-5 rounded border-slate-200 text-gold-600 focus:ring-gold-500">
+                            </label>
+                            @endforeach
                         </div>
                     </div>
-                </aside>
 
-                {{-- قسم عرض المنح الرئيسي --}}
-                <div class="lg:col-span-3 space-y-6 order-1 lg:order-2">
-                    @forelse($scholarships as $scholarship)
+                    {{-- فلتر التصنيف والمستوى الأكاديمي متوافق مع خيارات قاعدة البيانات (Category) --}}
+                    <div>
+                        <h4 class="text-sm font-black text-slate-700 mb-4 text-right">المستوى الأكاديمي</h4>
+                        <div class="flex flex-wrap gap-3 justify-end">
+                            @foreach(['Bachelor' => 'بكالوريوس', 'Master' => 'ماجستير', 'PhD' => 'دكتوراه', 'Short Course' => 'كورسات قصيرة وزمالات'] as $key => $level)
+                            <label class="flex items-center gap-2 cursor-pointer group bg-slate-50 hover:bg-slate-100 px-3 py-2 rounded-xl">
+                                <span class="text-sm font-bold text-slate-500 group-hover:text-slate-800">{{ $level }}</span>
+                                <input type="checkbox" name="category[]" value="{{ $key }}" onchange="this.form.submit()" {{ in_array($key, (array)request('category')) ? 'checked' : '' }} class="w-5 h-5 rounded border-slate-200 text-gold-600 focus:ring-gold-500">
+                            </label>
+                            @endforeach
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {{-- قسم عرض المنح الرئيسي --}}
+            <div class="space-y-6">
+                @forelse($scholarships as $scholarship)
                     <div class="bg-white rounded-[2.5rem] shadow-sm border border-slate-50 hover:border-gold-100 transition duration-300 relative group overflow-hidden">
 
                         {{-- نسبة التوافق الذكية: مخزّنة مسبقًا أو بتتحلل في الخلفية بعد تحميل الصفحة --}}
@@ -173,7 +181,6 @@
                         {{ $scholarships->appends(request()->query())->links() }}
                     </div>
                 </div>
-            </div>
         </form>
     </div>
 </div>
