@@ -62,6 +62,6 @@ a[class*="rounded"][class*="bg-"]:active {
    بيحسب المساحة المرئية الفعلية؛ نخليها fallback بعد vh حتى لو المتصفح
    قديم وما بيعرف dvh يستخدم القيمة العادية بدون ما ينكسر شي. */
 .h-dashboard-screen {
-    height: calc(100vh - 69px);
-    height: calc(100dvh - 69px);
+    height: calc(100vh - 65px);
+    height: calc(100dvh - 65px);
 }
