@@ -42,7 +42,7 @@
             <div class="absolute -inset-6 bg-gradient-to-br from-gold-300/40 via-gold-200/25 to-transparent blur-2xl rounded-full pointer-events-none"></div>
 
             <div role="img" aria-label="مساعد أوربيت الذكي" class="relative z-10 rounded-[2rem] overflow-hidden shadow-[0_25px_60px_-15px_rgba(219,138,71,0.4)] transition-transform duration-700 hover:rotate-2 group">
-                <video autoplay muted loop playsinline class="w-full h-auto block transition-all duration-500 group-hover:scale-[1.02]">
+                <video id="orbitMascotVideo" autoplay muted loop playsinline disablepictureinpicture controlslist="nodownload noplaybackrate nofullscreen" oncontextmenu="return false" class="w-full h-auto block transition-all duration-500 group-hover:scale-[1.02]">
                     <source src="{{ asset('assets/videos/orbit-ai-mascot.mp4') }}" type="video/mp4">
                 </video>
             </div>
@@ -219,4 +219,17 @@
         <div class="absolute bottom-0 left-0 w-72 h-72 bg-gold-400 opacity-20 rounded-full -ml-36 -mb-36 blur-2xl"></div>
     </div>
 </section>
+
+<script>
+    // فيديو الروبوت المتحرك بالهيرو: التكرار مفروض بالجافاسكربت بالإضافة لخاصية loop
+    // العادية، حتى لو المستخدم عطّل التكرار يدوياً من قائمة الفأرة اليمنى بالمتصفح.
+    (function () {
+        const video = document.getElementById('orbitMascotVideo');
+        if (!video) return;
+        video.addEventListener('ended', function () {
+            video.currentTime = 0;
+            video.play().catch(() => {});
+        });
+    })();
+</script>
 @endsection
