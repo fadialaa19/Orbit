@@ -140,8 +140,19 @@ class StudentDashboardController extends Controller
         // نجيب بس النسب المخزّنة (Cache) هون عشان الصفحة تفتح بسرعة - أي منحة
         // مالهاش نسبة محدّثة بتتحلل في الخلفية عبر JS بعد التحميل (matchMissing).
         $user = Auth::user();
+        [$matchScores, $matchMissing] = $this->getCachedMatchScores($user, $scholarships);
+
+        return view('dashboard.scholarships', compact('scholarships', 'search', 'matchScores', 'matchMissing'));
+    }
+
+    /**
+     * يجيب نسب التوافق المخزّنة (Cache) فقط لمجموعة منح معطاة، ويفصل اللي محتاجة
+     * إعادة تحليل (matchMissing) - مشترك بين صفحة استكشاف المنح وصفحة المفضلات.
+     */
+    private function getCachedMatchScores($user, $scholarships): array
+    {
         $cachedScores = \App\Models\ScholarshipMatchScore::where('user_id', $user->id)
-            ->whereIn('scholarship_id', $scholarships->pluck('id'))
+            ->whereIn('scholarship_id', collect($scholarships)->pluck('id'))
             ->get()
             ->keyBy('scholarship_id');
 
@@ -156,7 +167,7 @@ class StudentDashboardController extends Controller
             }
         }
 
-        return view('dashboard.scholarships', compact('scholarships', 'search', 'matchScores', 'matchMissing'));
+        return [$matchScores, $matchMissing];
     }
 
     public function computeMatchScores(Request $request, \App\Services\ScholarshipMatchService $matchService)
@@ -261,25 +272,14 @@ class StudentDashboardController extends Controller
     }
 
     public function favorites()
-{
-    $student = Auth::user();
-    
-    // جلب المفضلات مع التأكد من تحويل قيم اللوجو والبيانات لتطابق فرونت آند Alpine
-    $favorites = $student->favoriteScholarships()->get()->map(function($scholarship) {
-        return [
-            'id' => $scholarship->id,
-            'title' => $scholarship->title_ar ?? $scholarship->title_en,
-            'category' => $scholarship->category ?? 'منحة دراسية',
-            // $scholarship->logo_image يمر أصلاً عبر accessor الموديل الذي يبني الرابط الكامل
-            'logo_image' => $scholarship->logo_image,
-            'financial_value' => $scholarship->financial_value,
-            'amount' => $scholarship->price ? ('$' . number_format((float) $scholarship->price, 0)) : '$50,000',
-            'funding' => $scholarship->financial_value ?: 'ممولة بالكامل',
-        ];
-    });
+    {
+        $user = Auth::user();
+        $scholarships = $user->favoriteScholarships()->get();
 
-    return view('dashboard.favorites', compact('favorites'));
-}
+        [$matchScores, $matchMissing] = $this->getCachedMatchScores($user, $scholarships);
+
+        return view('dashboard.favorites', compact('scholarships', 'matchScores', 'matchMissing'));
+    }
 
     public function profile()
     {
