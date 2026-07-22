@@ -59,10 +59,9 @@ class AdminScholarshipIngestController extends Controller
         $data['coverage'] = $data['coverage'] ?? [];
         $data['tags'] = $data['tags'] ?? [];
 
-        if (!empty($data['financial_value'])) {
-            $numericPrice = (float) preg_replace('/[^0-9.]/', '', $data['financial_value']);
-            $data['price'] = $numericPrice > 0 ? $numericPrice : 0.00;
-        }
+        // عمود price مخصص لسعر خدمة "التقديم عن طريقنا"، لا علاقة له بنص
+        // financial_value الوصفي (راجع الشرح المفصّل في AdminScholarshipController::store) -
+        // نتركه فارغاً هون عمداً.
 
         if (!empty($validated['main_image_url'])) {
             $data['main_image'] = $validated['main_image_url'];

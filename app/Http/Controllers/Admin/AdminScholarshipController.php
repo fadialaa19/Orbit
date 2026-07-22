@@ -90,14 +90,13 @@ class AdminScholarshipController extends Controller
         $data['recommended_tags'] = [];
     }
 
-    // 2. حل مشكلة الثبات على 50000: نقوم بإسناد القيمة المدخلة في الـ price أيضاً إذا كانت قاعدة البيانات تعتمد عليه
-    if ($request->filled('financial_value')) {
-        // استخراج الأرقام فقط من القيمة المالية إذا كنت تريد تخزينها كـ decimal في الـ price
-        $numericPrice = (float) preg_replace('/[^0-9.]/', '', $request->input('financial_value'));
-        $data['price'] = $numericPrice > 0 ? $numericPrice : 0.00;
-    } else {
-        $data['price'] = 0.00;
-    }
+    // ملاحظة: عمود price مخصص لسعر خدمة "التقديم عن طريقنا" (راجع تعليق العمود
+    // بالمايجريشن: "Price for Apply via Us service; NULL means free grant") - لا
+    // علاقة له بنص financial_value الوصفي (زي "راتب شهري 1800 يورو، عقد 3 سنوات").
+    // محاولة استخراج رقم من هذا النص عبر تجريد كل شي غير رقمي كانت تلصق كل الأرقام
+    // المتفرقة ببعض (سنوات + مبلغ + نسبة%) فتنتج رقماً ضخماً يتجاوز حجم العمود
+    // ويُسقط الحفظ بالكامل (SQL Out of range). العمود يبقى فارغاً (يعني منحة
+    // مجانية) ما لم تتوفر لاحقاً خانة إدخال مخصصة فعلاً لسعر الخدمة.
 
     // ضمان عدم تصفير الفلاتر الأساسية
     $data['tags'] = $request->has('tags') ? $request->input('tags') : [];
@@ -195,11 +194,9 @@ public function update(Request $request, Scholarship $scholarship)
         $data['recommended_tags'] = [];
     }
 
-    // 2. تحديث الـ price بناءً على الـ financial_value المتغيرة لمنع ثبات الـ 50000
-    if ($request->filled('financial_value')) {
-        $numericPrice = (float) preg_replace('/[^0-9.]/', '', $request->input('financial_value'));
-        $data['price'] = $numericPrice > 0 ? $numericPrice : 0.00;
-    }
+    // ملاحظة: عمود price مخصص لسعر خدمة "التقديم عن طريقنا" ولا علاقة له بنص
+    // financial_value الوصفي - راجع نفس الشرح المفصّل في store() أعلاه. لا نلمسه
+    // هون فيبقى محتفظاً بقيمته الحالية بدل ما نستنتج رقماً خاطئاً من النص.
 
     // حماية الفلاتر عند التعديل: إذا لم يتم اختيار أي checkbox، نحتفظ بالقديم ولا نحذفه بالكامل
     $data['tags'] = $request->has('tags') ? $request->input('tags') : $scholarship->tags;
