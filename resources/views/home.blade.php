@@ -47,7 +47,7 @@
                 </video>
             </div>
 
-            <div class="absolute top-2 left-0 -translate-x-[calc(100%+14px)] bg-white p-3 sm:p-4 rounded-3xl shadow-2xl border border-gold-100 flex items-center gap-2.5 sm:gap-3 z-20">
+            <div class="absolute top-2 right-2 sm:right-auto sm:left-0 sm:-translate-x-[calc(100%+14px)] bg-white p-3 sm:p-4 rounded-3xl shadow-2xl border border-gold-100 flex items-center gap-2.5 sm:gap-3 z-20">
                 <div class="w-8 h-8 sm:w-10 sm:h-10 bg-gold-600 rounded-xl flex items-center justify-center text-white font-bold text-xs sm:text-sm shrink-0">95%</div>
                 <div>
                     <p class="text-[8px] sm:text-[9px] text-gray-400 font-black uppercase tracking-wider text-right">نسبة التطابق</p>
@@ -55,7 +55,7 @@
                 </div>
             </div>
 
-            <div class="absolute bottom-2 right-0 translate-x-[calc(100%+14px)] bg-white p-3 sm:p-4 rounded-3xl shadow-2xl border border-navy-100 flex items-center gap-2.5 sm:gap-3 z-20 max-w-[180px]">
+            <div class="absolute bottom-2 left-2 sm:left-auto sm:right-0 sm:translate-x-[calc(100%+14px)] bg-white p-3 sm:p-4 rounded-3xl shadow-2xl border border-navy-100 flex items-center gap-2.5 sm:gap-3 z-20 max-w-[200px] sm:max-w-[180px]">
                 <div class="w-8 h-8 sm:w-10 sm:h-10 bg-navy-900 rounded-xl flex items-center justify-center text-white shrink-0">
                     <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
                 </div>

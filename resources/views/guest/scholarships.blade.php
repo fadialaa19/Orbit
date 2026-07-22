@@ -56,9 +56,12 @@
             $coverageDisplay = is_array($coverageList) && !empty($coverageList) ? $coverageList[0] : 'ممونة';
             $countryCode = strtoupper(mb_substr($scholarship->country, 0, 2));
         @endphp
-        <div class="group bg-white rounded-[2.5rem] shadow-sm hover:shadow-xl border border-slate-50 hover:border-navy-100 transition-all duration-500 overflow-hidden" data-aos="fade-up" data-aos-delay="{{ $loop->index * 100 }}">
+        <div class="group bg-white rounded-[2.5rem] shadow-sm hover:shadow-xl border border-slate-50 hover:border-navy-100 transition-all duration-500 overflow-hidden relative" data-aos="fade-up" data-aos-delay="{{ $loop->index * 100 }}">
+            {{-- رابط يغطي الكارد بالكامل حتى الضغط بأي مكان ينقل لصفحة تفاصيل المنحة --}}
+            <a href="{{ route('guest.scholarships.show', $scholarship->id) }}" class="absolute inset-0 z-10" aria-label="{{ $scholarship->title_ar }}"></a>
+
             @if($scholarship->main_image)
-                <div class="w-full aspect-[5/1] overflow-hidden relative bg-gradient-to-br from-slate-100 to-slate-50">
+                <div class="w-full aspect-[2/1] md:aspect-[5/1] overflow-hidden relative bg-gradient-to-br from-slate-100 to-slate-50">
                     <img src="{{ $scholarship->main_image }}" alt="" class="w-full h-full object-cover">
                 </div>
             @endif
@@ -67,7 +70,7 @@
                 <div class="flex flex-col md:flex-row gap-8 items-center">
 
                     <!-- University Logo -->
-                    <div class="w-20 h-20 md:w-24 md:h-24 flex-shrink-0 bg-gradient-to-br from-gold-100 to-cream-50 rounded-[1.5rem] flex items-center justify-center relative z-10 shadow-inner border-4 border-white overflow-hidden {{ $scholarship->main_image ? 'shadow-lg' : '' }}">
+                    <div class="w-20 h-20 md:w-24 md:h-24 flex-shrink-0 bg-gradient-to-br from-gold-100 to-cream-50 rounded-[1.5rem] flex items-center justify-center relative z-10 pointer-events-none shadow-inner border-4 border-white overflow-hidden {{ $scholarship->main_image ? 'shadow-lg' : '' }}">
                         @if($scholarship->logo_image)
                             <img src="{{ $scholarship->logo_image }}" alt="{{ $scholarship->title_ar }}" class="w-full h-full object-contain p-2">
                         @else
@@ -91,7 +94,7 @@
                     </div>
 
                     <!-- CTAs -->
-                    <div class="flex flex-col gap-3 w-full md:w-auto items-center md:items-end shrink-0">
+                    <div class="relative z-20 flex flex-col gap-3 w-full md:w-auto items-center md:items-end shrink-0">
                         <div class="inline-flex items-center gap-2 px-4 py-2 rounded-3xl font-black text-xs shadow-md
                             {{ $fundingType == 'ممولة كاملة' ? 'bg-gradient-to-r from-gold-600 to-gold-400 text-white shadow-gold-100' : 'bg-gradient-to-r from-emerald-500 to-green-500 text-white shadow-emerald-200' }}">
                             {{ $fundingType === 'ممولة كاملة' ? '🌟 ' : '⭐ ' }}{{ $fundingType }}

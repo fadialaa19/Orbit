@@ -86,8 +86,8 @@
                 </div>
             </div>
 
-            <div class="relative flex items-center gap-2 bg-white/15 backdrop-blur p-2 rounded-2xl border border-white/20">
-                <input type="text" readonly :value="shareUrl" class="bg-transparent border-0 text-sm font-bold px-3 text-white focus:ring-0 flex-1 truncate select-all" dir="ltr">
+            <div class="relative flex items-center gap-2 bg-white/15 backdrop-blur p-2 rounded-2xl border border-white/20 overflow-hidden">
+                <input type="text" readonly :value="shareUrl" class="bg-transparent border-0 text-sm font-bold px-3 text-white focus:ring-0 flex-1 min-w-0 truncate select-all" dir="ltr">
                 <button @click="
                         navigator.clipboard.writeText(shareUrl);
                         copied = true;

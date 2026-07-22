@@ -262,8 +262,8 @@
                                 class="w-7 h-7 shrink-0 rounded-full bg-white/20 hover:bg-white/30 text-white font-black text-xs flex items-center justify-center transition">؟</button>
                     </div>
 
-                    <div class="relative flex items-center gap-2 bg-white/15 backdrop-blur p-1.5 rounded-2xl border border-white/20">
-                        <input type="text" readonly :value="shareUrl" class="bg-transparent border-0 text-xs font-bold px-2 text-white placeholder-white/70 focus:ring-0 flex-1 truncate select-all" dir="ltr">
+                    <div class="relative flex items-center gap-2 bg-white/15 backdrop-blur p-1.5 rounded-2xl border border-white/20 overflow-hidden">
+                        <input type="text" readonly :value="shareUrl" class="bg-transparent border-0 text-xs font-bold px-2 text-white placeholder-white/70 focus:ring-0 flex-1 min-w-0 truncate select-all" dir="ltr">
                         <button @click="
                                 navigator.clipboard.writeText(shareUrl);
                                 copied = true;

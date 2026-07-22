@@ -78,8 +78,13 @@
                 @forelse($scholarships as $scholarship)
                     <div class="bg-white rounded-[2.5rem] shadow-sm border border-slate-50 hover:border-gold-100 transition duration-300 relative group overflow-hidden">
 
+                        {{-- رابط يغطي الكارد بالكامل حتى الضغط بأي مكان (الصورة، اللوجو، العنوان) ينقل
+                             لصفحة تفاصيل المنحة - بستوي z-index أقل من أزرار التفاعل الفعلية حتى تضل
+                             هي القابلة للنقر بشكل منفصل فوقه. --}}
+                        <a href="{{ route('dashboard.scholarships.show', $scholarship->id) }}" class="absolute inset-0 z-10" aria-label="{{ $scholarship->title_ar }}"></a>
+
                         @if($scholarship->main_image)
-                            <div class="w-full aspect-[5/1] overflow-hidden relative bg-gradient-to-br from-slate-100 to-slate-50">
+                            <div class="w-full aspect-[2/1] md:aspect-[5/1] overflow-hidden relative bg-gradient-to-br from-slate-100 to-slate-50">
                                 <img src="{{ $scholarship->main_image }}" alt="" class="w-full h-full object-cover">
 
                                 {{-- نسبة التوافق الذكية: مخزّنة مسبقًا أو بتتحلل بالخلفية - محاطة داخل صورة
@@ -121,7 +126,7 @@
                         <div class="flex flex-col md:flex-row gap-8 items-center">
 
                             {{-- صندوق اللوجو المعتمد على logo_image الفعلي والـ Fallback له --}}
-                            <div class="w-20 h-20 md:w-24 md:h-24 flex-shrink-0 rounded-2xl overflow-hidden border border-slate-100 bg-slate-50 flex items-center justify-center p-2 relative z-10 {{ $scholarship->main_image ? 'ring-4 ring-white shadow-lg' : '' }}">
+                            <div class="w-20 h-20 md:w-24 md:h-24 flex-shrink-0 rounded-2xl overflow-hidden border border-slate-100 bg-slate-50 flex items-center justify-center p-2 relative z-10 pointer-events-none {{ $scholarship->main_image ? 'ring-4 ring-white shadow-lg' : '' }}">
                                 @if($scholarship->logo_image)
                                     <img src="{{ $scholarship->logo_image }}" alt="{{ $scholarship->title_ar }}" class="w-full h-full object-contain">
                                 @else
@@ -155,7 +160,7 @@
                                 </div>
                             </div>
 
-                            <div class="flex flex-col gap-3 w-full md:w-auto items-center md:items-end">
+                            <div class="relative z-20 flex flex-col gap-3 w-full md:w-auto items-center md:items-end">
                                 {{-- جلب أول وسم موصى به من مصفوفة الـ recommended_tags --}}
                                 @if(is_array($scholarship->recommended_tags) && count($scholarship->recommended_tags) > 0)
                                 <span class="text-[10px] font-black py-1 px-3 rounded-lg shadow-sm border bg-amber-50 text-amber-700 border-amber-100">

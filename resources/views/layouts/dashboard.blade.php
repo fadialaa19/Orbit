@@ -162,7 +162,9 @@
 
     @include('layouts.partials._toast')
 
-@include('components.groq-chat')
+@unless(request()->routeIs('dashboard.communications', 'dashboard.community'))
+    @include('components.groq-chat')
+@endunless
 
 <script>
     function studentLayout() {
