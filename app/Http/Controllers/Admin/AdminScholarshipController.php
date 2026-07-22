@@ -79,8 +79,13 @@ class AdminScholarshipController extends Controller
 
     // 1. حل مشكلة الـ recommended_tags: تحويل النص المفصول بفاصلة إلى مصفوفة (لأن الموديل يعامله كـ array)
     if ($request->filled('recommended_tags')) {
-        // تحويل السلسلة النصية "tag1, tag2" إلى مصفوفة ['tag1', 'tag2'] وتنظيف الفراغات
-        $data['recommended_tags'] = array_map('trim', explode(',', $request->input('recommended_tags')));
+        // تحويل السلسلة النصية "tag1, tag2" إلى مصفوفة ['tag1', 'tag2'] وتنظيف الفراغات.
+        // نتخلص أيضاً من أي بايتات UTF-8 غير صالحة قد ينسخها المتصفح عند اللصق (تسبب
+        // JsonEncodingException قاتلة وقت الحفظ لأن الموديل يخزّن الحقل كـ JSON array).
+        $data['recommended_tags'] = array_map(
+            fn ($tag) => trim(mb_convert_encoding($tag, 'UTF-8', 'UTF-8')),
+            explode(',', $request->input('recommended_tags'))
+        );
     } else {
         $data['recommended_tags'] = [];
     }
@@ -117,7 +122,18 @@ class AdminScholarshipController extends Controller
         $data['logo_image'] = $request->input('logo_image_url');
     }
 
-    Scholarship::create(array_merge($data, ['status' => 'active']));
+    // أي انهيار غير متوقع هون (مثلاً بيانات لا تُحفظ كـ JSON، أو مشكلة تخزين) كان
+    // يظهر كصفحة "500 خطأ في الخادم" فارغة تماماً بدون أي تفاصيل للأدمن. بدل هيك،
+    // نعرض رسالة واضحة بنفس صندوق الأخطاء المستخدم أصلاً بهاي الصفحة، ونسجّل
+    // التفاصيل الحقيقية بالـ log حتى يمكن تتبعها.
+    try {
+        Scholarship::create(array_merge($data, ['status' => 'active']));
+    } catch (\Throwable $e) {
+        Log::error('Failed to create scholarship: ' . $e->getMessage());
+        return redirect()->back()->withInput()->withErrors([
+            'error' => 'تعذّر حفظ المنحة. يرجى مراجعة الحقول (خصوصاً النصوص المنسوخة من مصادر خارجية) والمحاولة مجدداً.',
+        ]);
+    }
 
     // إشعار الطلاب بيصير عبر جدولة مستقلة (routes/console.php، كل دقيقة) وليس هون
     // مباشرة - لأنه على الاستضافة الحية ما في queue worker، وإرسال إيميلات لكل
@@ -168,9 +184,13 @@ public function update(Request $request, Scholarship $scholarship)
     $data['categories'] = $request->input('categories');
     $data['category'] = $data['categories'][0];
 
-    // 1. معالجة الـ recommended_tags لمنع تعارض مصفوفة الـ Model وحذف الفلاتر
+    // 1. معالجة الـ recommended_tags لمنع تعارض مصفوفة الـ Model وحذف الفلاتر.
+    // نفس معالجة الترميز المطبّقة في store() لمنع JsonEncodingException.
     if ($request->filled('recommended_tags')) {
-        $data['recommended_tags'] = array_map('trim', explode(',', $request->input('recommended_tags')));
+        $data['recommended_tags'] = array_map(
+            fn ($tag) => trim(mb_convert_encoding($tag, 'UTF-8', 'UTF-8')),
+            explode(',', $request->input('recommended_tags'))
+        );
     } else {
         $data['recommended_tags'] = [];
     }
@@ -208,7 +228,14 @@ public function update(Request $request, Scholarship $scholarship)
         $data['logo_image'] = $scholarship->getRawOriginal('logo_image');
     }
 
-    $scholarship->update($data);
+    try {
+        $scholarship->update($data);
+    } catch (\Throwable $e) {
+        Log::error('Failed to update scholarship #' . $scholarship->id . ': ' . $e->getMessage());
+        return redirect()->back()->withInput()->withErrors([
+            'error' => 'تعذّر حفظ التعديلات. يرجى مراجعة الحقول (خصوصاً النصوص المنسوخة من مصادر خارجية) والمحاولة مجدداً.',
+        ]);
+    }
 
     return redirect()->route('admin.scholarships.index')->with('success', 'تم تحديث المنحة بنجاح!');
 }
