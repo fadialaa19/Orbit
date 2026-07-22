@@ -44,7 +44,7 @@ class AdminAdminController extends Controller
 
         // إذا كان مدير عام، بنعطيه كل الصلاحيات تلقائياً
         $permissions = $request->role === 'super_admin'
-            ? ['dashboard', 'scholarships', 'students', 'applications', 'support', 'contacts', 'admins']
+            ? ['dashboard', 'scholarships', 'students', 'applications', 'support', 'communities', 'official-documents', 'announcements', 'contacts', 'xp', 'admins']
             : $request->input('permissions', []);
 
         // "مخصص" مجرد خيار واجهة يعني "لا تطبّق صلاحيات افتراضية جاهزة"، وليس
@@ -101,7 +101,7 @@ class AdminAdminController extends Controller
         ]);
 
         $permissions = $request->role === 'super_admin'
-            ? ['dashboard', 'scholarships', 'students', 'applications', 'support', 'contacts', 'admins']
+            ? ['dashboard', 'scholarships', 'students', 'applications', 'support', 'communities', 'official-documents', 'announcements', 'contacts', 'xp', 'admins']
             : $request->input('permissions', []);
 
         // "مخصص" خيار واجهة فقط، مش قيمة صالحة في عمود role (enum) - راجع نفس الشرح في store()

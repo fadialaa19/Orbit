@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 
 class CheckPermission
 {
-    public function handle(Request $request, Closure $next, $permission)
+    public function handle(Request $request, Closure $next, ...$permissions)
     {
         $user = auth()->user();
 
@@ -21,8 +21,10 @@ class CheckPermission
             return $next($request);
         }
 
-        // 3. فحص إذا كان يمتلك الكلمة المفتاحية للصلاحية المطلوبة داخل المصفوفة
-        if ($user->permissions && in_array($permission, $user->permissions)) {
+        // 3. فحص إذا كان يمتلك أياً من الصلاحيات المطلوبة داخل المصفوفة (قد يُمرَّر أكثر
+        // من مفتاح صلاحية واحد، مثلاً "communities,support"، حتى تبقى الصلاحية القديمة
+        // الأشمل "support" فاتحة الوصول لمن يملكها، مع إتاحة تخصيص أدق لاحقاً)
+        if ($user->permissions && array_intersect($permissions, $user->permissions)) {
             return $next($request);
         }
 

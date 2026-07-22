@@ -4,7 +4,21 @@
 @section('breadcrumb', 'الدعم الفني')
 
 @section('content')
-<div class="max-w-full mx-auto space-y-6" x-data="ticketApp()" x-init="init()">
+<div class="max-w-full mx-auto space-y-6" x-data="ticketApp('{{ $activeTab }}')" x-init="init()">
+    {{-- تبويب: الدعم الفني مقابل طلبات الأوراق الرسمية --}}
+    <div class="flex gap-2 bg-white p-1.5 rounded-2xl border border-slate-100 shadow-sm w-fit">
+        <a href="{{ route('admin.tickets.index') }}"
+           class="px-5 py-2.5 rounded-xl text-xs font-black transition-all {{ $activeTab === 'support' ? 'bg-gold-600 text-white shadow-sm' : 'text-slate-500 hover:bg-slate-50' }}">
+            💬 الدعم الفني
+            <span class="mr-1 px-1.5 py-0.5 rounded-md text-[10px] {{ $activeTab === 'support' ? 'bg-white/20' : 'bg-slate-100' }}">{{ $counts['support'] }}</span>
+        </a>
+        <a href="{{ route('admin.tickets.index', ['view' => 'documents']) }}"
+           class="px-5 py-2.5 rounded-xl text-xs font-black transition-all {{ $activeTab === 'documents' ? 'bg-gold-600 text-white shadow-sm' : 'text-slate-500 hover:bg-slate-50' }}">
+            📄 طلبات الأوراق الرسمية
+            <span class="mr-1 px-1.5 py-0.5 rounded-md text-[10px] {{ $activeTab === 'documents' ? 'bg-white/20' : 'bg-slate-100' }}">{{ $counts['documents'] }}</span>
+        </a>
+    </div>
+
     {{-- الإحصائيات --}}
     <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
         <div class="bg-white p-5 rounded-[1.5rem] border border-slate-100 shadow-sm relative overflow-hidden">
@@ -76,7 +90,7 @@
                         </td>
                     </tr>
                     @empty
-                    <tr><td colspan="5" class="px-6 py-10 text-center text-slate-400 font-bold">لا توجد طلبات حالياً</td></tr>
+                    <tr><td colspan="5" class="px-6 py-10 text-center text-slate-400 font-bold">{{ $activeTab === 'documents' ? 'لا توجد طلبات أوراق رسمية حالياً' : 'لا توجد تذاكر دعم فني حالياً' }}</td></tr>
                     @endforelse
                 </tbody>
             </table>
@@ -140,13 +154,14 @@
 </div>
 
 <script>
-function ticketApp() {
+function ticketApp(activeTab) {
     return {
         chatModal: false,
         activeTicket: {},
         messages: [],
         replyText: '',
         loading: false,
+        activeTab: activeTab || 'support',
 
 init() {
     // ✅ Real-time باستخدام Echo - يستقبل الرسائل فور إرسالها
@@ -207,8 +222,8 @@ async pollMessages() {
 },
 
 loadTickets() {
-    // تحديث قائمة التذاكر عبر JSON API (باستخدام query parameter)
-    fetch('/admin/tickets?api=true', { 
+    // تحديث قائمة التذاكر عبر JSON API (باستخدام query parameter)، مع الحفاظ على نفس التبويب المفتوح
+    fetch(`/admin/tickets?api=true&view=${this.activeTab}`, {
         headers: { 
             'Accept': 'application/json',
             'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content

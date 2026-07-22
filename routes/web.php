@@ -151,22 +151,23 @@ Route::prefix('admin')->middleware(['auth'])->name('admin.')->group(function () 
 
         Route::get('contact-messages', [\App\Http\Controllers\Admin\AdminContactMessageController::class, 'index'])->name('contact-messages.index');
         Route::patch('contact-messages/{contactMessage}/status', [\App\Http\Controllers\Admin\AdminContactMessageController::class, 'updateStatus'])->name('contact-messages.status');
+        Route::delete('contact-messages/{contactMessage}', [\App\Http\Controllers\Admin\AdminContactMessageController::class, 'destroy'])->name('contact-messages.destroy');
     });
 
     // 6️⃣.5 المجتمعات (Communities)
-    Route::middleware(['check.permission:support'])->group(function () {
+    Route::middleware(['check.permission:communities,support'])->group(function () {
         Route::resource('communities', \App\Http\Controllers\Admin\AdminCommunityController::class)->only(['index', 'store', 'update', 'destroy']);
         Route::patch('communities/{community}/toggle', [\App\Http\Controllers\Admin\AdminCommunityController::class, 'toggleStatus'])->name('communities.toggle');
     });
 
     // 6️⃣.55 استخراج الأوراق الرسمية (المستندات المتاحة للطلب)
-    Route::middleware(['check.permission:support'])->group(function () {
+    Route::middleware(['check.permission:official-documents,support'])->group(function () {
         Route::resource('official-documents', \App\Http\Controllers\Admin\AdminOfficialDocumentController::class)->only(['index', 'store', 'update', 'destroy']);
         Route::patch('official-documents/{official_document}/toggle', [\App\Http\Controllers\Admin\AdminOfficialDocumentController::class, 'toggleStatus'])->name('official-documents.toggle');
     });
 
     // 6️⃣.56 لوحة الإعلانات (تظهر بأعلى لوحة تحكم الطالب)
-    Route::middleware(['check.permission:support'])->group(function () {
+    Route::middleware(['check.permission:announcements,support'])->group(function () {
         Route::resource('announcements', \App\Http\Controllers\Admin\AdminAnnouncementController::class)->only(['index', 'store', 'update', 'destroy']);
         Route::patch('announcements/{announcement}/toggle', [\App\Http\Controllers\Admin\AdminAnnouncementController::class, 'toggleStatus'])->name('announcements.toggle');
     });

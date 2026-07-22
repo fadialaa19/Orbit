@@ -12,13 +12,16 @@
     editModal: false, 
     currentAdmin: {},
     
-    // 1️⃣ تم تحديث الصفحات لتطابق الباك إند تماماً (7 صفحات)
+    // 1️⃣ تم تحديث الصفحات لتطابق الباك إند تماماً
     systemPages: [
         { key: 'dashboard', name: 'الرئيسية والإحصائيات', icon: '📊', color: 'indigo' },
         { key: 'scholarships', name: 'إدارة المنح الدراسية', icon: '🎓', color: 'emerald' },
         { key: 'students', name: 'إدارة الطلاب', icon: '👨‍🎓', color: 'blue' },
         { key: 'applications', name: 'طلبات التقديم والعمليات', icon: '📥', color: 'amber' },
         { key: 'support', name: 'الدعم الفني والرسائل', icon: '💬', color: 'purple' },
+        { key: 'communities', name: 'إدارة المجتمعات', icon: '👥', color: 'teal' },
+        { key: 'official-documents', name: 'طلبات الأوراق الرسمية', icon: '📄', color: 'cyan' },
+        { key: 'announcements', name: 'لوحة الإعلانات', icon: '📢', color: 'orange' },
         { key: 'contacts', name: 'رسائل اتصل بنا والآراء', icon: '✉️', color: 'rose' },
         { key: 'xp', name: 'التحكم بنقاط XP للطلاب', icon: '🎮', color: 'gold' },
         { key: 'admins', name: 'إدارة المدراء والصلاحيات والإعدادات', icon: '🔐', color: 'slate' }
@@ -26,14 +29,14 @@
 
     // 2️⃣ تصحيح المسميات الافتراضية للأدوار لتطابق الـ keys بالكتب تماماً
     roleDefaults: {
-        super_admin: ['dashboard', 'scholarships', 'students', 'applications', 'support', 'contacts', 'xp', 'admins'],
+        super_admin: ['dashboard', 'scholarships', 'students', 'applications', 'support', 'communities', 'official-documents', 'announcements', 'contacts', 'xp', 'admins'],
         scholarship_admin: ['dashboard', 'scholarships', 'students', 'applications'],
-        support_admin: ['dashboard', 'support', 'contacts']
+        support_admin: ['dashboard', 'support', 'communities', 'official-documents', 'announcements', 'contacts']
     },
 
     // الصلاحيات المحددة تلقائياً عند فتح الواجهة لأول مرة (أو المحتفظ بها بعد فشل التحقق)
     addRole: @js(old('form_name') === 'add' ? old('role', 'super_admin') : 'super_admin'),
-    addPermissions: @js(old('form_name') === 'add' ? old('permissions', ['dashboard', 'scholarships', 'students', 'applications', 'support', 'contacts', 'xp', 'admins']) : ['dashboard', 'scholarships', 'students', 'applications', 'support', 'contacts', 'xp', 'admins']),
+    addPermissions: @js(old('form_name') === 'add' ? old('permissions', ['dashboard', 'scholarships', 'students', 'applications', 'support', 'communities', 'official-documents', 'announcements', 'contacts', 'xp', 'admins']) : ['dashboard', 'scholarships', 'students', 'applications', 'support', 'communities', 'official-documents', 'announcements', 'contacts', 'xp', 'admins']),
     
     // دالة لتحديث الصلاحيات تلقائياً عند تغيير الدور في الإضافة
     updateAddPermissions() {
@@ -165,6 +168,9 @@
                                                 'students' => 'الطلاب',
                                                 'applications' => 'الطلبات',
                                                 'support' => 'الدعم',
+                                                'communities' => 'المجتمعات',
+                                                'official-documents' => 'الأوراق الرسمية',
+                                                'announcements' => 'الإعلانات',
                                                 'contacts' => 'اتصل بنا',
                                                 'xp' => 'نقاط XP',
                                                 'admins' => 'الصلاحيات'

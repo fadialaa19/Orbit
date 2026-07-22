@@ -8,25 +8,49 @@ use Illuminate\Http\Request;
 
 class AdminTicketController extends Controller
 {
-public function index(Request $request)
+    // نفس بادئة العنوان المستخدمة في StudentDashboardController لتذاكر طلب
+    // استخراج المستندات، تسمح بفصلها عن تذاكر الدعم الفني العادية بدون عمود جديد.
+    private const DOCUMENT_PREFIX = '📄 طلب استخراج مستند:';
+
+    private function scopeDocuments($query)
     {
+        return $query->where('subject', 'like', self::DOCUMENT_PREFIX . '%');
+    }
+
+    private function scopeSupport($query)
+    {
+        return $query->where(function ($q) {
+            $q->where('subject', 'not like', self::DOCUMENT_PREFIX . '%')->orWhereNull('subject');
+        });
+    }
+
+    public function index(Request $request)
+    {
+        $activeTab = $request->query('view') === 'documents' ? 'documents' : 'support';
+        $activeScope = $activeTab === 'documents' ? 'scopeDocuments' : 'scopeSupport';
+
         $stats = [
-            'pending'   => SupportTicket::where('status', 'pending')->count(),
-            'resolved'  => SupportTicket::where('status', 'resolved')->count(),
-            'closed'    => SupportTicket::where('status', 'closed')->count(),
-            'emergency' => SupportTicket::where('priority', 'emergency')->where('status', '!=', 'resolved')->count(),
+            'pending'   => $this->{$activeScope}(SupportTicket::query())->where('status', 'pending')->count(),
+            'resolved'  => $this->{$activeScope}(SupportTicket::query())->where('status', 'resolved')->count(),
+            'closed'    => $this->{$activeScope}(SupportTicket::query())->where('status', 'closed')->count(),
+            'emergency' => $this->{$activeScope}(SupportTicket::query())->where('priority', 'emergency')->where('status', '!=', 'resolved')->count(),
+        ];
+
+        $counts = [
+            'support'   => $this->scopeSupport(SupportTicket::query())->count(),
+            'documents' => $this->scopeDocuments(SupportTicket::query())->count(),
         ];
 
         // Check if this is an AJAX request for polling (explicit check for fetch/axios)
-        $isAjax = $request->header('X-Requested-With') === 'XMLHttpRequest' || 
+        $isAjax = $request->header('X-Requested-With') === 'XMLHttpRequest' ||
                  $request->hasHeader('X-Polling-Request') ||
                  $request->query('api') === 'true';
 
         if ($isAjax) {
-            $tickets = SupportTicket::with('user')
+            $tickets = $this->{$activeScope}(SupportTicket::with('user'))
                 ->latest()
                 ->paginate(15);
-            
+
             return response()->json([
                 'tickets' => $tickets->map(function ($ticket) {
                     return [
@@ -42,11 +66,11 @@ public function index(Request $request)
         }
 
         // Default: return HTML view
-        $tickets = SupportTicket::with('user')
+        $tickets = $this->{$activeScope}(SupportTicket::with('user'))
             ->latest()
             ->paginate(15);
 
-        return view('admin.tickets', compact('tickets', 'stats'));
+        return view('admin.tickets', compact('tickets', 'stats', 'activeTab', 'counts'));
     }
 
     public function show($id)

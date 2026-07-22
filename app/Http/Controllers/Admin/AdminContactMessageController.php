@@ -24,4 +24,11 @@ class AdminContactMessageController extends Controller
 
         return back()->with('success', 'تم تحديث حالة الرسالة');
     }
+
+    public function destroy(ContactMessage $contactMessage)
+    {
+        $contactMessage->delete();
+
+        return back()->with('success', 'تم حذف الرسالة');
+    }
 }
