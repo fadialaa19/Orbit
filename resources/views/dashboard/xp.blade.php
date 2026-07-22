@@ -11,12 +11,17 @@
         init() {
             this.tick = setInterval(() => { this.seconds++ }, 1000);
         },
-        formatted() {
-            const h = Math.floor(this.seconds / 3600);
-            const m = Math.floor((this.seconds % 3600) / 60);
-            const s = this.seconds % 60;
+        // عداد الساعة الحالية: بيعد من 00:00 لـ 59:59 وبعدين يرجع للصفر من جديد،
+        // يمثّل تقدمك الفعلي نحو الـ 25 XP يلي بتاخدهم كل ما تكمّل ساعة كاملة.
+        formattedCycle() {
+            const remainder = this.seconds % 3600;
+            const m = Math.floor(remainder / 60);
+            const s = remainder % 60;
             const pad = n => n.toString().padStart(2, '0');
-            return pad(h) + ':' + pad(m) + ':' + pad(s);
+            return pad(m) + ':' + pad(s);
+        },
+        hoursCompleted() {
+            return Math.floor(this.seconds / 3600);
         }
      }">
     <div class="max-w-6xl mx-auto">
@@ -45,9 +50,17 @@
 
             <div class="bg-gradient-to-br from-navy-900 to-navy-950 rounded-[2.5rem] p-8 shadow-sm text-white relative overflow-hidden">
                 <div class="absolute -top-10 -left-10 w-40 h-40 bg-white/5 rounded-full"></div>
-                <p class="text-sm font-black text-gold-300 mb-2 relative">⏱️ الوقت الذي قضيته بالموقع</p>
-                <p class="text-4xl md:text-5xl font-black tracking-wider relative" style="font-variant-numeric: tabular-nums;" x-text="formatted()"></p>
-                <p class="text-xs font-bold text-slate-300 mt-3 relative">ساعة : دقيقة : ثانية — بيزيد كل ما تكون متصفح الموقع فعلياً</p>
+                <div class="relative flex items-start justify-between gap-4">
+                    <div class="min-w-0">
+                        <p class="text-sm font-black text-gold-300 mb-2">⏱️ تقدمك نحو الساعة القادمة</p>
+                        <p class="text-4xl md:text-5xl font-black tracking-wider" style="font-variant-numeric: tabular-nums;" x-text="formattedCycle()"></p>
+                        <p class="text-xs font-bold text-slate-300 mt-3">دقيقة : ثانية — كل ساعة كاملة بتضيفلك 25 XP تلقائياً</p>
+                    </div>
+                    <div class="shrink-0 bg-white/10 backdrop-blur rounded-2xl px-4 py-3 text-center border border-white/10">
+                        <p class="text-2xl font-black text-gold-300" x-text="hoursCompleted()"></p>
+                        <p class="text-[9px] font-black text-slate-300 uppercase tracking-wider mt-1 leading-tight">ساعة<br>مكتملة</p>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -57,8 +70,8 @@
             <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
                 <div class="bg-slate-50 rounded-3xl p-6 border border-slate-100">
                     <span class="w-12 h-12 rounded-2xl bg-gold-100 text-gold-600 flex items-center justify-center text-xl mb-4">🤝</span>
-                    <p class="font-black text-slate-800 mb-2">+50 XP لكل دعوة ناجحة</p>
-                    <p class="text-xs font-bold text-slate-500 leading-relaxed">لما تدعو صديق ويسجل من رابطك، بتاخد 50 نقطة - بس بعد ما يكمّل صديقك 50% من ملفه الشخصي (اسمه، بياناته، مستنداته)، مش لمجرد إنه سجّل. هيك منضمن إنه الدعوة حقيقية ومش حساب فاضي.</p>
+                    <p class="font-black text-slate-800 mb-2">+25 XP لكل دعوة ناجحة</p>
+                    <p class="text-xs font-bold text-slate-500 leading-relaxed">لما تدعو صديق ويسجل من رابطك، بتاخد 25 نقطة - بس بعد ما يكمّل صديقك 50% من ملفه الشخصي (اسمه، بياناته، مستنداته)، مش لمجرد إنه سجّل. هيك منضمن إنه الدعوة حقيقية ومش حساب فاضي.</p>
                 </div>
                 <div class="bg-slate-50 rounded-3xl p-6 border border-slate-100">
                     <span class="w-12 h-12 rounded-2xl bg-blue-100 text-blue-600 flex items-center justify-center text-xl mb-4">⏱️</span>
@@ -82,7 +95,7 @@
                 <div class="w-14 h-14 bg-white/20 backdrop-blur rounded-2xl flex items-center justify-center text-3xl">🎁</div>
                 <div>
                     <h4 class="font-black text-white text-lg">رابط دعوتك الخاص</h4>
-                    <p class="text-sm text-gold-50 font-bold mt-0.5">شاركه مع أصدقائك واكسب 50 XP عن كل صديق يفعّل حسابه</p>
+                    <p class="text-sm text-gold-50 font-bold mt-0.5">شاركه مع أصدقائك واكسب 25 XP عن كل صديق يفعّل حسابه</p>
                 </div>
             </div>
 

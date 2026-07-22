@@ -256,7 +256,7 @@
                         </div>
                         <div class="flex-1">
                             <h4 class="font-black text-white text-base">ادعُ أصدقاءك واربح نقاط XP</h4>
-                            <p class="text-[11px] text-gold-50 font-bold mt-0.5">كل صديق يسجل من رابطك = <span class="font-black">+50 XP</span> فوراً لك</p>
+                            <p class="text-[11px] text-gold-50 font-bold mt-0.5">كل صديق يسجل من رابطك = <span class="font-black">+25 XP</span> فوراً لك</p>
                         </div>
                         <button type="button" @click="showInfo = !showInfo" title="كيف تعمل نقاط XP؟"
                                 class="w-7 h-7 shrink-0 rounded-full bg-white/20 hover:bg-white/30 text-white font-black text-xs flex items-center justify-center transition">؟</button>
@@ -281,7 +281,7 @@
                         <p class="text-[11px] font-black text-slate-800 mb-1">كيف تجمع نقاط XP؟</p>
                         <div class="flex items-center gap-3">
                             <span class="w-8 h-8 rounded-xl bg-gold-100 text-gold-600 flex items-center justify-center text-sm font-black shrink-0">🤝</span>
-                            <p class="text-[11px] font-bold text-slate-600">+50 XP عن كل صديق يسجل من رابط دعوتك</p>
+                            <p class="text-[11px] font-bold text-slate-600">+25 XP عن كل صديق يسجل من رابط دعوتك</p>
                         </div>
                         <div class="flex items-center gap-3">
                             <span class="w-8 h-8 rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center text-sm font-black shrink-0">⏱️</span>

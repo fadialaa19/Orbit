@@ -73,7 +73,7 @@ class XpService
     /**
      * Called after anything that could raise a referred student's profile
      * completion (profile save, document upload). Once they cross 50% for
-     * the first time, their referrer finally gets the 50 XP for inviting
+     * the first time, their referrer finally gets the 25 XP for inviting
      * them - a deliberate delay so inviting empty/fake accounts earns
      * nothing until the invitee actually uses the platform.
      */
@@ -90,7 +90,7 @@ class XpService
         $referrer = User::find($referredUser->referred_by);
 
         if ($referrer) {
-            $this->award($referrer, 50, "referral (invited user #{$referredUser->id} reached 50% profile completion)");
+            $this->award($referrer, 25, "referral (invited user #{$referredUser->id} reached 50% profile completion)");
         }
 
         $referredUser->update(['referral_reward_granted' => true]);
