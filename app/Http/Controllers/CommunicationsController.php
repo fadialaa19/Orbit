@@ -25,12 +25,19 @@ class CommunicationsController extends Controller
         $user = Auth::user();
         $ai_chats = $user->rooms()->where('type', 'ai')->latest()->get();
         $support_chats = $user->rooms()->where('type', 'support')->latest()->get();
-        $tickets = $user->supportTickets()->latest()->get();
+
+        // تذاكر طلب الأوراق الرسمية بتستخدم نفس جدول SupportTicket، ومميّزة عن
+        // تذاكر الدعم الفني العادية ببادئة ثابتة بالعنوان (نفس البادئة المستخدمة
+        // في StudentDashboardController::submitDocumentRequest/documentRequests).
+        $allTickets = $user->supportTickets()->latest()->get();
+        $documentTickets = $allTickets->filter(fn ($t) => str_starts_with($t->subject ?? '', '📄 طلب استخراج مستند:'))->values();
+        $supportTickets = $allTickets->reject(fn ($t) => str_starts_with($t->subject ?? '', '📄 طلب استخراج مستند:'))->values();
 
         return response()->json([
             'ai_chats' => $ai_chats->map(fn($chat) => $this->formatChat($chat)),
             'support_chats' => $support_chats->map(fn($chat) => $this->formatChat($chat)),
-            'tickets' => $tickets->map(fn($ticket) => $this->formatTicket($ticket)),
+            'tickets' => $supportTickets->map(fn($ticket) => $this->formatTicket($ticket)),
+            'document_tickets' => $documentTickets->map(fn($ticket) => $this->formatTicket($ticket)),
         ]);
     }
 
@@ -166,13 +173,14 @@ class CommunicationsController extends Controller
     protected function formatTicket($ticket)
     {
         $lastMsg = $ticket->messages()->latest()->first();
+        $isDocumentRequest = str_starts_with($ticket->subject ?? '', '📄 طلب استخراج مستند:');
         return [
             'id' => $ticket->id,
             'type' => 'ticket',
             'name' => $ticket->subject ?? 'تذكرة دعم',
             'last_message' => $lastMsg?->message_text ?? 'لا توجد رسائل بعد',
             'status' => $ticket->status ?? 'open',
-            'avatar' => '🛠️',
+            'avatar' => $isDocumentRequest ? '📄' : '🛠️',
             'updated_at' => $ticket->updated_at?->format('H:i') ?? '',
         ];
     }

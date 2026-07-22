@@ -14,14 +14,22 @@
             <button @click="switchPanel('support')" :class="activePanel === 'support' ? 'bg-white/20 rounded-2xl p-2 shadow-lg' : 'hover:bg-white/10 rounded-xl p-2'" title="الدعم الفني">
                 <svg class="w-7 h-7 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
             </button>
+            <button @click="switchPanel('documents')" :class="activePanel === 'documents' ? 'bg-white/20 rounded-2xl p-2 shadow-lg' : 'hover:bg-white/10 rounded-xl p-2'" title="طلبات الأوراق الرسمية">
+                <svg class="w-7 h-7 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+            </button>
         </div>
 
         <div class="flex-1 min-w-0 w-full md:max-w-md border-l border-slate-100/50 bg-gradient-to-b from-slate-50/50 backdrop-blur-sm flex-col"
              :class="(!selectedChat || !isMobile()) ? 'flex' : 'hidden'">
             <div class="p-4 border-b border-slate-100/50 bg-white/70 flex justify-between items-center">
                 <h2 x-text="panelTitles[activePanel]" class="text-xl font-black text-slate-900"></h2>
-                
-                <button @click="createNew()" class="p-2 bg-gold-600 text-white rounded-xl hover:bg-gold-700 shadow-md transition-all">
+
+                {{-- طلبات الأوراق الرسمية بتتقدّم من صفحتها المخصصة، مو من هون - فبدل زر
+                     "محادثة جديدة" منعرض رابط سريع لصفحة الطلب. --}}
+                <a x-show="activePanel === 'documents'" x-cloak href="{{ route('dashboard.document-requests') }}" class="p-2 bg-gold-600 text-white rounded-xl hover:bg-gold-700 shadow-md transition-all" title="طلب مستند جديد">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                </a>
+                <button x-show="activePanel !== 'documents'" @click="createNew()" class="p-2 bg-gold-600 text-white rounded-xl hover:bg-gold-700 shadow-md transition-all">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
                 </button>
             </div>
@@ -129,8 +137,8 @@ function communicationHub() {
         selectedMessages: [],
         newMessage: '',
         isTyping: false,
-        chatsByType: { ai: [], support: [] },
-        panelTitles: { ai: 'مساعد الذكاء الاصطناعي', support: 'تذاكر الدعم الفني' },
+        chatsByType: { ai: [], support: [], documents: [] },
+        panelTitles: { ai: 'مساعد الذكاء الاصطناعي', support: 'تذاكر الدعم الفني', documents: 'طلبات الأوراق الرسمية' },
         myAvatar: @js(auth()->user()->avatar),
         myInitial: @js(mb_substr(auth()->user()->name, 0, 1)),
 
@@ -166,9 +174,9 @@ function communicationHub() {
             });
     }
 
-    // ✅ Polling احتياطي لردود الدعم الفني (في حال تأخر أو فشل اتصال الـ WebSocket)
+    // ✅ Polling احتياطي لردود الدعم الفني وطلبات الأوراق (في حال تأخر أو فشل اتصال الـ WebSocket)
     this.pollInterval = setInterval(() => {
-        if (this.selectedChat && this.activePanel === 'support') this.pollMessages();
+        if (this.selectedChat && (this.activePanel === 'support' || this.activePanel === 'documents')) this.pollMessages();
     }, 3000);
 },
 
@@ -194,6 +202,7 @@ async pollMessages() {
             const data = await res.json();
             this.chatsByType.ai = data.ai_chats || [];
             this.chatsByType.support = data.tickets || data.support_chats || [];
+            this.chatsByType.documents = data.document_tickets || [];
         },
 
         async switchPanel(panel) {

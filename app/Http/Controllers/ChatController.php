@@ -143,14 +143,14 @@ class ChatController extends Controller
             return response()->json(['success' => false, 'message' => 'Unauthorized'], 403);
         }
 
-        $messages = $ticket->messages()->with('user:id,name')->orderBy('created_at')->get()->map(function ($msg) {
+        $messages = $ticket->messages()->with('sender:id,name')->orderBy('created_at')->get()->map(function ($msg) {
             return [
                 'id' => $msg->id,
                 'sender_type' => $msg->sender_type,
                 'message_text' => $msg->message_text,
                 'file_path' => $msg->file_path,
                 'created_at' => $msg->created_at->format('Y-m-d H:i'),
-                'user' => $msg->user ? ['name' => $msg->user->name] : null,
+                'user' => $msg->sender ? ['name' => $msg->sender->name] : null,
             ];
         });
 
