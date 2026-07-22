@@ -35,6 +35,13 @@ return [
         ],
     ],
 
+    // مفتاح خاص يسمح بإنشاء منح دراسية عبر API مباشرة (بدون تسجيل دخول أدمن عادي) -
+    // يُستخدم فقط من قبل تكامل خارجي موثوق (مثلاً Claude) يرسل بيانات منحة جاهزة
+    // بعد موافقة صريحة من الأدمن على كل نشر.
+    'scholarship_admin_api' => [
+        'key' => env('SCHOLARSHIP_ADMIN_API_KEY'),
+    ],
+
     'groq' => [
         'key' => env('GROQ_API_KEY'),
         'model' => env('GROQ_MODEL', 'llama-3.3-70b-versatile'),
