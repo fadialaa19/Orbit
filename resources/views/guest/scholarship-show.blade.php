@@ -22,7 +22,7 @@
             {{-- كفر المنحة --}}
             <div class="relative w-full aspect-[2/1] md:aspect-[5/1] bg-slate-100">
                 @if($scholarship->main_image)
-                    <img src="{{ $scholarship->main_image }}" alt="{{ $scholarship->title_ar }}" class="w-full h-full object-contain md:object-cover">
+                    <img src="{{ $scholarship->main_image }}" alt="{{ $scholarship->title_ar }}" class="w-full h-full object-cover">
                 @else
                     <div class="w-full h-full bg-gradient-to-r from-navy-900 to-navy-800"></div>
                 @endif

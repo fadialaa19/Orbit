@@ -11,7 +11,7 @@
 
     @if($scholarship->main_image)
         <div class="w-full aspect-[2/1] md:aspect-[5/1] overflow-hidden relative bg-gradient-to-br from-slate-100 to-slate-50">
-            <img src="{{ $scholarship->main_image }}" alt="" class="w-full h-full object-contain md:object-cover">
+            <img src="{{ $scholarship->main_image }}" alt="" class="w-full h-full object-cover">
 
             {{-- نسبة التوافق الذكية: مخزّنة مسبقًا أو بتتحلل بالخلفية - محاطة داخل صورة
                  الغلاف نفسها وملاصقة لأسفلها، بعيدة عن زاوية الكارد المدوّرة العلوية
