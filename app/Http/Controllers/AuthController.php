@@ -64,10 +64,14 @@ class AuthController extends Controller
             'password' => ['required', 'string', 'min:8', 'confirmed'],
             'country' => ['nullable', 'string', 'max:255'],
             'field' => ['nullable', 'string', 'max:255'],
+            'high_school_gpa' => ['nullable', 'numeric', 'min:0', 'max:100'],
         ]);
 
         // 🎯 1. جلب معرف الشخص الداعي من الـ Session إذا كان موجوداً
         $referrerId = session()->get('referrer_id');
+
+        // 🎁 هدية حملة نتائج التوجيهي (100 XP) - العلم مخزّن بالسيشين من GET /register?tawjihi_gift=1
+        $tawjihiGift = session()->get('tawjihi_gift', false);
 
         // 🎯 2. إنشاء المستخدم الجديد وربطه بحقول الـ XP والإحالة
         $user = User::create([
@@ -76,6 +80,7 @@ class AuthController extends Controller
             'password' => Hash::make($data['password']),
             'country' => $data['country'] ?? null,
             'field_of_study' => $data['field'] ?? null,
+            'high_school_gpa' => $data['high_school_gpa'] ?? null,
             'referred_by' => $referrerId, // تخزين الـ ID الخاص بالصديق الداعي أو null
             'xp' => 0,                    // يبدأ الطالب الجديد بـ 0 نقاط
             'email_verified_at' => null,
@@ -86,6 +91,15 @@ class AuthController extends Controller
         // مستند)، لمنع إنشاء حسابات وهمية فاضية لكسب نقاط بدون أي استخدام حقيقي.
         if ($referrerId) {
             session()->forget('referrer_id');
+        }
+
+        // 🎁 منح هدية حملة التوجيهي فوراً هنا (وليس بعد تسجيل الدخول)، لأن الطالب
+        // بيتسجل خروجه حالاً وما بيقدر يدخل قبل توثيق إيميله.
+        if ($tawjihiGift) {
+            session()->forget('tawjihi_gift');
+            if (!empty($data['high_school_gpa'])) {
+                (new \App\Services\XpService())->award($user, 100, 'هدية تسجيل حملة نتائج التوجيهي');
+            }
         }
 
         // Logout user (must verify email)

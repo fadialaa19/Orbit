@@ -55,6 +55,10 @@ Route::get('/register', function (Request $request) {
         // تخزين ID الشخص الداعي في السيشين لمدة نصف ساعة مثلاً
         session(['referrer_id' => $request->query('ref')]);
     }
+    if ($request->has('tawjihi_gift')) {
+        // علم حملة هدية التوجيهي (100 XP) - يُستهلك ويُحذف من الجلسة داخل AuthController::register()
+        session(['tawjihi_gift' => true]);
+    }
     return view('auth.register');
 })->name('register')->middleware('guest');
 

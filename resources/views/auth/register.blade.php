@@ -28,10 +28,12 @@
     <div class="max-w-xl w-full" 
          x-data="{ 
             step: 1, 
-            name: '{{ old('name', '') }}', 
-            email: '{{ old('email', '') }}', 
-            country: '{{ old('country', '') }}', 
+            name: '{{ old('name', '') }}',
+            email: '{{ old('email', '') }}',
+            country: '{{ old('country', '') }}',
             field: '{{ old('field', '') }}',
+            gpa: '{{ old('high_school_gpa', '') }}',
+            tawjihiGift: {{ session('tawjihi_gift') ? 'true' : 'false' }},
             password: '',
             password_confirmation: '',
             errors: {},
@@ -50,7 +52,7 @@
                     return this.serverErrors.name || this.serverErrors.email || this.serverErrors.password || this.serverErrors.password_confirmation;
                 }
                 if (stepNum === 2) {
-                    return this.serverErrors.country;
+                    return this.serverErrors.country || this.serverErrors.high_school_gpa;
                 }
                 return false;
             },
@@ -79,8 +81,18 @@
                 return valid;
             },
 
+            validateStep2() {
+                this.errors = {};
+                if (this.tawjihiGift && (!this.gpa || this.gpa < 0 || this.gpa > 100)) {
+                    this.errors.gpa = 'أدخل معدلك بالثانوية العامة (من 100) عشان تحصل على هدية الـ 100 XP.';
+                    return false;
+                }
+                return true;
+            },
+
             goNext() {
                 if (this.step === 1 && !this.validateStep1()) return;
+                if (this.step === 2 && !this.validateStep2()) return;
                 this.errors = {};
                 this.step++;
             },
@@ -196,11 +208,11 @@
                 <!-- STEP 2 -->
                 <div x-show="step === 2" x-cloak x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 translate-x-10">
                     <h2 class="font-black text-slate-800 mb-6 border-r-4 border-gold-600 pr-3">التفاصيل الأكاديمية</h2>
-                    
+
                     <div class="space-y-5">
                         <div>
                             <label class="block text-sm font-bold text-slate-700 mb-2">البلد</label>
-                            <input type="text" name="country" x-model="country" placeholder="السعودية" 
+                            <input type="text" name="country" x-model="country" placeholder="السعودية"
                                 class="w-full bg-slate-50 border-2 rounded-xl py-3 px-5 outline-none transition-all"
                                 :class="(errors.country || serverErrors.country) ? 'border-rose-500' : 'border-transparent focus:border-gold-500 focus:bg-white'">
                             <p x-show="errors.country" x-text="errors.country" class="mt-1 text-sm text-rose-500 font-medium" x-cloak></p>
@@ -209,8 +221,21 @@
 
                         <div>
                             <label class="block text-sm font-bold text-slate-700 mb-2">مجال الدراسة</label>
-                            <input type="text" name="field" x-model="field" placeholder="علوم الحاسب" 
+                            <input type="text" name="field" x-model="field" placeholder="علوم الحاسب"
                                 class="w-full bg-slate-50 border-2 border-transparent focus:border-gold-500 focus:bg-white rounded-xl py-3 px-5 outline-none transition-all">
+                        </div>
+
+                        <div x-show="tawjihiGift" x-cloak class="bg-gold-50 border-2 border-gold-200 rounded-2xl p-5">
+                            <p class="font-black text-gold-700 mb-3 flex items-center gap-2">
+                                <span>🎁</span>
+                                <span>أدخل معدلك بالثانوية العامة واحصل فوراً على 100 XP هدية!</span>
+                            </p>
+                            <label class="block text-sm font-bold text-slate-700 mb-2">المعدل (من 100)</label>
+                            <input type="number" name="high_school_gpa" x-model="gpa" min="0" max="100" step="0.01" placeholder="85.5"
+                                class="w-full bg-white border-2 rounded-xl py-3 px-5 outline-none transition-all"
+                                :class="(errors.gpa || serverErrors.high_school_gpa) ? 'border-rose-500' : 'border-transparent focus:border-gold-500'">
+                            <p x-show="errors.gpa" x-text="errors.gpa" class="mt-1 text-sm text-rose-500 font-medium" x-cloak></p>
+                            @error('high_school_gpa')<p class="mt-1 text-sm text-rose-500 font-medium">{{ $message }}</p>@enderror
                         </div>
                     </div>
 
@@ -247,9 +272,13 @@
                             <span class="text-slate-400">البلد:</span>
                             <span class="font-bold text-slate-700" x-text="country || 'غير محدد'"></span>
                         </div>
-                        <div class="flex justify-between">
+                        <div class="flex justify-between" :class="tawjihiGift ? 'border-b border-white pb-2' : ''">
                             <span class="text-slate-400">المجال:</span>
                             <span class="font-bold text-slate-700" x-text="field || 'غير محدد'"></span>
+                        </div>
+                        <div class="flex justify-between" x-show="tawjihiGift" x-cloak>
+                            <span class="text-slate-400">المعدل (هدية 100 XP):</span>
+                            <span class="font-bold text-gold-700" x-text="gpa || 'غير محدد'"></span>
                         </div>
                     </div>
 

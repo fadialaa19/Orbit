@@ -11,6 +11,72 @@
     .btn-pulse { animation: pulse-gold 2s infinite; }
 </style>
 
+<script>
+    function tawjihiCountdown() {
+        return {
+            target: new Date('2026-07-24T09:00:00+03:00').getTime(),
+            days: 0, hours: 0, minutes: 0, seconds: 0,
+            expired: false,
+            timer: null,
+            init() {
+                this.tick();
+                this.timer = setInterval(() => this.tick(), 1000);
+            },
+            tick() {
+                const diff = this.target - Date.now();
+                if (diff <= 0) {
+                    this.expired = true;
+                    clearInterval(this.timer);
+                    return;
+                }
+                this.days = Math.floor(diff / 86400000);
+                this.hours = Math.floor((diff % 86400000) / 3600000);
+                this.minutes = Math.floor((diff % 3600000) / 60000);
+                this.seconds = Math.floor((diff % 60000) / 1000);
+            }
+        };
+    }
+</script>
+
+<div x-data="tawjihiCountdown()" class="max-w-7xl mx-auto px-8 pt-10">
+    <template x-if="!expired">
+        <div class="bg-gradient-to-br from-navy-900 to-navy-800 rounded-[2rem] p-6 sm:p-8 text-center text-white shadow-xl" data-aos="fade-up">
+            <p class="font-black text-lg mb-1">🎓 نتائج التوجيهي بتنعلن قريباً!</p>
+            <p class="text-white/60 text-sm mb-6">عد تنازلي للحظة الإعلان الرسمي عن النتائج</p>
+            <div class="flex justify-center gap-3 sm:gap-6">
+                <div class="bg-white/10 rounded-2xl px-3 sm:px-5 py-3 min-w-[64px] sm:min-w-[80px]">
+                    <div class="text-2xl sm:text-3xl font-black" x-text="days"></div>
+                    <div class="text-[10px] sm:text-xs text-white/60 font-bold mt-1">يوم</div>
+                </div>
+                <div class="bg-white/10 rounded-2xl px-3 sm:px-5 py-3 min-w-[64px] sm:min-w-[80px]">
+                    <div class="text-2xl sm:text-3xl font-black" x-text="String(hours).padStart(2,'0')"></div>
+                    <div class="text-[10px] sm:text-xs text-white/60 font-bold mt-1">ساعة</div>
+                </div>
+                <div class="bg-white/10 rounded-2xl px-3 sm:px-5 py-3 min-w-[64px] sm:min-w-[80px]">
+                    <div class="text-2xl sm:text-3xl font-black" x-text="String(minutes).padStart(2,'0')"></div>
+                    <div class="text-[10px] sm:text-xs text-white/60 font-bold mt-1">دقيقة</div>
+                </div>
+                <div class="bg-white/10 rounded-2xl px-3 sm:px-5 py-3 min-w-[64px] sm:min-w-[80px]">
+                    <div class="text-2xl sm:text-3xl font-black" x-text="String(seconds).padStart(2,'0')"></div>
+                    <div class="text-[10px] sm:text-xs text-white/60 font-bold mt-1">ثانية</div>
+                </div>
+            </div>
+        </div>
+    </template>
+    <template x-if="expired">
+        <div class="bg-gradient-to-br from-gold-500 to-gold-600 rounded-[2rem] p-6 sm:p-10 text-center text-white shadow-xl" data-aos="fade-up">
+            <p class="text-4xl mb-3">🎉</p>
+            <h2 class="font-black text-xl sm:text-2xl mb-2">مبروك النجاح لكل طلاب التوجيهي!</h2>
+            <p class="text-white/90 mb-6 max-w-xl mx-auto text-sm sm:text-base">
+                سجّل حسابك الآن على أوربيت وأدخل معدلك بالثانوية العامة، واحصل فوراً على 100 نقطة XP هدية لتبدأ رحلتك نحو المنح الدراسية المناسبة إلك.
+            </p>
+            <a href="{{ route('register', ['tawjihi_gift' => 1]) }}" class="inline-block bg-white text-gold-700 px-8 py-4 rounded-2xl font-black shadow-xl hover:scale-105 transition-all duration-300">
+                سجّل الآن واحصل على 100 XP 🎁
+            </a>
+        </div>
+    </template>
+</div>
+
 <section class="py-20 px-8 max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-16 items-center overflow-hidden">
     <div data-aos="fade-left" data-aos-duration="1200">
         <span class="bg-gold-100 text-gold-600 px-5 py-2 rounded-full text-sm font-bold border border-gold-100 inline-block mb-6">
