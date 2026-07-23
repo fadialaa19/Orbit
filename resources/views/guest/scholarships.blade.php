@@ -62,8 +62,13 @@
 
             @if($scholarship->main_image)
                 <div class="w-full aspect-[2/1] md:aspect-[5/1] overflow-hidden relative bg-gradient-to-br from-slate-100 to-slate-50">
-                    <img src="{{ $scholarship->main_image }}" alt="" class="absolute inset-0 w-full h-full object-cover blur-2xl scale-110 opacity-70" aria-hidden="true">
-                    <img src="{{ $scholarship->main_image }}" alt="" class="absolute inset-0 w-full h-full object-contain">
+                    @if($scholarship->main_image_mobile)
+                        <img src="{{ $scholarship->main_image_mobile }}" alt="" class="md:hidden absolute inset-0 w-full h-full object-cover">
+                    @else
+                        <img src="{{ $scholarship->main_image }}" alt="" class="md:hidden absolute inset-0 w-full h-full object-cover blur-2xl scale-110 opacity-70" aria-hidden="true">
+                        <img src="{{ $scholarship->main_image }}" alt="" class="md:hidden absolute inset-0 w-full h-full object-contain">
+                    @endif
+                    <img src="{{ $scholarship->main_image }}" alt="" class="hidden md:block absolute inset-0 w-full h-full object-cover">
                 </div>
             @endif
 

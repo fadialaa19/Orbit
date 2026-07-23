@@ -14,6 +14,7 @@ class Scholarship extends Model
 'title_ar',
 'title_en',
 'main_image',
+        'main_image_mobile',
         'logo_image',
         'country',
         'university',
@@ -89,6 +90,11 @@ public function getFormattedDeadlineAttribute()
     }
 
     public function getMainImageAttribute($value)
+    {
+        return $this->resolveImageUrl($value);
+    }
+
+    public function getMainImageMobileAttribute($value)
     {
         return $this->resolveImageUrl($value);
     }

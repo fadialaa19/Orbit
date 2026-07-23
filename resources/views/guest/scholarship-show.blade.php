@@ -22,8 +22,13 @@
             {{-- كفر المنحة --}}
             <div class="relative w-full aspect-[2/1] md:aspect-[5/1] bg-slate-100 overflow-hidden">
                 @if($scholarship->main_image)
-                    <img src="{{ $scholarship->main_image }}" alt="" class="absolute inset-0 w-full h-full object-cover blur-2xl scale-110 opacity-70" aria-hidden="true">
-                    <img src="{{ $scholarship->main_image }}" alt="{{ $scholarship->title_ar }}" class="absolute inset-0 w-full h-full object-contain">
+                    @if($scholarship->main_image_mobile)
+                        <img src="{{ $scholarship->main_image_mobile }}" alt="{{ $scholarship->title_ar }}" class="md:hidden absolute inset-0 w-full h-full object-cover">
+                    @else
+                        <img src="{{ $scholarship->main_image }}" alt="" class="md:hidden absolute inset-0 w-full h-full object-cover blur-2xl scale-110 opacity-70" aria-hidden="true">
+                        <img src="{{ $scholarship->main_image }}" alt="{{ $scholarship->title_ar }}" class="md:hidden absolute inset-0 w-full h-full object-contain">
+                    @endif
+                    <img src="{{ $scholarship->main_image }}" alt="{{ $scholarship->title_ar }}" class="hidden md:block absolute inset-0 w-full h-full object-cover">
                 @else
                     <div class="w-full h-full bg-gradient-to-r from-navy-900 to-navy-800"></div>
                 @endif
@@ -188,7 +193,7 @@
 
         {{-- نظام التبويبات --}}
         <div x-data="{ activeTab: 'overview' }">
-            <div class="flex justify-center gap-8 md:gap-12 border-b border-slate-200 mb-8 overflow-x-auto whitespace-nowrap">
+            <div class="flex justify-start md:justify-center gap-5 md:gap-12 border-b border-slate-200 mb-8 overflow-x-auto whitespace-nowrap">
                 <button @click="activeTab = 'overview'" :class="activeTab === 'overview' ? 'pb-4 border-b-2 border-gold-600 text-gold-600 font-black text-sm' : 'pb-4 text-slate-400 font-bold text-sm hover:text-slate-600 transition'" class="cursor-pointer">نظرة عامة</button>
                 <button @click="activeTab = 'conditions'" :class="activeTab === 'conditions' ? 'pb-4 border-b-2 border-gold-600 text-gold-600 font-black text-sm' : 'pb-4 text-slate-400 font-bold text-sm hover:text-slate-600 transition'" class="cursor-pointer">الشروط</button>
                 <button @click="activeTab = 'documents'" :class="activeTab === 'documents' ? 'pb-4 border-b-2 border-gold-600 text-gold-600 font-black text-sm' : 'pb-4 text-slate-400 font-bold text-sm hover:text-slate-600 transition'" class="cursor-pointer">المستندات</button>

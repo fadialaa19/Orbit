@@ -11,11 +11,17 @@
 
     @if($scholarship->main_image)
         <div class="w-full aspect-[2/1] md:aspect-[5/1] overflow-hidden relative bg-gradient-to-br from-slate-100 to-slate-50">
-            {{-- خلفية مموّهة ومكبّرة من نفس الصورة تملأ المساحة بالكامل، والصورة الحقيقية
-                 فوقها كاملة بدون أي قص (object-contain) - هيك ما في فراغات فارغة وما في
-                 قص لأي جزء من الصورة الأصلية بنفس الوقت. --}}
-            <img src="{{ $scholarship->main_image }}" alt="" class="absolute inset-0 w-full h-full object-cover blur-2xl scale-110 opacity-70" aria-hidden="true">
-            <img src="{{ $scholarship->main_image }}" alt="" class="absolute inset-0 w-full h-full object-contain">
+            @if($scholarship->main_image_mobile)
+                {{-- صورة مخصصة رفعها الأدمن لمقاس الجوال (٨٠٠×٤٠٠) - تُعرض مباشرة بدون
+                     أي تأثيرات لأنها مصممة أصلاً لتطابق نسبة الحاوية على الجوال. --}}
+                <img src="{{ $scholarship->main_image_mobile }}" alt="" class="md:hidden absolute inset-0 w-full h-full object-cover">
+            @else
+                {{-- بدون صورة مخصصة للجوال: خلفية مموّهة ومكبّرة من صورة اللابتوب تملأ
+                     المساحة، والصورة الحقيقية فوقها كاملة بدون أي قص (object-contain). --}}
+                <img src="{{ $scholarship->main_image }}" alt="" class="md:hidden absolute inset-0 w-full h-full object-cover blur-2xl scale-110 opacity-70" aria-hidden="true">
+                <img src="{{ $scholarship->main_image }}" alt="" class="md:hidden absolute inset-0 w-full h-full object-contain">
+            @endif
+            <img src="{{ $scholarship->main_image }}" alt="" class="hidden md:block absolute inset-0 w-full h-full object-cover">
 
             {{-- نسبة التوافق الذكية: مخزّنة مسبقًا أو بتتحلل بالخلفية - محاطة داخل صورة
                  الغلاف نفسها وملاصقة لأسفلها، بعيدة عن زاوية الكارد المدوّرة العلوية

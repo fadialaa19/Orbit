@@ -65,8 +65,10 @@ class AdminScholarshipController extends Controller
         'application_url' => 'nullable|url|max:500',
         'apply_via_us_link' => 'nullable|url|max:500',
         'main_image' => 'nullable|image|max:2048',
+        'main_image_mobile' => 'nullable|image|max:2048',
         'logo_image' => 'nullable|image|max:1048',
         'main_image_url' => 'nullable|url|max:500',
+        'main_image_mobile_url' => 'nullable|url|max:500',
         'logo_image_url' => 'nullable|url|max:500',
     ]);
 
@@ -111,6 +113,14 @@ class AdminScholarshipController extends Controller
         $data['main_image'] = $file->storeAs('scholarships/main-images', $filename, 'public');
     } elseif ($request->filled('main_image_url')) {
         $data['main_image'] = $request->input('main_image_url');
+    }
+
+    if ($request->hasFile('main_image_mobile')) {
+        $file = $request->file('main_image_mobile');
+        $filename = Str::random(20) . '_' . time() . '.' . $file->getClientOriginalExtension();
+        $data['main_image_mobile'] = $file->storeAs('scholarships/main-images-mobile', $filename, 'public');
+    } elseif ($request->filled('main_image_mobile_url')) {
+        $data['main_image_mobile'] = $request->input('main_image_mobile_url');
     }
 
     if ($request->hasFile('logo_image')) {
@@ -171,8 +181,10 @@ public function update(Request $request, Scholarship $scholarship)
         'apply_via_us_link' => 'nullable|url|max:500',
         'status' => 'required|in:active,closed',
         'main_image' => 'nullable|image|max:2048',
+        'main_image_mobile' => 'nullable|image|max:2048',
         'logo_image' => 'nullable|image|max:1048',
         'main_image_url' => 'nullable|url|max:500',
+        'main_image_mobile_url' => 'nullable|url|max:500',
         'logo_image_url' => 'nullable|url|max:500',
     ]);
 
@@ -213,6 +225,16 @@ public function update(Request $request, Scholarship $scholarship)
         // نستخدم القيمة الخام (غير المحوّلة عبر accessor) حتى لا يُعاد حفظ
         // رابط كامل جاهز بدل المسار النسبي الأصلي عند عدم تغيير الصورة.
         $data['main_image'] = $scholarship->getRawOriginal('main_image');
+    }
+
+    if ($request->hasFile('main_image_mobile')) {
+        $file = $request->file('main_image_mobile');
+        $filename = Str::random(20) . '_' . time() . '.' . $file->getClientOriginalExtension();
+        $data['main_image_mobile'] = $file->storeAs('scholarships/main-images-mobile', $filename, 'public');
+    } elseif ($request->filled('main_image_mobile_url')) {
+        $data['main_image_mobile'] = $request->input('main_image_mobile_url');
+    } else {
+        $data['main_image_mobile'] = $scholarship->getRawOriginal('main_image_mobile');
     }
 
     if ($request->hasFile('logo_image')) {

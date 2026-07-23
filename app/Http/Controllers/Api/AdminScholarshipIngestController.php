@@ -43,6 +43,7 @@ class AdminScholarshipIngestController extends Controller
             'application_url' => 'nullable|url|max:500',
             'apply_via_us_link' => 'nullable|url|max:500',
             'main_image_url' => 'nullable|url|max:500',
+            'main_image_mobile_url' => 'nullable|url|max:500',
             'logo_image_url' => 'nullable|url|max:500',
         ]);
 
@@ -66,10 +67,13 @@ class AdminScholarshipIngestController extends Controller
         if (!empty($validated['main_image_url'])) {
             $data['main_image'] = $validated['main_image_url'];
         }
+        if (!empty($validated['main_image_mobile_url'])) {
+            $data['main_image_mobile'] = $validated['main_image_mobile_url'];
+        }
         if (!empty($validated['logo_image_url'])) {
             $data['logo_image'] = $validated['logo_image_url'];
         }
-        unset($data['main_image_url'], $data['logo_image_url']);
+        unset($data['main_image_url'], $data['main_image_mobile_url'], $data['logo_image_url']);
 
         try {
             $scholarship = Scholarship::create(array_merge($data, ['status' => 'active']));
