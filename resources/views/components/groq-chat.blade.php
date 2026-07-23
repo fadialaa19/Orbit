@@ -22,12 +22,29 @@
             if (this.supportTicketId) {
                 this.supportCreated = true;
             }
+
+            // استرجاع محادثة الشات بوت من localStorage حتى ما تنمسح لما الطالب يحدّث
+            // الصفحة - الجلسة على الباك إند أصلاً محفوظة، بس واجهة الشات كانت تفضى بصرياً.
+            try {
+                const savedMessages = JSON.parse(localStorage.getItem('groq_chat_messages') || '[]');
+                if (Array.isArray(savedMessages) && savedMessages.length) {
+                    this.messages = savedMessages;
+                    this.msgId = Math.max(...savedMessages.map(m => m.id || 0), 0);
+                }
+            } catch (e) {
+                localStorage.removeItem('groq_chat_messages');
+            }
+
             setInterval(() => {
                 this.nowTick = Date.now();
                 if (this.bannedUntil && this.bannedUntil <= this.nowTick) {
                     this.clearBan();
                 }
             }, 1000);
+        },
+
+        saveMessages() {
+            localStorage.setItem('groq_chat_messages', JSON.stringify(this.messages));
         },
 
         get banned() {
@@ -53,6 +70,7 @@
             this.loading = true;
             this.handoff = false;
             this.messages.push({ id: ++this.msgId, role: 'user', content: this.escapeHtml(text) });
+            this.saveMessages();
             this.scrollToBottom();
             try {
                 const res = await fetch('{{ route('api.chat') }}', {
@@ -67,8 +85,10 @@
                 const data = await res.json();
                 if (!data.success) {
                     this.messages.push({ id: ++this.msgId, role: 'ai', content: '⚠️ ' + (data.reply || 'Error') });
+                    this.saveMessages();
                 } else {
                     this.messages.push({ id: ++this.msgId, role: 'ai', content: data.reply });
+                    this.saveMessages();
 
                     // Handle temporary ban (1 hour)
                     if (data.force_close) {
@@ -89,6 +109,7 @@
                 }
             } catch (e) {
                 this.messages.push({ id: ++this.msgId, role: 'ai', content: '⚠️ Failed to connect. Retry later.' });
+                this.saveMessages();
             }
             this.loading = false;
             this.scrollToBottom();
@@ -101,6 +122,7 @@
             this.supportCreated = false;
             this.msgId = 0;
             localStorage.removeItem('groq_chat_support_ticket_id');
+            localStorage.removeItem('groq_chat_messages');
             await fetch('{{ route('api.chat.clear') }}', {
                 method: 'POST',
                 headers: { 'X-CSRF-TOKEN': document.querySelector('meta[name=csrf-token]').getAttribute('content') }
@@ -112,6 +134,7 @@
             this.messages = [];
             this.msgId = 0;
             localStorage.removeItem('groq_chat_banned_until');
+            localStorage.removeItem('groq_chat_messages');
             await fetch('{{ route('api.chat.clear-ban') }}', {
                 method: 'POST',
                 headers: { 'X-CSRF-TOKEN': document.querySelector('meta[name=csrf-token]').getAttribute('content') }
