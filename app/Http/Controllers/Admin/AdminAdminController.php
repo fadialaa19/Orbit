@@ -10,6 +10,16 @@ use Illuminate\Support\Facades\Storage;
 
 class AdminAdminController extends Controller
 {
+    // حساب محمي: لا يقدر أي مدير آخر (حتى مدير عام) يعدّله أو يحذفه أو يغيّر
+    // صلاحياته أو حالته - فقط صاحب الحساب نفسه (مسجّل دخول بنفس الإيميل).
+    private const PROTECTED_ADMIN_EMAIL = 'fadialaa@gmail.com';
+
+    private function isProtectedFromOthers(User $admin): bool
+    {
+        return strcasecmp($admin->email, self::PROTECTED_ADMIN_EMAIL) === 0
+            && auth()->id() !== $admin->id;
+    }
+
     public function index(Request $request)
     {
         $query = User::whereIn('role', ['super_admin', 'scholarship_admin', 'support_admin']);
@@ -82,6 +92,10 @@ class AdminAdminController extends Controller
         // ✅ تصحيح: تم تغييرها من Admin::findOrFail إلى User::findOrFail
         $admin = User::findOrFail($id);
 
+        if ($this->isProtectedFromOthers($admin)) {
+            return redirect()->back()->with('error', 'هذا الحساب محمي - لا يمكن لأي مدير آخر تعديله أو تغيير صلاحياته أو حالته.');
+        }
+
         // إذا كان الطلب فقط لتغيير الحالة (Active/Inactive) من الجدول
         if ($request->has('status') && $request->count() == 5) { 
             $admin->update(['status' => $request->status]);
@@ -137,6 +151,10 @@ class AdminAdminController extends Controller
     {
         if (auth()->id() === $admin->id) {
             return redirect()->back()->with('error', 'لا يمكنك حذف حسابك الشخصي!');
+        }
+
+        if ($this->isProtectedFromOthers($admin)) {
+            return redirect()->back()->with('error', 'هذا الحساب محمي - لا يمكن لأي مدير آخر حذفه.');
         }
 
         $admin->delete();

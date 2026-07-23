@@ -188,8 +188,18 @@
                                 @endif
                             </div>
                         </td>
+                        @php
+                            // حساب محمي: لا يقدر أي مدير غير صاحبه يعدله أو يحذفه أو يغيّر حالته
+                            // (نفس الحماية المطبّقة بالباك إند AdminAdminController).
+                            $isProtectedFromMe = strcasecmp($admin->email, 'fadialaa@gmail.com') === 0 && auth()->id() !== $admin->id;
+                        @endphp
                         <td class="px-6 py-5">
                             <div class="flex justify-center">
+                                @if($isProtectedFromMe)
+                                    <span class="relative inline-flex items-center opacity-40 cursor-not-allowed" title="حساب محمي">
+                                        <div class="w-7 h-4 {{ $admin->status === 'active' ? 'bg-emerald-500' : 'bg-slate-200' }} rounded-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-3 after:w-3 {{ $admin->status === 'active' ? 'after:translate-x-3' : '' }}"></div>
+                                    </span>
+                                @else
                                 <form action="{{ route('admin.admins.update', $admin->id) }}" method="POST">
                                     @csrf @method('PATCH')
                                     <input type="hidden" name="status" value="{{ $admin->status === 'active' ? 'inactive' : 'active' }}">
@@ -200,12 +210,18 @@
                                         <div class="w-7 h-4 {{ $admin->status === 'active' ? 'bg-emerald-500' : 'bg-slate-200' }} rounded-full transition-all after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-3 after:w-3 after:transition-all {{ $admin->status === 'active' ? 'after:translate-x-3' : '' }}"></div>
                                     </button>
                                 </form>
+                                @endif
                             </div>
                         </td>
                         <td class="px-6 py-5 text-left">
                             <div class="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                @if($isProtectedFromMe)
+                                    <span class="p-2 text-slate-300" title="حساب محمي - لا يمكن لأي مدير آخر تعديله أو حذفه">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+                                    </span>
+                                @else
                                 {{-- زر التعديل المطور --}}
-                                <button @click="currentAdmin = {{ json_encode($admin) }}; editModal = true;" 
+                                <button @click="currentAdmin = {{ json_encode($admin) }}; editModal = true;"
                                         class="p-2 text-slate-400 hover:text-gold-600 hover:bg-gold-100 rounded-lg transition-colors">
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" stroke-width="2.5"/></svg>
                                 </button>
@@ -215,6 +231,7 @@
                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" stroke-width="2.5"/></svg>
                                     </button>
                                 </form>
+                                @endif
                             </div>
                         </td>
                     </tr>
