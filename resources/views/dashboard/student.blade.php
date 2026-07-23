@@ -88,7 +88,7 @@
                 <span class="text-2xl shrink-0" x-text="current.icon"></span>
                 <div class="flex-1 min-w-0">
                     <h3 class="font-black text-white text-sm leading-tight" x-text="current.title"></h3>
-                    <p class="text-white/75 text-xs font-bold truncate" x-text="current.body"></p>
+                    <p class="text-white/75 text-xs font-bold" x-text="current.body"></p>
                 </div>
                 <template x-if="visible.length > 1">
                     <div class="hidden sm:flex items-center gap-1.5 shrink-0">
