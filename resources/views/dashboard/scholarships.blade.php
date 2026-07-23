@@ -25,8 +25,8 @@
         @endphp
         <form method="GET" action="{{ route('dashboard.scholarships') }}" id="filterForm" x-data="{ filtersOpen: {{ $activeFiltersCount > 0 ? 'true' : 'false' }} }">
 
-            <div class="bg-white p-4 rounded-[2rem] shadow-sm mb-4 flex gap-3 border border-slate-100">
-                <input type="text" name="q" value="{{ request('q') }}" placeholder="ابحث عن منحة، جامعة أو تخصص..." class="flex-1 bg-transparent pr-4 outline-none font-medium text-right">
+            <div class="bg-white p-4 rounded-[2rem] shadow-sm mb-4 flex gap-3 border border-slate-100 overflow-hidden">
+                <input type="text" name="q" value="{{ request('q') }}" placeholder="ابحث عن منحة، جامعة أو تخصص..." class="flex-1 min-w-0 bg-transparent pr-4 outline-none font-medium text-right">
                 <button type="button" @click="filtersOpen = !filtersOpen" class="relative flex items-center gap-2 px-5 py-3 rounded-2xl font-bold text-sm transition" :class="filtersOpen ? 'bg-gold-100 text-gold-600' : 'bg-slate-50 text-slate-500 hover:bg-slate-100'">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"/></svg>
                     الفلاتر
