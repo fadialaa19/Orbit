@@ -121,11 +121,10 @@ class AiCompletionService
             $generationConfig = [
                 'temperature' => $options['temperature'] ?? 0.5,
                 'maxOutputTokens' => $options['max_tokens'] ?? 2048,
-                // Gemini's *-latest flash models default to an internal "thinking" pass before
-                // answering, which both slows responses down (risking timeouts) and eats into
-                // maxOutputTokens before any visible text is produced. We just want a plain
-                // completion (matching how Groq behaves), so switch thinking off.
-                'thinkingConfig' => ['thinkingBudget' => 0],
+                // ملاحظة: كان هون thinkingConfig.thinkingBudget=0 لإيقاف تفكير Gemini الداخلي،
+                // لكن "gemini-flash-lite-latest" صار يشاور لنسخة أحدث (gemini-3.5-flash-lite)
+                // بترفض هالحقل بخطأ 400 "invalid argument" - يعني كل استدعاء لـ Gemini كان
+                // بيفشل مهما كان. النموذج الجديد أصلاً بيرد بسرعة بدون الحقل، فحذفناه.
             ];
             if (!empty($options['json_mode'])) {
                 $generationConfig['responseMimeType'] = 'application/json';
