@@ -38,7 +38,7 @@
     }
 </script>
 
-<section class="py-20 px-8 max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-16 items-center overflow-hidden">
+<section class="pt-8 pb-20 px-8 max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-16 items-center overflow-hidden">
     <div data-aos="fade-left" data-aos-duration="1200">
         <span class="bg-gold-100 text-gold-600 px-5 py-2 rounded-full text-sm font-bold border border-gold-100 inline-block mb-6">
             ✨ مدعوم بالذكاء الاصطناعي
