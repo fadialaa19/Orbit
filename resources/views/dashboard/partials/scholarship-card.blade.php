@@ -11,7 +11,11 @@
 
     @if($scholarship->main_image)
         <div class="w-full aspect-[2/1] md:aspect-[5/1] overflow-hidden relative bg-gradient-to-br from-slate-100 to-slate-50">
-            <img src="{{ $scholarship->main_image }}" alt="" class="w-full h-full object-cover">
+            {{-- خلفية مموّهة ومكبّرة من نفس الصورة تملأ المساحة بالكامل، والصورة الحقيقية
+                 فوقها كاملة بدون أي قص (object-contain) - هيك ما في فراغات فارغة وما في
+                 قص لأي جزء من الصورة الأصلية بنفس الوقت. --}}
+            <img src="{{ $scholarship->main_image }}" alt="" class="absolute inset-0 w-full h-full object-cover blur-2xl scale-110 opacity-70" aria-hidden="true">
+            <img src="{{ $scholarship->main_image }}" alt="" class="absolute inset-0 w-full h-full object-contain">
 
             {{-- نسبة التوافق الذكية: مخزّنة مسبقًا أو بتتحلل بالخلفية - محاطة داخل صورة
                  الغلاف نفسها وملاصقة لأسفلها، بعيدة عن زاوية الكارد المدوّرة العلوية

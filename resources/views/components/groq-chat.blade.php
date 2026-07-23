@@ -1,5 +1,5 @@
 ﻿<div id="groq-chat-widget"
-     class="fixed bottom-6 right-6 z-[9999] rtl:font-sans"
+     class="fixed bottom-6 left-6 z-[9999] rtl:font-sans"
      style="font-family:'Cairo',sans-serif;direction:rtl;"
      x-data="{
         open: false,
@@ -151,7 +151,7 @@
 
     {{-- Chat Window --}}
     <div x-show="open" x-cloak x-transition
-         class="absolute bottom-16 right-0 w-[340px] md:w-[380px] bg-white rounded-[2rem] shadow-2xl border border-slate-100 overflow-hidden flex flex-col"
+         class="absolute bottom-16 left-0 w-[340px] md:w-[380px] bg-white rounded-[2rem] shadow-2xl border border-slate-100 overflow-hidden flex flex-col"
          style="max-height:600px;height:500px;">
 
         {{-- Header --}}

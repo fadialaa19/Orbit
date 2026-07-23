@@ -21,9 +21,10 @@
         <div class="bg-white rounded-[2.5rem] shadow-sm border border-slate-100 overflow-hidden mb-8">
             
             {{-- 1. كفر المنحة الفعلي من قاعدة البيانات --}}
-            <div class="relative w-full aspect-[2/1] md:aspect-[5/1] bg-slate-100">
+            <div class="relative w-full aspect-[2/1] md:aspect-[5/1] bg-slate-100 overflow-hidden">
                 @if($scholarship->main_image)
-                    <img src="{{ $scholarship->main_image }}" alt="{{ $scholarship->title_ar }}" class="w-full h-full object-cover">
+                    <img src="{{ $scholarship->main_image }}" alt="" class="absolute inset-0 w-full h-full object-cover blur-2xl scale-110 opacity-70" aria-hidden="true">
+                    <img src="{{ $scholarship->main_image }}" alt="{{ $scholarship->title_ar }}" class="absolute inset-0 w-full h-full object-contain">
                 @else
                     {{-- fallback الافتراضي --}}
                     <div class="w-full h-full bg-gradient-to-r from-gold-500 via-gold-500 to-pink-500"></div>

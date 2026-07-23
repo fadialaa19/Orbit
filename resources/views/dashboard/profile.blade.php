@@ -178,7 +178,7 @@
                                             </div>
                                             <div>
                                                 <label class="block text-slate-500 font-bold mb-2 text-xs">المعدل (GPA)</label>
-                                                <input type="number" name="diploma_gpa" value="{{ old('diploma_gpa', $user->diploma_gpa) }}" placeholder="المعدل" step="0.01" min="0" max="4" class="w-full bg-white border-0 rounded-2xl p-3 text-slate-700 font-bold focus:ring-2 focus:ring-amber-500">
+                                                <input type="number" name="diploma_gpa" value="{{ old('diploma_gpa', $user->diploma_gpa) }}" placeholder="المعدل" step="0.01" min="0" max="100" class="w-full bg-white border-0 rounded-2xl p-3 text-slate-700 font-bold focus:ring-2 focus:ring-amber-500">
                                             </div>
                                         </div>
                                     </div>
@@ -211,7 +211,7 @@
                                             </div>
                                             <div>
                                                 <label class="block text-slate-500 font-bold mb-2 text-xs">المعدل (GPA)</label>
-                                                <input type="number" name="bachelor_gpa" value="{{ old('bachelor_gpa', $user->bachelor_gpa) }}" placeholder="المعدل" step="0.01" min="0" max="4" class="w-full bg-white border-0 rounded-2xl p-3 text-slate-700 font-bold focus:ring-2 focus:ring-blue-500">
+                                                <input type="number" name="bachelor_gpa" value="{{ old('bachelor_gpa', $user->bachelor_gpa) }}" placeholder="المعدل" step="0.01" min="0" max="100" class="w-full bg-white border-0 rounded-2xl p-3 text-slate-700 font-bold focus:ring-2 focus:ring-blue-500">
                                             </div>
                                         </div>
                                     </div>
@@ -244,7 +244,7 @@
                                             </div>
                                             <div>
                                                 <label class="block text-slate-500 font-bold mb-2 text-xs">المعدل (GPA)</label>
-                                                <input type="number" name="master_gpa" value="{{ old('master_gpa', $user->master_gpa) }}" placeholder="المعدل" step="0.01" min="0" max="4" class="w-full bg-white border-0 rounded-2xl p-3 text-slate-700 font-bold focus:ring-2 focus:ring-gold-500">
+                                                <input type="number" name="master_gpa" value="{{ old('master_gpa', $user->master_gpa) }}" placeholder="المعدل" step="0.01" min="0" max="100" class="w-full bg-white border-0 rounded-2xl p-3 text-slate-700 font-bold focus:ring-2 focus:ring-gold-500">
                                             </div>
                                         </div>
                                     </div>
