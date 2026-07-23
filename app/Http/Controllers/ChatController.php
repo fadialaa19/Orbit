@@ -114,10 +114,13 @@ class ChatController extends Controller
             \Log::warning("ChatMessageSent broadcast failed (studentReply): " . $e->getMessage());
         }
 
+        // admin.tickets.show بيرجع JSON خام (مخصص لـ AJAX)، مش صفحة حقيقية - نربط
+        // لصفحة القائمة نفسها مع فتح التذكرة تلقائياً وتحديد التبويب الصحيح.
+        $isDocumentTicket = str_starts_with($ticket->subject ?? '', '📄 طلب استخراج مستند:');
         \App\Models\User::admins()->get()->each->notify(new StudentAlertNotification(
             'رد جديد على تذكرة #' . $ticket->id,
             $ticket->subject . ': ' . Str::limit($request->message, 100),
-            route('admin.tickets.show', $ticket->id)
+            route('admin.tickets.index', ['view' => $isDocumentTicket ? 'documents' : 'support', 'open' => $ticket->id])
         ));
 
         return response()->json([

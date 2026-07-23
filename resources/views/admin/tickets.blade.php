@@ -201,6 +201,10 @@ init() {
     this.messagePollInterval = setInterval(() => {
         if (this.chatModal && this.activeTicket.id) this.pollMessages();
     }, 3000);
+
+    // فتح تذكرة محددة تلقائياً لو الصفحة انفتحت من رابط إشعار (?open=ID)
+    const openId = new URLSearchParams(window.location.search).get('open');
+    if (openId) this.openChat(openId);
 },
 
 async pollMessages() {
